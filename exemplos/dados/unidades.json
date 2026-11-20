@@ -1,0 +1,26 @@
+{
+  "GAB": {
+    "nome": "Gabinete do Secretário",
+    "saldo_diarias": 12000.0
+  },
+  "CFF": {
+    "nome": "Coordenadoria de Fiscalização de Flora",
+    "saldo_diarias": 18400.0
+  },
+  "CFA": {
+    "nome": "Coordenadoria de Fiscalização de Fauna",
+    "saldo_diarias": 9250.0
+  },
+  "CUC": {
+    "nome": "Coordenadoria de Unidades de Conservação",
+    "saldo_diarias": 7800.0
+  },
+  "CRH": {
+    "nome": "Coordenadoria de Recursos Hídricos",
+    "saldo_diarias": 640.0
+  },
+  "URS": {
+    "nome": "Unidade Regional de Sinop",
+    "saldo_diarias": 5300.0
+  }
+}

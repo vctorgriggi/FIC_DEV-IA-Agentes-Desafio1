@@ -1,0 +1,23 @@
+{
+  "data_da_analise": "2026-10-09",
+  "antecedencia_minima_dias": 10,
+  "limite_mensal_diarias": 10.0,
+  "prazo_prestacao_dias_uteis": 5,
+  "valores": {
+    "A": {
+      "interior_mt": 380.0,
+      "outra_uf": 520.0,
+      "distrito_federal": 600.0
+    },
+    "B": {
+      "interior_mt": 280.0,
+      "outra_uf": 400.0,
+      "distrito_federal": 460.0
+    },
+    "C": {
+      "interior_mt": 220.0,
+      "outra_uf": 330.0,
+      "distrito_federal": 380.0
+    }
+  }
+}

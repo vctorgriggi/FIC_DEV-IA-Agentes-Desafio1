@@ -1,0 +1,13 @@
+# segredos: a chave da API nunca é versionada
+.env
+
+# ambiente e caches
+.venv/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+
+# sistema e editores
+.DS_Store
+.~lock.*#
+~$*
