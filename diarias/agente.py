@@ -5,7 +5,9 @@ agente não faz conta nenhuma (as ferramentas fazem) e não decide nada: o que e
 devolve só chega ao conferente depois de `barreira.conferir` aprovar.
 """
 import json
+from collections.abc import Callable
 from dataclasses import dataclass, field
+from typing import Any
 
 from agno.agent import Agent, RunOutput
 from agno.models.openai import OpenAIChat
@@ -63,6 +65,18 @@ NORMA
 {(PASTA_DADOS / "normas.md").read_text(encoding="utf-8")}"""
 
 
+# Quem acompanha as consultas do run em andamento (o formulário mostra o progresso).
+# Uma aplicação local, um conferente por vez: basta uma referência no módulo.
+_ouvinte: Callable[[str, dict], None] | None = None
+
+
+def _avisar_consulta(function_name: str, function_call: Callable, arguments: dict) -> Any:
+    """tool_hook do Agno: avisa o ouvinte e executa a ferramenta sem mudar nada nela."""
+    if _ouvinte is not None:
+        _ouvinte(function_name, dict(arguments))
+    return function_call(**arguments)
+
+
 def criar_agente(paralelas: bool = False, **memoria) -> Agent:
     """Um agente para todos os pedidos: sessão e usuário vão em cada run, nunca aqui.
 
@@ -77,6 +91,7 @@ def criar_agente(paralelas: bool = False, **memoria) -> Agent:
         output_schema=Instrucao,
         tool_call_limit=TETO_DE_CHAMADAS,
         pre_hooks=[criar_filtro()],
+        tool_hooks=[_avisar_consulta],
         telemetry=False,
         debug_mode=False,    # o log de depuração imprimiria o pedido inteiro
         markdown=False,
@@ -104,19 +119,24 @@ class Resultado:
     resposta: RunOutput | None = None
 
 
-def instruir(agente: Agent, pedido: dict, complementacao: dict | None = None) -> Resultado:
+def instruir(agente: Agent, pedido: dict, complementacao: dict | None = None,
+             ao_consultar: Callable[[str, dict], None] | None = None) -> Resultado:
     """Primeiro turno com o pedido; na diligência, segundo turno só com a complementação.
 
     A sessão é o número do pedido e o usuário é a matrícula digitada nele, nos dois turnos:
     a complementação continua a mesma sessão. A barreira recebe o pedido que a aplicação
     tem em mãos, porque ela não confia no que o modelo lembra.
     """
+    global _ouvinte
     mensagem = mensagem_da_complementacao(complementacao) if complementacao else mensagem_do_pedido(pedido)
+    _ouvinte = ao_consultar
     try:
         resposta = agente.run(mensagem, session_id=pedido["numero"], user_id=pedido["matricula"])
     except Exception as erro:  # erro de rede ou da API vira recusa, nunca instrução
         return Resultado(numero=pedido["numero"], aprovada=False, instrucao=None,
                          motivos_da_recusa=[f"execução falhou: {type(erro).__name__}"])
+    finally:
+        _ouvinte = None
     veredito = barreira.conferir(resposta, pedido, complementacao)
     return Resultado(numero=pedido["numero"], aprovada=veredito.aprovada,
                      instrucao=resposta.content if veredito.aprovada else None,

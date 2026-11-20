@@ -1,0 +1,62 @@
+"""Registro da conferência humana: o que o agente sugeriu e o que o servidor decidiu.
+
+É o lugar físico da conferência. Cada linha guarda só o necessário para medir com
+que frequência o servidor discorda do agente: número do pedido, sugestão, decisão,
+motivo e se a minuta foi editada. A minuta em si e os dados do solicitante não são
+gravados aqui. Recusas da barreira entram como "analise_manual", com os motivos
+num log à parte, que é para a medição e nunca para a tela.
+"""
+import json
+from datetime import datetime
+from pathlib import Path
+
+from diarias.memoria import PASTA_BANCOS
+
+ARQUIVO = PASTA_BANCOS / "conferencias.jsonl"
+LOG_RECUSAS = PASTA_BANCOS / "recusas.jsonl"
+
+ENCAMINHAMENTOS = {
+    "apto_para_autorizacao": "Encaminhar ao ordenador como apto para autorização",
+    "nao_recomendado": "Encaminhar ao ordenador com recomendação contrária",
+    "diligencia": "Devolver ao solicitante em diligência",
+    "analise_manual": "Reter para análise manual",
+}
+
+
+def _gravar(arquivo: Path, linha: dict) -> None:
+    arquivo.parent.mkdir(exist_ok=True)
+    with open(arquivo, "a", encoding="utf-8") as f:
+        f.write(json.dumps(linha, ensure_ascii=False) + "\n")
+
+
+def registrar(numero: str, sugerido: str, decidido: str, motivo: str = "", minuta_editada: bool = False,
+              arquivo: Path | None = None) -> dict:
+    """Grava a decisão do conferente. Divergir do agente exige motivo."""
+    if decidido not in ENCAMINHAMENTOS:
+        raise ValueError(f"encaminhamento desconhecido: {decidido}")
+    divergiu = decidido != sugerido
+    if divergiu and not motivo.strip():
+        raise ValueError("decisão diferente da sugerida pelo agente exige o motivo")
+    linha = {"pedido": numero, "sugerido": sugerido, "decidido": decidido, "divergiu": divergiu,
+             "motivo": motivo.strip(), "minuta_editada": minuta_editada,
+             "registrado_em": datetime.now().isoformat(timespec="seconds")}
+    _gravar(arquivo or ARQUIVO, linha)
+    return linha
+
+
+def registrar_recusa(numero: str, motivos: list[str], arquivo: Path | None = None) -> None:
+    _gravar(arquivo or LOG_RECUSAS, {"pedido": numero, "motivos": motivos,
+                      "registrado_em": datetime.now().isoformat(timespec="seconds")})
+
+
+def ler(arquivo: Path | None = None) -> list[dict]:
+    arquivo = arquivo or ARQUIVO
+    if not arquivo.exists():
+        return []
+    return [json.loads(linha) for linha in arquivo.read_text(encoding="utf-8").splitlines() if linha.strip()]
+
+
+def taxa_de_divergencia(arquivo: Path | None = None) -> float | None:
+    """Fração das conferências em que o servidor decidiu diferente do agente."""
+    linhas = ler(arquivo)
+    return sum(linha["divergiu"] for linha in linhas) / len(linhas) if linhas else None
