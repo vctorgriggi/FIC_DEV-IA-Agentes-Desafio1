@@ -77,19 +77,21 @@ def _avisar_consulta(function_name: str, function_call: Callable, arguments: dic
     return function_call(**arguments)
 
 
-def criar_agente(paralelas: bool = False, **memoria) -> Agent:
+def criar_agente(paralelas: bool = False, modelo: str = MODELO, teto: int = TETO_DE_CHAMADAS,
+                 **memoria) -> Agent:
     """Um agente para todos os pedidos: sessão e usuário vão em cada run, nunca aqui.
 
-    `paralelas` liga as chamadas simultâneas de ferramentas. `memoria` recebe os
-    parâmetros de memória do Agno (db, add_history_to_context, num_history_runs...).
+    `paralelas` liga as chamadas simultâneas de ferramentas. `modelo` e `teto` só mudam
+    para provocar falhas na medição. `memoria` recebe os parâmetros de memória do Agno
+    (db, add_history_to_context, num_history_runs...).
     """
     return Agent(
-        model=OpenAIChat(id=MODELO, reasoning_effort="none",   # GPT-5.6 exige "none" com ferramentas
+        model=OpenAIChat(id=modelo, reasoning_effort="none",   # GPT-5.6 exige "none" com ferramentas
                          request_params={"parallel_tool_calls": paralelas}),
         tools=FERRAMENTAS,
         instructions=INSTRUCAO,
         output_schema=Instrucao,
-        tool_call_limit=TETO_DE_CHAMADAS,
+        tool_call_limit=teto,
         pre_hooks=[criar_filtro()],
         tool_hooks=[_avisar_consulta],
         telemetry=False,

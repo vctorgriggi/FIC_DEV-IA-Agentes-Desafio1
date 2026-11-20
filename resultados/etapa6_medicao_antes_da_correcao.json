@@ -1,0 +1,2109 @@
+{
+  "sequencial r1": {
+    "casos": {
+      "DIA-2026-0101": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "apto_para_autorizacao",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor",
+          "consultar_historico_diarias",
+          "calcular_diarias",
+          "consultar_saldo_diarias"
+        ],
+        "passos": 5,
+        "entrada_por_chamada": [
+          2602,
+          2692,
+          2809,
+          2970,
+          3045
+        ],
+        "entrada": 14118,
+        "saida": 712,
+        "custo": 0.003678,
+        "segundos": 12.4
+      },
+      "DIA-2026-0102": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "apto_para_autorizacao",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor",
+          "consultar_historico_diarias",
+          "calcular_diarias",
+          "consultar_saldo_diarias"
+        ],
+        "passos": 5,
+        "entrada_por_chamada": [
+          2595,
+          2682,
+          2834,
+          2995,
+          3070
+        ],
+        "entrada": 14176,
+        "saida": 739,
+        "custo": 0.003722,
+        "segundos": 10.6
+      },
+      "DIA-2026-0103": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "apto_para_autorizacao",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor",
+          "consultar_historico_diarias",
+          "calcular_diarias",
+          "consultar_saldo_diarias"
+        ],
+        "passos": 5,
+        "entrada_por_chamada": [
+          2597,
+          2689,
+          2806,
+          2967,
+          3042
+        ],
+        "entrada": 14101,
+        "saida": 676,
+        "custo": 0.003631,
+        "segundos": 10.6
+      },
+      "DIA-2026-0104": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "apto_para_autorizacao",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor",
+          "consultar_historico_diarias",
+          "calcular_diarias",
+          "consultar_saldo_diarias"
+        ],
+        "passos": 5,
+        "entrada_por_chamada": [
+          2610,
+          2704,
+          2821,
+          2982,
+          3059
+        ],
+        "entrada": 14176,
+        "saida": 788,
+        "custo": 0.003781,
+        "segundos": 11.6
+      },
+      "DIA-2026-0105": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "nao_recomendado",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor",
+          "consultar_historico_diarias",
+          "calcular_diarias",
+          "consultar_saldo_diarias"
+        ],
+        "passos": 5,
+        "entrada_por_chamada": [
+          2600,
+          2689,
+          2806,
+          2989,
+          3061
+        ],
+        "entrada": 14145,
+        "saida": 798,
+        "custo": 0.003787,
+        "segundos": 10.8
+      },
+      "DIA-2026-0106": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "apto_para_autorizacao",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor",
+          "consultar_historico_diarias",
+          "calcular_diarias",
+          "consultar_saldo_diarias"
+        ],
+        "passos": 5,
+        "entrada_por_chamada": [
+          2612,
+          2700,
+          2817,
+          3001,
+          3078
+        ],
+        "entrada": 14208,
+        "saida": 865,
+        "custo": 0.00388,
+        "segundos": 11.3
+      },
+      "DIA-2026-0107": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "nao_recomendado",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor",
+          "consultar_historico_diarias",
+          "calcular_diarias",
+          "consultar_saldo_diarias"
+        ],
+        "passos": 5,
+        "entrada_por_chamada": [
+          2646,
+          2737,
+          2854,
+          3037,
+          3109
+        ],
+        "entrada": 14383,
+        "saida": 864,
+        "custo": 0.003913,
+        "segundos": 11.4
+      },
+      "DIA-2026-0108": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "nao_recomendado",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor",
+          "consultar_historico_diarias",
+          "calcular_diarias",
+          "consultar_saldo_diarias"
+        ],
+        "passos": 5,
+        "entrada_por_chamada": [
+          2590,
+          2676,
+          2837,
+          2998,
+          3073
+        ],
+        "entrada": 14174,
+        "saida": 773,
+        "custo": 0.003762,
+        "segundos": 10.3
+      },
+      "DIA-2026-0109": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "nao_recomendado",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor",
+          "consultar_historico_diarias",
+          "calcular_diarias",
+          "consultar_saldo_diarias"
+        ],
+        "passos": 5,
+        "entrada_por_chamada": [
+          2591,
+          2681,
+          2800,
+          2961,
+          3035
+        ],
+        "entrada": 14068,
+        "saida": 729,
+        "custo": 0.003688,
+        "segundos": 10.1
+      },
+      "DIA-2026-0110": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "nao_recomendado",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor",
+          "consultar_historico_diarias",
+          "calcular_diarias",
+          "consultar_saldo_diarias"
+        ],
+        "passos": 5,
+        "entrada_por_chamada": [
+          2597,
+          2692,
+          2809,
+          2970,
+          3051
+        ],
+        "entrada": 14119,
+        "saida": 749,
+        "custo": 0.003723,
+        "segundos": 10.9
+      },
+      "DIA-2026-0111": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "diligencia",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor"
+        ],
+        "passos": 2,
+        "entrada_por_chamada": [
+          2590,
+          2680
+        ],
+        "entrada": 5270,
+        "saida": 592,
+        "custo": 0.001764,
+        "segundos": 6.5
+      },
+      "DIA-2026-0111 complementado": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "apto_para_autorizacao",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor",
+          "consultar_historico_diarias",
+          "calcular_diarias",
+          "consultar_saldo_diarias"
+        ],
+        "passos": 5,
+        "entrada_por_chamada": [
+          3325,
+          3415,
+          3532,
+          3693,
+          3766
+        ],
+        "entrada": 17731,
+        "saida": 767,
+        "custo": 0.004467,
+        "segundos": 10.3
+      },
+      "DIA-2026-0112": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "diligencia",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor"
+        ],
+        "passos": 2,
+        "entrada_por_chamada": [
+          2590,
+          2673
+        ],
+        "entrada": 5263,
+        "saida": 463,
+        "custo": 0.001608,
+        "segundos": 5.8
+      },
+      "DIA-2026-0112 complementado": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "apto_para_autorizacao",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor",
+          "consultar_historico_diarias",
+          "calcular_diarias",
+          "consultar_saldo_diarias"
+        ],
+        "passos": 5,
+        "entrada_por_chamada": [
+          3194,
+          3280,
+          3397,
+          3558,
+          3633
+        ],
+        "entrada": 17062,
+        "saida": 724,
+        "custo": 0.004281,
+        "segundos": 10.1
+      }
+    },
+    "resumo": {
+      "casos": 14,
+      "acertos": 14,
+      "recusadas": 0,
+      "erros_entregues": 0,
+      "entrada_media": 13357,
+      "primeira_chamada_media": 2604,
+      "passos_medios_instrucao_completa": 5,
+      "segundos_medios": 10.2,
+      "custo_total": 0.0497,
+      "custo_por_pedido": 0.00414
+    },
+    "duracao_da_rodada": 39.5
+  },
+  "sequencial r2": {
+    "casos": {
+      "DIA-2026-0101": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "apto_para_autorizacao",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor",
+          "consultar_historico_diarias",
+          "calcular_diarias",
+          "consultar_saldo_diarias"
+        ],
+        "passos": 5,
+        "entrada_por_chamada": [
+          2602,
+          2692,
+          2809,
+          2970,
+          3043
+        ],
+        "entrada": 14116,
+        "saida": 701,
+        "custo": 0.003664,
+        "segundos": 9.8
+      },
+      "DIA-2026-0102": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "apto_para_autorizacao",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor",
+          "consultar_historico_diarias",
+          "calcular_diarias",
+          "consultar_saldo_diarias"
+        ],
+        "passos": 5,
+        "entrada_por_chamada": [
+          2595,
+          2682,
+          2834,
+          2995,
+          3070
+        ],
+        "entrada": 14176,
+        "saida": 749,
+        "custo": 0.003734,
+        "segundos": 9.8
+      },
+      "DIA-2026-0103": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "apto_para_autorizacao",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor",
+          "consultar_historico_diarias",
+          "calcular_diarias",
+          "consultar_saldo_diarias"
+        ],
+        "passos": 5,
+        "entrada_por_chamada": [
+          2597,
+          2689,
+          2806,
+          2967,
+          3042
+        ],
+        "entrada": 14101,
+        "saida": 713,
+        "custo": 0.003676,
+        "segundos": 8.9
+      },
+      "DIA-2026-0104": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "apto_para_autorizacao",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor",
+          "consultar_historico_diarias",
+          "calcular_diarias",
+          "consultar_saldo_diarias"
+        ],
+        "passos": 5,
+        "entrada_por_chamada": [
+          2610,
+          2704,
+          2821,
+          2982,
+          3059
+        ],
+        "entrada": 14176,
+        "saida": 762,
+        "custo": 0.00375,
+        "segundos": 10.0
+      },
+      "DIA-2026-0105": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "nao_recomendado",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor",
+          "consultar_historico_diarias",
+          "calcular_diarias",
+          "consultar_saldo_diarias"
+        ],
+        "passos": 5,
+        "entrada_por_chamada": [
+          2600,
+          2689,
+          2806,
+          2989,
+          3061
+        ],
+        "entrada": 14145,
+        "saida": 820,
+        "custo": 0.003813,
+        "segundos": 11.0
+      },
+      "DIA-2026-0106": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "apto_para_autorizacao",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor",
+          "consultar_historico_diarias",
+          "calcular_diarias",
+          "consultar_saldo_diarias"
+        ],
+        "passos": 5,
+        "entrada_por_chamada": [
+          2612,
+          2700,
+          2817,
+          3001,
+          3076
+        ],
+        "entrada": 14206,
+        "saida": 804,
+        "custo": 0.003806,
+        "segundos": 10.3
+      },
+      "DIA-2026-0107": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "nao_recomendado",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor",
+          "consultar_historico_diarias",
+          "calcular_diarias",
+          "consultar_saldo_diarias"
+        ],
+        "passos": 5,
+        "entrada_por_chamada": [
+          2646,
+          2737,
+          2854,
+          3037,
+          3109
+        ],
+        "entrada": 14383,
+        "saida": 808,
+        "custo": 0.003846,
+        "segundos": 10.1
+      },
+      "DIA-2026-0108": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "nao_recomendado",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor",
+          "consultar_historico_diarias",
+          "calcular_diarias",
+          "consultar_saldo_diarias"
+        ],
+        "passos": 5,
+        "entrada_por_chamada": [
+          2590,
+          2676,
+          2837,
+          2998,
+          3073
+        ],
+        "entrada": 14174,
+        "saida": 774,
+        "custo": 0.003764,
+        "segundos": 10.1
+      },
+      "DIA-2026-0109": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "nao_recomendado",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor",
+          "consultar_historico_diarias",
+          "calcular_diarias",
+          "consultar_saldo_diarias"
+        ],
+        "passos": 5,
+        "entrada_por_chamada": [
+          2591,
+          2681,
+          2800,
+          2961,
+          3035
+        ],
+        "entrada": 14068,
+        "saida": 759,
+        "custo": 0.003724,
+        "segundos": 10.0
+      },
+      "DIA-2026-0110": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "nao_recomendado",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor",
+          "consultar_historico_diarias",
+          "calcular_diarias",
+          "consultar_saldo_diarias"
+        ],
+        "passos": 5,
+        "entrada_por_chamada": [
+          2597,
+          2692,
+          2809,
+          2970,
+          3051
+        ],
+        "entrada": 14119,
+        "saida": 734,
+        "custo": 0.003705,
+        "segundos": 9.5
+      },
+      "DIA-2026-0111": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "diligencia",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor"
+        ],
+        "passos": 2,
+        "entrada_por_chamada": [
+          2590,
+          2680
+        ],
+        "entrada": 5270,
+        "saida": 528,
+        "custo": 0.001688,
+        "segundos": 6.0
+      },
+      "DIA-2026-0111 complementado": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "apto_para_autorizacao",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor",
+          "consultar_historico_diarias",
+          "calcular_diarias",
+          "consultar_saldo_diarias"
+        ],
+        "passos": 5,
+        "entrada_por_chamada": [
+          3261,
+          3351,
+          3468,
+          3629,
+          3702
+        ],
+        "entrada": 17411,
+        "saida": 775,
+        "custo": 0.004412,
+        "segundos": 10.0
+      },
+      "DIA-2026-0112": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "diligencia",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor"
+        ],
+        "passos": 2,
+        "entrada_por_chamada": [
+          2590,
+          2673
+        ],
+        "entrada": 5263,
+        "saida": 485,
+        "custo": 0.001635,
+        "segundos": 6.6
+      },
+      "DIA-2026-0112 complementado": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "apto_para_autorizacao",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor",
+          "consultar_historico_diarias",
+          "calcular_diarias",
+          "consultar_saldo_diarias"
+        ],
+        "passos": 5,
+        "entrada_por_chamada": [
+          3216,
+          3302,
+          3419,
+          3580,
+          3653
+        ],
+        "entrada": 17170,
+        "saida": 737,
+        "custo": 0.004318,
+        "segundos": 10.9
+      }
+    },
+    "resumo": {
+      "casos": 14,
+      "acertos": 14,
+      "recusadas": 0,
+      "erros_entregues": 0,
+      "entrada_media": 13341,
+      "primeira_chamada_media": 2604,
+      "passos_medios_instrucao_completa": 5,
+      "segundos_medios": 9.5,
+      "custo_total": 0.0495,
+      "custo_por_pedido": 0.00413
+    },
+    "duracao_da_rodada": 37.7
+  },
+  "sequencial r3": {
+    "casos": {
+      "DIA-2026-0101": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "apto_para_autorizacao",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor",
+          "consultar_historico_diarias",
+          "calcular_diarias",
+          "consultar_saldo_diarias"
+        ],
+        "passos": 5,
+        "entrada_por_chamada": [
+          2602,
+          2692,
+          2809,
+          2970,
+          3045
+        ],
+        "entrada": 14118,
+        "saida": 700,
+        "custo": 0.003664,
+        "segundos": 9.7
+      },
+      "DIA-2026-0102": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "apto_para_autorizacao",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor",
+          "consultar_historico_diarias",
+          "calcular_diarias",
+          "consultar_saldo_diarias"
+        ],
+        "passos": 5,
+        "entrada_por_chamada": [
+          2595,
+          2682,
+          2834,
+          2995,
+          3070
+        ],
+        "entrada": 14176,
+        "saida": 795,
+        "custo": 0.003789,
+        "segundos": 10.4
+      },
+      "DIA-2026-0103": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "apto_para_autorizacao",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor",
+          "consultar_historico_diarias",
+          "calcular_diarias",
+          "consultar_saldo_diarias"
+        ],
+        "passos": 5,
+        "entrada_por_chamada": [
+          2597,
+          2689,
+          2806,
+          2967,
+          3042
+        ],
+        "entrada": 14101,
+        "saida": 706,
+        "custo": 0.003667,
+        "segundos": 9.7
+      },
+      "DIA-2026-0104": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "apto_para_autorizacao",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor",
+          "consultar_historico_diarias",
+          "calcular_diarias",
+          "consultar_saldo_diarias"
+        ],
+        "passos": 5,
+        "entrada_por_chamada": [
+          2610,
+          2704,
+          2821,
+          2982,
+          3059
+        ],
+        "entrada": 14176,
+        "saida": 777,
+        "custo": 0.003768,
+        "segundos": 10.6
+      },
+      "DIA-2026-0105": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "nao_recomendado",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor",
+          "consultar_historico_diarias",
+          "calcular_diarias",
+          "consultar_saldo_diarias"
+        ],
+        "passos": 5,
+        "entrada_por_chamada": [
+          2600,
+          2689,
+          2806,
+          2989,
+          3061
+        ],
+        "entrada": 14145,
+        "saida": 819,
+        "custo": 0.003812,
+        "segundos": 10.4
+      },
+      "DIA-2026-0106": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "apto_para_autorizacao",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor",
+          "consultar_historico_diarias",
+          "calcular_diarias",
+          "consultar_saldo_diarias"
+        ],
+        "passos": 5,
+        "entrada_por_chamada": [
+          2612,
+          2700,
+          2817,
+          3001,
+          3078
+        ],
+        "entrada": 14208,
+        "saida": 844,
+        "custo": 0.003854,
+        "segundos": 10.4
+      },
+      "DIA-2026-0107": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "nao_recomendado",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor",
+          "consultar_historico_diarias",
+          "calcular_diarias",
+          "consultar_saldo_diarias"
+        ],
+        "passos": 5,
+        "entrada_por_chamada": [
+          2646,
+          2737,
+          2854,
+          3037,
+          3111
+        ],
+        "entrada": 14385,
+        "saida": 833,
+        "custo": 0.003877,
+        "segundos": 10.5
+      },
+      "DIA-2026-0108": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "nao_recomendado",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor",
+          "consultar_historico_diarias",
+          "calcular_diarias",
+          "consultar_saldo_diarias"
+        ],
+        "passos": 5,
+        "entrada_por_chamada": [
+          2590,
+          2676,
+          2837,
+          2998,
+          3071
+        ],
+        "entrada": 14172,
+        "saida": 783,
+        "custo": 0.003774,
+        "segundos": 10.2
+      },
+      "DIA-2026-0109": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "nao_recomendado",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor",
+          "consultar_historico_diarias",
+          "calcular_diarias",
+          "consultar_saldo_diarias"
+        ],
+        "passos": 5,
+        "entrada_por_chamada": [
+          2591,
+          2681,
+          2800,
+          2961,
+          3035
+        ],
+        "entrada": 14068,
+        "saida": 780,
+        "custo": 0.00375,
+        "segundos": 9.6
+      },
+      "DIA-2026-0110": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "nao_recomendado",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor",
+          "consultar_historico_diarias",
+          "calcular_diarias",
+          "consultar_saldo_diarias"
+        ],
+        "passos": 5,
+        "entrada_por_chamada": [
+          2597,
+          2692,
+          2809,
+          2970,
+          3051
+        ],
+        "entrada": 14119,
+        "saida": 765,
+        "custo": 0.003742,
+        "segundos": 10.3
+      },
+      "DIA-2026-0111": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "diligencia",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor",
+          "consultar_historico_diarias"
+        ],
+        "passos": 3,
+        "entrada_por_chamada": [
+          2590,
+          2680,
+          2761
+        ],
+        "entrada": 8031,
+        "saida": 610,
+        "custo": 0.002338,
+        "segundos": 7.7
+      },
+      "DIA-2026-0111 complementado": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "apto_para_autorizacao",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor",
+          "consultar_historico_diarias",
+          "calcular_diarias",
+          "consultar_saldo_diarias"
+        ],
+        "passos": 5,
+        "entrada_por_chamada": [
+          3382,
+          3472,
+          3589,
+          3750,
+          3823
+        ],
+        "entrada": 18016,
+        "saida": 735,
+        "custo": 0.004485,
+        "segundos": 10.4
+      },
+      "DIA-2026-0112": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "diligencia",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor"
+        ],
+        "passos": 2,
+        "entrada_por_chamada": [
+          2590,
+          2673
+        ],
+        "entrada": 5263,
+        "saida": 462,
+        "custo": 0.001607,
+        "segundos": 5.5
+      },
+      "DIA-2026-0112 complementado": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "apto_para_autorizacao",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor",
+          "consultar_historico_diarias",
+          "calcular_diarias",
+          "consultar_saldo_diarias"
+        ],
+        "passos": 5,
+        "entrada_por_chamada": [
+          3193,
+          3279,
+          3396,
+          3557,
+          3630
+        ],
+        "entrada": 17055,
+        "saida": 746,
+        "custo": 0.004306,
+        "segundos": 9.8
+      }
+    },
+    "resumo": {
+      "casos": 14,
+      "acertos": 14,
+      "recusadas": 0,
+      "erros_entregues": 0,
+      "entrada_media": 13574,
+      "primeira_chamada_media": 2604,
+      "passos_medios_instrucao_completa": 5,
+      "segundos_medios": 9.7,
+      "custo_total": 0.0504,
+      "custo_por_pedido": 0.0042
+    },
+    "duracao_da_rodada": 38.9
+  },
+  "paralelas r1": {
+    "casos": {
+      "DIA-2026-0101": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "apto_para_autorizacao",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor",
+          "consultar_historico_diarias",
+          "calcular_diarias",
+          "consultar_saldo_diarias"
+        ],
+        "passos": 4,
+        "entrada_por_chamada": [
+          2602,
+          2692,
+          2971,
+          3044
+        ],
+        "entrada": 11309,
+        "saida": 700,
+        "custo": 0.003102,
+        "segundos": 10.0
+      },
+      "DIA-2026-0102": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "apto_para_autorizacao",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor",
+          "consultar_historico_diarias",
+          "calcular_diarias",
+          "consultar_saldo_diarias"
+        ],
+        "passos": 4,
+        "entrada_por_chamada": [
+          2595,
+          2682,
+          2996,
+          3069
+        ],
+        "entrada": 11342,
+        "saida": 774,
+        "custo": 0.003197,
+        "segundos": 9.5
+      },
+      "DIA-2026-0103": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "apto_para_autorizacao",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor",
+          "consultar_historico_diarias",
+          "calcular_diarias",
+          "consultar_saldo_diarias"
+        ],
+        "passos": 4,
+        "entrada_por_chamada": [
+          2597,
+          2689,
+          2968,
+          3043
+        ],
+        "entrada": 11297,
+        "saida": 687,
+        "custo": 0.003084,
+        "segundos": 8.7
+      },
+      "DIA-2026-0104": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "apto_para_autorizacao",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor",
+          "consultar_historico_diarias",
+          "calcular_diarias",
+          "consultar_saldo_diarias"
+        ],
+        "passos": 4,
+        "entrada_por_chamada": [
+          2610,
+          2704,
+          2983,
+          3058
+        ],
+        "entrada": 11355,
+        "saida": 743,
+        "custo": 0.003163,
+        "segundos": 8.7
+      },
+      "DIA-2026-0105": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "nao_recomendado",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor",
+          "consultar_historico_diarias",
+          "calcular_diarias",
+          "consultar_saldo_diarias"
+        ],
+        "passos": 5,
+        "entrada_por_chamada": [
+          2600,
+          2689,
+          2806,
+          2989,
+          3061
+        ],
+        "entrada": 14145,
+        "saida": 770,
+        "custo": 0.003753,
+        "segundos": 10.2
+      },
+      "DIA-2026-0106": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "apto_para_autorizacao",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor",
+          "consultar_historico_diarias",
+          "calcular_diarias",
+          "consultar_saldo_diarias"
+        ],
+        "passos": 4,
+        "entrada_por_chamada": [
+          2612,
+          2700,
+          3002,
+          3079
+        ],
+        "entrada": 11393,
+        "saida": 884,
+        "custo": 0.003339,
+        "segundos": 10.1
+      },
+      "DIA-2026-0107": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "nao_recomendado",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor",
+          "consultar_historico_diarias",
+          "calcular_diarias",
+          "consultar_saldo_diarias"
+        ],
+        "passos": 5,
+        "entrada_por_chamada": [
+          2646,
+          2737,
+          2854,
+          3037,
+          3111
+        ],
+        "entrada": 14385,
+        "saida": 844,
+        "custo": 0.00389,
+        "segundos": 10.7
+      },
+      "DIA-2026-0108": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "nao_recomendado",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor",
+          "consultar_historico_diarias",
+          "calcular_diarias",
+          "consultar_saldo_diarias"
+        ],
+        "passos": 4,
+        "entrada_por_chamada": [
+          2590,
+          2676,
+          2999,
+          3072
+        ],
+        "entrada": 11337,
+        "saida": 768,
+        "custo": 0.003189,
+        "segundos": 9.2
+      },
+      "DIA-2026-0109": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "nao_recomendado",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor",
+          "consultar_historico_diarias",
+          "calcular_diarias",
+          "consultar_saldo_diarias"
+        ],
+        "passos": 4,
+        "entrada_por_chamada": [
+          2591,
+          2681,
+          2962,
+          3034
+        ],
+        "entrada": 11268,
+        "saida": 772,
+        "custo": 0.00318,
+        "segundos": 9.6
+      },
+      "DIA-2026-0110": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "nao_recomendado",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor",
+          "consultar_historico_diarias",
+          "calcular_diarias",
+          "consultar_saldo_diarias"
+        ],
+        "passos": 4,
+        "entrada_por_chamada": [
+          2597,
+          2692,
+          2971,
+          3050
+        ],
+        "entrada": 11310,
+        "saida": 727,
+        "custo": 0.003134,
+        "segundos": 9.8
+      },
+      "DIA-2026-0111": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "diligencia",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor"
+        ],
+        "passos": 2,
+        "entrada_por_chamada": [
+          2590,
+          2680
+        ],
+        "entrada": 5270,
+        "saida": 573,
+        "custo": 0.001742,
+        "segundos": 6.4
+      },
+      "DIA-2026-0111 complementado": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "apto_para_autorizacao",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor",
+          "consultar_historico_diarias",
+          "calcular_diarias",
+          "consultar_saldo_diarias"
+        ],
+        "passos": 4,
+        "entrada_por_chamada": [
+          3306,
+          3396,
+          3675,
+          3748
+        ],
+        "entrada": 14125,
+        "saida": 697,
+        "custo": 0.003661,
+        "segundos": 8.6
+      },
+      "DIA-2026-0112": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "diligencia",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor"
+        ],
+        "passos": 2,
+        "entrada_por_chamada": [
+          2590,
+          2673
+        ],
+        "entrada": 5263,
+        "saida": 474,
+        "custo": 0.001621,
+        "segundos": 5.5
+      },
+      "DIA-2026-0112 complementado": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "apto_para_autorizacao",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor",
+          "consultar_historico_diarias",
+          "calcular_diarias",
+          "consultar_saldo_diarias"
+        ],
+        "passos": 5,
+        "entrada_por_chamada": [
+          3205,
+          3291,
+          3408,
+          3569,
+          3642
+        ],
+        "entrada": 17115,
+        "saida": 700,
+        "custo": 0.004263,
+        "segundos": 9.3
+      }
+    },
+    "resumo": {
+      "casos": 14,
+      "acertos": 14,
+      "recusadas": 0,
+      "erros_entregues": 0,
+      "entrada_media": 11494,
+      "primeira_chamada_media": 2604,
+      "passos_medios_instrucao_completa": 4.2,
+      "segundos_medios": 9.0,
+      "custo_total": 0.0443,
+      "custo_por_pedido": 0.00369
+    },
+    "duracao_da_rodada": 35.1
+  },
+  "paralelas r2": {
+    "casos": {
+      "DIA-2026-0101": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "apto_para_autorizacao",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor",
+          "consultar_historico_diarias",
+          "calcular_diarias",
+          "consultar_saldo_diarias"
+        ],
+        "passos": 4,
+        "entrada_por_chamada": [
+          2602,
+          2692,
+          2971,
+          3044
+        ],
+        "entrada": 11309,
+        "saida": 696,
+        "custo": 0.003097,
+        "segundos": 8.3
+      },
+      "DIA-2026-0102": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "apto_para_autorizacao",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor",
+          "consultar_historico_diarias",
+          "calcular_diarias",
+          "consultar_saldo_diarias"
+        ],
+        "passos": 4,
+        "entrada_por_chamada": [
+          2595,
+          2682,
+          2996,
+          3069
+        ],
+        "entrada": 11342,
+        "saida": 783,
+        "custo": 0.003208,
+        "segundos": 9.3
+      },
+      "DIA-2026-0103": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "apto_para_autorizacao",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor",
+          "consultar_historico_diarias",
+          "calcular_diarias",
+          "consultar_saldo_diarias"
+        ],
+        "passos": 4,
+        "entrada_por_chamada": [
+          2597,
+          2689,
+          2968,
+          3041
+        ],
+        "entrada": 11295,
+        "saida": 708,
+        "custo": 0.003109,
+        "segundos": 8.8
+      },
+      "DIA-2026-0104": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "apto_para_autorizacao",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor",
+          "consultar_historico_diarias",
+          "calcular_diarias",
+          "consultar_saldo_diarias"
+        ],
+        "passos": 4,
+        "entrada_por_chamada": [
+          2610,
+          2704,
+          2983,
+          3058
+        ],
+        "entrada": 11355,
+        "saida": 726,
+        "custo": 0.003142,
+        "segundos": 8.8
+      },
+      "DIA-2026-0105": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "nao_recomendado",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor",
+          "consultar_historico_diarias",
+          "calcular_diarias",
+          "consultar_saldo_diarias"
+        ],
+        "passos": 5,
+        "entrada_por_chamada": [
+          2600,
+          2689,
+          2806,
+          2989,
+          3061
+        ],
+        "entrada": 14145,
+        "saida": 774,
+        "custo": 0.003758,
+        "segundos": 10.9
+      },
+      "DIA-2026-0106": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "apto_para_autorizacao",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor",
+          "consultar_historico_diarias",
+          "calcular_diarias",
+          "consultar_saldo_diarias"
+        ],
+        "passos": 4,
+        "entrada_por_chamada": [
+          2612,
+          2700,
+          3002,
+          3077
+        ],
+        "entrada": 11391,
+        "saida": 885,
+        "custo": 0.00334,
+        "segundos": 10.3
+      },
+      "DIA-2026-0107": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "nao_recomendado",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor",
+          "consultar_historico_diarias",
+          "calcular_diarias",
+          "consultar_saldo_diarias"
+        ],
+        "passos": 5,
+        "entrada_por_chamada": [
+          2646,
+          2737,
+          2854,
+          3037,
+          3109
+        ],
+        "entrada": 14383,
+        "saida": 782,
+        "custo": 0.003815,
+        "segundos": 10.5
+      },
+      "DIA-2026-0108": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "nao_recomendado",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor",
+          "consultar_historico_diarias",
+          "calcular_diarias",
+          "consultar_saldo_diarias"
+        ],
+        "passos": 4,
+        "entrada_por_chamada": [
+          2590,
+          2676,
+          2999,
+          3072
+        ],
+        "entrada": 11337,
+        "saida": 769,
+        "custo": 0.00319,
+        "segundos": 9.8
+      },
+      "DIA-2026-0109": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "nao_recomendado",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor",
+          "consultar_historico_diarias",
+          "calcular_diarias",
+          "consultar_saldo_diarias"
+        ],
+        "passos": 4,
+        "entrada_por_chamada": [
+          2591,
+          2681,
+          2962,
+          3034
+        ],
+        "entrada": 11268,
+        "saida": 718,
+        "custo": 0.003115,
+        "segundos": 8.6
+      },
+      "DIA-2026-0110": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "nao_recomendado",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor",
+          "consultar_historico_diarias",
+          "calcular_diarias",
+          "consultar_saldo_diarias"
+        ],
+        "passos": 4,
+        "entrada_por_chamada": [
+          2597,
+          2692,
+          2971,
+          3052
+        ],
+        "entrada": 11312,
+        "saida": 738,
+        "custo": 0.003148,
+        "segundos": 8.6
+      },
+      "DIA-2026-0111": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "diligencia",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor",
+          "consultar_historico_diarias"
+        ],
+        "passos": 3,
+        "entrada_por_chamada": [
+          2590,
+          2680,
+          2761
+        ],
+        "entrada": 8031,
+        "saida": 565,
+        "custo": 0.002284,
+        "segundos": 7.4
+      },
+      "DIA-2026-0111 complementado": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "apto_para_autorizacao",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor",
+          "consultar_historico_diarias",
+          "calcular_diarias",
+          "consultar_saldo_diarias"
+        ],
+        "passos": 4,
+        "entrada_por_chamada": [
+          3337,
+          3427,
+          3706,
+          3781
+        ],
+        "entrada": 14251,
+        "saida": 753,
+        "custo": 0.003754,
+        "segundos": 9.3
+      },
+      "DIA-2026-0112": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "diligencia",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor"
+        ],
+        "passos": 2,
+        "entrada_por_chamada": [
+          2590,
+          2673
+        ],
+        "entrada": 5263,
+        "saida": 501,
+        "custo": 0.001654,
+        "segundos": 5.5
+      },
+      "DIA-2026-0112 complementado": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "apto_para_autorizacao",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor",
+          "consultar_historico_diarias",
+          "calcular_diarias",
+          "consultar_saldo_diarias"
+        ],
+        "passos": 4,
+        "entrada_por_chamada": [
+          3232,
+          3318,
+          3597,
+          3672
+        ],
+        "entrada": 13819,
+        "saida": 723,
+        "custo": 0.003631,
+        "segundos": 9.2
+      }
+    },
+    "resumo": {
+      "casos": 14,
+      "acertos": 14,
+      "recusadas": 0,
+      "erros_entregues": 0,
+      "entrada_media": 11464,
+      "primeira_chamada_media": 2604,
+      "passos_medios_instrucao_completa": 4.2,
+      "segundos_medios": 9.0,
+      "custo_total": 0.0442,
+      "custo_por_pedido": 0.00369
+    },
+    "duracao_da_rodada": 35.9
+  },
+  "paralelas r3": {
+    "casos": {
+      "DIA-2026-0101": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "apto_para_autorizacao",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor",
+          "consultar_historico_diarias",
+          "calcular_diarias",
+          "consultar_saldo_diarias"
+        ],
+        "passos": 5,
+        "entrada_por_chamada": [
+          2602,
+          2692,
+          2809,
+          2970,
+          3045
+        ],
+        "entrada": 14118,
+        "saida": 711,
+        "custo": 0.003677,
+        "segundos": 9.8
+      },
+      "DIA-2026-0102": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "apto_para_autorizacao",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor",
+          "consultar_historico_diarias",
+          "calcular_diarias",
+          "consultar_saldo_diarias"
+        ],
+        "passos": 5,
+        "entrada_por_chamada": [
+          2595,
+          2682,
+          2834,
+          2995,
+          3068
+        ],
+        "entrada": 14174,
+        "saida": 711,
+        "custo": 0.003688,
+        "segundos": 9.6
+      },
+      "DIA-2026-0103": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "apto_para_autorizacao",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor",
+          "consultar_historico_diarias",
+          "calcular_diarias",
+          "consultar_saldo_diarias"
+        ],
+        "passos": 4,
+        "entrada_por_chamada": [
+          2597,
+          2689,
+          2968,
+          3041
+        ],
+        "entrada": 11295,
+        "saida": 690,
+        "custo": 0.003087,
+        "segundos": 8.2
+      },
+      "DIA-2026-0104": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "apto_para_autorizacao",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor",
+          "consultar_historico_diarias",
+          "calcular_diarias",
+          "consultar_saldo_diarias"
+        ],
+        "passos": 4,
+        "entrada_por_chamada": [
+          2610,
+          2704,
+          2983,
+          3058
+        ],
+        "entrada": 11355,
+        "saida": 802,
+        "custo": 0.003233,
+        "segundos": 9.6
+      },
+      "DIA-2026-0105": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "nao_recomendado",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor",
+          "consultar_historico_diarias",
+          "calcular_diarias",
+          "consultar_saldo_diarias"
+        ],
+        "passos": 5,
+        "entrada_por_chamada": [
+          2600,
+          2689,
+          2806,
+          2989,
+          3061
+        ],
+        "entrada": 14145,
+        "saida": 751,
+        "custo": 0.00373,
+        "segundos": 9.8
+      },
+      "DIA-2026-0106": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "apto_para_autorizacao",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor",
+          "consultar_historico_diarias",
+          "calcular_diarias",
+          "consultar_saldo_diarias"
+        ],
+        "passos": 4,
+        "entrada_por_chamada": [
+          2612,
+          2700,
+          3002,
+          3077
+        ],
+        "entrada": 11391,
+        "saida": 850,
+        "custo": 0.003298,
+        "segundos": 9.6
+      },
+      "DIA-2026-0107": {
+        "aprovada": true,
+        "acerto": false,
+        "erro_entregue": true,
+        "recomendacao": "nao_recomendado",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor",
+          "consultar_historico_diarias",
+          "calcular_diarias",
+          "consultar_saldo_diarias"
+        ],
+        "passos": 4,
+        "entrada_por_chamada": [
+          2646,
+          2737,
+          3038,
+          3110
+        ],
+        "entrada": 11531,
+        "saida": 889,
+        "custo": 0.003373,
+        "segundos": 10.2
+      },
+      "DIA-2026-0108": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "nao_recomendado",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor",
+          "consultar_historico_diarias",
+          "calcular_diarias",
+          "consultar_saldo_diarias"
+        ],
+        "passos": 4,
+        "entrada_por_chamada": [
+          2590,
+          2676,
+          2999,
+          3072
+        ],
+        "entrada": 11337,
+        "saida": 841,
+        "custo": 0.003277,
+        "segundos": 9.7
+      },
+      "DIA-2026-0109": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "nao_recomendado",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor",
+          "consultar_historico_diarias",
+          "calcular_diarias",
+          "consultar_saldo_diarias"
+        ],
+        "passos": 4,
+        "entrada_por_chamada": [
+          2591,
+          2681,
+          2962,
+          3034
+        ],
+        "entrada": 11268,
+        "saida": 779,
+        "custo": 0.003188,
+        "segundos": 10.1
+      },
+      "DIA-2026-0110": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "nao_recomendado",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor",
+          "consultar_historico_diarias",
+          "calcular_diarias",
+          "consultar_saldo_diarias"
+        ],
+        "passos": 4,
+        "entrada_por_chamada": [
+          2597,
+          2692,
+          2971,
+          3052
+        ],
+        "entrada": 11312,
+        "saida": 737,
+        "custo": 0.003147,
+        "segundos": 8.8
+      },
+      "DIA-2026-0111": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "diligencia",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor"
+        ],
+        "passos": 2,
+        "entrada_por_chamada": [
+          2590,
+          2680
+        ],
+        "entrada": 5270,
+        "saida": 585,
+        "custo": 0.001756,
+        "segundos": 6.1
+      },
+      "DIA-2026-0111 complementado": {
+        "aprovada": false,
+        "acerto": false,
+        "erro_entregue": false,
+        "recomendacao": "recusada",
+        "motivos_da_recusa": [
+          "instrução de mérito sem as quatro consultas"
+        ],
+        "consultas": [
+          "consultar_historico_diarias",
+          "calcular_diarias",
+          "consultar_saldo_diarias"
+        ],
+        "passos": 3,
+        "entrada_por_chamada": [
+          3318,
+          3597,
+          3670
+        ],
+        "entrada": 10585,
+        "saida": 757,
+        "custo": 0.003025,
+        "segundos": 8.3
+      },
+      "DIA-2026-0112": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "diligencia",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor"
+        ],
+        "passos": 2,
+        "entrada_por_chamada": [
+          2590,
+          2673
+        ],
+        "entrada": 5263,
+        "saida": 475,
+        "custo": 0.001623,
+        "segundos": 5.4
+      },
+      "DIA-2026-0112 complementado": {
+        "aprovada": true,
+        "acerto": true,
+        "erro_entregue": false,
+        "recomendacao": "apto_para_autorizacao",
+        "motivos_da_recusa": [],
+        "consultas": [
+          "consultar_servidor",
+          "consultar_historico_diarias",
+          "calcular_diarias",
+          "consultar_saldo_diarias"
+        ],
+        "passos": 5,
+        "entrada_por_chamada": [
+          3206,
+          3292,
+          3409,
+          3570,
+          3643
+        ],
+        "entrada": 17120,
+        "saida": 704,
+        "custo": 0.004269,
+        "segundos": 9.6
+      }
+    },
+    "resumo": {
+      "casos": 14,
+      "acertos": 12,
+      "recusadas": 1,
+      "erros_entregues": 1,
+      "entrada_media": 11440,
+      "primeira_chamada_media": 2604,
+      "passos_medios_instrucao_completa": 4.3,
+      "segundos_medios": 8.9,
+      "custo_total": 0.0444,
+      "custo_por_pedido": 0.0037
+    },
+    "duracao_da_rodada": 34.9
+  }
+}

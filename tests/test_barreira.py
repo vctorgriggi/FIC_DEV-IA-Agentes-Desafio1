@@ -201,3 +201,16 @@ def test_merito_sem_as_quatro_consultas_e_recusado():
 ])
 def test_execucao_com_erro_ou_sem_objeto_e_recusada(resposta):
     assert not barreira.conferir(resposta, PEDIDOS["DIA-2026-0101"]).aprovada
+
+
+def test_0107_autorizacao_exigida_com_urgencia_negada_e_recusada():
+    """Caso real da medição (paralelas r3): tudo certo, mas o sinal de autorização marcado à toa."""
+    resposta = alterar(execucao_honesta(PEDIDOS["DIA-2026-0107"]), exige_autorizacao_superior=True)
+    assert resposta.content.recomendacao == "nao_recomendado"
+    veredito = conferir(resposta, "DIA-2026-0107")
+    assert not veredito.aprovada and any("exige_autorizacao_superior" in m for m in veredito.motivos)
+
+
+def test_urgencia_aceita_sem_exigir_autorizacao_e_recusada():
+    resposta = alterar(execucao_honesta(PEDIDOS["DIA-2026-0106"], urgente=True), exige_autorizacao_superior=False)
+    assert not conferir(resposta, "DIA-2026-0106").aprovada

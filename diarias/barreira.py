@@ -152,10 +152,13 @@ def conferir(resposta: RunOutput | None, pedido: dict, complementacao: dict | No
     curta = "NÃO atende" in texto_calc
     if not curta and situacao.get("antecedencia") != "atende":
         motivos.append("antecedência suficiente marcada como não atendida")
+    # O sinal decorre das verificações, como no gabarito: só quando a urgência foi aceita e nada
+    # mais impede. A regra antiga só cobria a antecedência suficiente e deixou passar, na medição,
+    # um 0107 com urgência negada e autorização exigida (resultados/etapa6_medicao_antes_da_correcao).
     aceita_por_urgencia = curta and situacao.get("antecedencia") == "atende"
-    if aceita_por_urgencia and not impedido and not instrucao.exige_autorizacao_superior:
-        motivos.append("antecedência curta aceita sem exigir autorização superior")
-    if instrucao.exige_autorizacao_superior and not curta:
-        motivos.append("autorização superior exigida sem antecedência curta")
+    exige = aceita_por_urgencia and not impedido
+    if instrucao.exige_autorizacao_superior != exige:
+        motivos.append(f"exige_autorizacao_superior {instrucao.exige_autorizacao_superior} não decorre das "
+                       f"verificações ({exige})")
 
     return Veredito(not motivos, motivos)
