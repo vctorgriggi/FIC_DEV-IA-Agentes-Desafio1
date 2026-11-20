@@ -75,9 +75,16 @@ exemplos/    # acervo gerado por gerar_dados.py; entrada do sistema, nunca edita
 - DIA-2026-0106 e DIA-2026-0107 têm a mesma antecedência curta → urgência é julgamento sobre o
   texto; autorização verbal não supre a escrita (art. 5º, § 2º).
 
+## Como rodar
+
+```bash
+python3 -m venv .venv && .venv/bin/pip install -r requirements.lock
+.venv/bin/python scripts/estimar_desenho.py
+.venv/bin/ruff check . && .venv/bin/python -m pytest -q
+```
+
 ## Em andamento
 
-- [ ] Etapa 1 — desenho.md com processo, PEAS, confiabilidade composta, custo e quadrante.
 - [ ] Etapa 2 — ferramentas com docstring e teste sem modelo sobre 0103, 0108, 0110 e 0112.
 - [ ] Etapa 3 — agente com saída Pydantic, limites, filtro de CPF e conta, barreira em código.
 - [ ] Etapa 4 — memória por pedido, custo por turno em três configurações, eliminação provada.
