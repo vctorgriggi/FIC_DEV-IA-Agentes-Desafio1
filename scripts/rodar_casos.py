@@ -55,7 +55,8 @@ def main() -> None:
         for t in (r.resposta.tools or []) if r.resposta else []:
             linhas.append(f"  consulta: {t.tool_name}({json.dumps(t.tool_args, ensure_ascii=False)})")
         if "052.318.947-20" in json.dumps(PEDIDOS[numero], ensure_ascii=False):
-            linhas.append(f"  CPF do pedido no que o modelo recebeu: {'SIM' if '052.318.947-20' in recebido else 'não'}")
+            vazou = "052.318.947-20" in recebido
+            linhas.append(f"  CPF do pedido no que o modelo recebeu: {'SIM' if vazou else 'não'}")
         if r.instrucao:
             i = r.instrucao
             linhas.append(f"  recomendação {i.recomendacao} · quantidade {i.quantidade_diarias} · valor {i.valor_total}"
