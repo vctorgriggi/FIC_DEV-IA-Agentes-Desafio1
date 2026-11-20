@@ -1,0 +1,37 @@
+ETAPA 2 · FERRAMENTAS SEM AGENTE E SEM CHAVE
+
+## DIA-2026-0112 · matrícula trocada
+>>> consultar_servidor("207481", "Carla Regina Souza")
+Matrícula 207481 não pertence a Carla Regina Souza: o cadastro registra outro servidor. Dados do titular não são devolvidos. Diligência (art. 9º).
+
+## DIA-2026-0112 · matrícula da complementação
+>>> consultar_servidor("207418", "Carla Regina Souza")
+Cadastro confere: matrícula 207418, Carla Regina Souza, Técnica Ambiental, grupo da diária C, unidade CUC (Coordenadoria de Unidades de Conservação), sede Cuiabá.
+
+## DIA-2026-0108 · prestação vencida
+>>> consultar_historico_diarias("203648", "2026-11-03", "2026-11-06")
+Prestação de contas VENCIDA: DIA-2026-0023, retorno 2026-09-18, prazo 2026-09-25. Impede nova diária (art. 7º). Data da análise: 2026-10-09. Diárias em 2026-11: 0 já concedidas + 3.5 pedidas = 3.5, limite 10: dentro do limite (art. 6º).
+
+## DIA-2026-0102 · pendente no prazo
+>>> consultar_historico_diarias("205882", "2026-11-09", "2026-11-12")
+Sem prestação de contas vencida (art. 7º). Pendente ainda no prazo, não impede: DIA-2026-0041, retorno 2026-10-06, prazo 2026-10-13. Diárias em 2026-11: 0 já concedidas + 3.5 pedidas = 3.5, limite 10: dentro do limite (art. 6º).
+
+## DIA-2026-0103 · meia diária
+>>> calcular_diarias("B", "MT", "2026-10-07", "2026-11-05", "2026-11-05")
+Antecedência de 29 dias corridos, mínimo 10: atende (art. 5º). Quantidade: 0.5 diária(s) de 2026-11-05 a 2026-11-05 (art. 4º). Valor: 0.5 × R$ 280.00 (grupo B, interior de MT) = R$ 140.00 (Anexo I).
+
+## DIA-2026-0110 · saldo da unidade
+>>> calcular_diarias("B", "RO", "2026-10-02", "2026-11-10", "2026-11-14")
+Antecedência de 39 dias corridos, mínimo 10: atende (art. 5º). Quantidade: 4.5 diária(s) de 2026-11-10 a 2026-11-14 (art. 4º). Valor: 4.5 × R$ 400.00 (grupo B, outra UF) = R$ 1800.00 (Anexo I).
+
+## DIA-2026-0110 · saldo da unidade
+>>> consultar_saldo_diarias("CRH", 1800.0)
+Saldo da unidade CRH: R$ 640.00. Saldo INSUFICIENTE para R$ 1800.00 (art. 8º).
+
+## DIA-2026-0109 · limite mensal
+>>> consultar_historico_diarias("208114", "2026-11-23", "2026-11-26")
+Sem prestação de contas vencida (art. 7º). Diárias em 2026-11: 8 já concedidas + 3.5 pedidas = 11.5, limite 10: LIMITE EXCEDIDO (art. 6º).
+
+## DIA-2026-0111 · retorno ausente
+>>> consultar_historico_diarias("206689", "2026-11-17", None)
+Data de retorno não informada no pedido: dado obrigatório ausente (art. 9º, diligência).

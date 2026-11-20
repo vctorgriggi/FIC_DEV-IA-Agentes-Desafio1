@@ -1,0 +1,40 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.15.2, pytest-9.2.0, pluggy-1.7.0 -- /Users/victor/Desktop/Workspaces/FIC_DEV/IA Agentes/desafio-01/.venv/bin/python
+rootdir: /Users/victor/Desktop/Workspaces/FIC_DEV/IA Agentes/desafio-01
+configfile: pyproject.toml
+testpaths: tests
+plugins: anyio-4.16.0
+collecting ... collected 30 items
+
+tests/test_ferramentas.py::test_0112_matricula_trocada_vai_a_diligencia_sem_expor_o_outro_servidor PASSED
+tests/test_ferramentas.py::test_0112_matricula_corrigida_confere PASSED
+tests/test_ferramentas.py::test_0108_prestacao_vencida_impede PASSED
+tests/test_ferramentas.py::test_0102_pendente_no_prazo_nao_impede PASSED
+tests/test_ferramentas.py::test_0103_meia_diaria_sem_pernoite PASSED
+tests/test_ferramentas.py::test_0110_saldo_insuficiente PASSED
+tests/test_ferramentas.py::test_0109_limite_mensal_excedido PASSED
+tests/test_ferramentas.py::test_nenhuma_ferramenta_devolve_cpf_ou_email_de_ninguem PASSED
+tests/test_ferramentas.py::test_argumento_invalido_volta_como_texto_explicando_o_formato[<lambda>-n\xe3o consta do cadastro] PASSED
+tests/test_ferramentas.py::test_argumento_invalido_volta_como_texto_explicando_o_formato[<lambda>-Data de retorno n\xe3o informada0] PASSED
+tests/test_ferramentas.py::test_argumento_invalido_volta_como_texto_explicando_o_formato[<lambda>-Data de retorno n\xe3o informada1] PASSED
+tests/test_ferramentas.py::test_argumento_invalido_volta_como_texto_explicando_o_formato[<lambda>-use A, B ou C] PASSED
+tests/test_ferramentas.py::test_argumento_invalido_volta_como_texto_explicando_o_formato[<lambda>-duas letras] PASSED
+tests/test_ferramentas.py::test_argumento_invalido_volta_como_texto_explicando_o_formato[<lambda>-AAAA-MM-DD] PASSED
+tests/test_ferramentas.py::test_argumento_invalido_volta_como_texto_explicando_o_formato[<lambda>-anterior \xe0 partida] PASSED
+tests/test_ferramentas.py::test_argumento_invalido_volta_como_texto_explicando_o_formato[<lambda>-n\xe3o localizada] PASSED
+tests/test_ferramentas.py::test_ferramentas_encadeadas_chegam_ao_gabarito[DIA-2026-0101] PASSED
+tests/test_ferramentas.py::test_ferramentas_encadeadas_chegam_ao_gabarito[DIA-2026-0102] PASSED
+tests/test_ferramentas.py::test_ferramentas_encadeadas_chegam_ao_gabarito[DIA-2026-0103] PASSED
+tests/test_ferramentas.py::test_ferramentas_encadeadas_chegam_ao_gabarito[DIA-2026-0104] PASSED
+tests/test_ferramentas.py::test_ferramentas_encadeadas_chegam_ao_gabarito[DIA-2026-0105] PASSED
+tests/test_ferramentas.py::test_ferramentas_encadeadas_chegam_ao_gabarito[DIA-2026-0106] PASSED
+tests/test_ferramentas.py::test_ferramentas_encadeadas_chegam_ao_gabarito[DIA-2026-0107] PASSED
+tests/test_ferramentas.py::test_ferramentas_encadeadas_chegam_ao_gabarito[DIA-2026-0108] PASSED
+tests/test_ferramentas.py::test_ferramentas_encadeadas_chegam_ao_gabarito[DIA-2026-0109] PASSED
+tests/test_ferramentas.py::test_ferramentas_encadeadas_chegam_ao_gabarito[DIA-2026-0110] PASSED
+tests/test_ferramentas.py::test_ferramentas_encadeadas_chegam_ao_gabarito[DIA-2026-0111] PASSED
+tests/test_ferramentas.py::test_ferramentas_encadeadas_chegam_ao_gabarito[DIA-2026-0112] PASSED
+tests/test_ferramentas.py::test_ferramentas_encadeadas_chegam_ao_gabarito[DIA-2026-0111 complementado] PASSED
+tests/test_ferramentas.py::test_ferramentas_encadeadas_chegam_ao_gabarito[DIA-2026-0112 complementado] PASSED
+
+============================== 30 passed in 0.02s ==============================
