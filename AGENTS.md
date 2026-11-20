@@ -23,6 +23,7 @@ enunciado/   # transcrição fiel do docx; não se edita para "corrigir" o enunc
 exemplos/    # acervo gerado por gerar_dados.py; entrada do sistema, nunca editado à mão
 diarias/     # regras e ferramentas; o que as ferramentas leem o agente vê, então nunca o gabarito
 bancos/      # banco do agente, cópia de trabalho com dados pessoais; fora do git
+app.py       # formulário; só exibe instrução aprovada pela barreira, nunca o conteúdo recusado
 ```
 
 ## Nunca fazer
@@ -66,6 +67,8 @@ bancos/      # banco do agente, cópia de trabalho com dados pessoais; fora do g
 - Memória: histórico da sessão com teto de 3 execuções e memórias do usuário desligadas — mediu-se
   que só o histórico aplica a complementação, e as memórias custam mais e gravam dados de uma
   pessoa sob o user_id de outra (0112).
+- Registro da conferência guarda número, sugestão, decisão, motivo e se a minuta foi editada; nem
+  a minuta nem dados do solicitante — basta para medir a discordância, e minimiza dado pessoal.
 
 ## Gotchas
 
@@ -83,6 +86,8 @@ bancos/      # banco do agente, cópia de trabalho com dados pessoais; fora do g
   agno_runs por upsert_run; use-o, como o agente faz.
 - Memória do usuário do 0112 fica sob o user_id 207481 (de outro servidor) → mais um motivo para a
   eliminação procurar por conteúdo, e para a memória do usuário ficar desligada.
+- Painel de pré-visualização do app não abre o servidor ("Operation not permitted") → o macOS
+  não deixa o painel ler a pasta Desktop; suba o Streamlit pelo terminal e conecte pelo endereço.
 
 ## Como rodar
 
@@ -93,12 +98,12 @@ python3 -m venv .venv && .venv/bin/pip install -r requirements.lock
 .venv/bin/python scripts/rodar_casos.py   # chama o modelo: precisa da chave no .env
 .venv/bin/python scripts/medir_memoria.py      # chama o modelo
 .venv/bin/python scripts/eliminar_titulares.py
+.venv/bin/streamlit run app.py   # formulário; chama o modelo
 .venv/bin/ruff check . && .venv/bin/python -m pytest -q
 ```
 
 ## Em andamento
 
-- [ ] Etapa 5 — formulário Streamlit com despacho editável e decisão do conferente registrada.
 - [ ] Etapa 6 — medição e falhas provocadas; relatório e LEIA-ME com os números medidos.
 
 ## Decisões em aberto
