@@ -69,11 +69,11 @@ app.py       # formulário; só exibe instrução aprovada pela barreira, nunca 
   pessoa sob o user_id de outra (0112).
 - Registro da conferência guarda número, sugestão, decisão, motivo e se a minuta foi editada; nem
   a minuta nem dados do solicitante — basta para medir a discordância, e minimiza dado pessoal.
-- Chamadas paralelas desligadas — medido: 126/126 desligadas; todos os erros das três medições
-  aconteceram com elas ligadas, por cerca de 9% de custo a menos.
-- Prazo de guarda: 30 dias após a última conferência do pedido (decisão do usuário); expurgo e
-  conferência em diarias/guarda.py, chamado a cada interação do formulário. Usa a data real: é
-  regra de operação, não da norma.
+- Chamadas paralelas desligadas — medido: 168/168 desligadas; todos os erros das quatro medições
+  aconteceram com elas ligadas, por cerca de 10% de custo a menos.
+- Prazo de guarda: 30 dias após o último evento do pedido — conferência (decisão do usuário),
+  recusa ou último uso no banco, para que recusado não fique para sempre nem pedido em uso seja
+  apagado; expurgo em diarias/guarda.py a cada interação do formulário, com a data real.
 
 ## Gotchas
 
@@ -99,12 +99,21 @@ app.py       # formulário; só exibe instrução aprovada pela barreira, nunca 
   pessoa (0112, 0111, 0101) → confira campo a campo e pela matrícula do cadastro; a revisão achou isso.
 - Painel de pré-visualização do app não abre o servidor ("Operation not permitted") → o macOS
   não deixa o painel ler a pasta Desktop; suba o Streamlit pelo terminal e conecte pelo endereço.
+- Checagem de texto livre que recusa toda matrícula fora do pedido recusa o alerta sobre injeção
+  (falha provocada 1) → aceite o que o próprio pedido ou a complementação traz.
+- Complementação com duas datas ou duas matrículas → nenhuma vale como correção; não escolha uma.
+- O formulário guarda a instrução em session_state → eliminação e expurgo tiram da tela com
+  `esquecer`, senão o eliminado continua visível e conferível.
 
 ## Gaps conhecidos
 
 - G1 — a eliminação casa nome e matrícula como trecho de texto: um número de 6 algarismos dentro
   do registro de outra pessoa apagaria a sessão dela — não ocorreu nas medições; paliativo: a
   conferência por bytes acusa o que sobrou do titular, mas não o que foi apagado a mais.
+- G2 — `_ouvinte` em diarias/agente.py é global: dois conferentes no mesmo processo misturariam
+  os avisos de consulta — paliativo: o formulário roda local, para um conferente por vez.
+- G3 — uma execução em andamento pode regravar a sessão depois da eliminação do titular — corrida
+  teórica, não observada; paliativo: a eliminação confere tabela e bytes logo depois.
 
 ## Como rodar
 
