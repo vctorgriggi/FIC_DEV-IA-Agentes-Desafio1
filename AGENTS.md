@@ -22,6 +22,7 @@ mensagem padrão e o pedido volta à análise manual. É o critério que mais pe
 enunciado/   # transcrição fiel do docx; não se edita para "corrigir" o enunciado
 exemplos/    # acervo gerado por gerar_dados.py; entrada do sistema, nunca editado à mão
 diarias/     # regras e ferramentas; o que as ferramentas leem o agente vê, então nunca o gabarito
+bancos/      # banco do agente, cópia de trabalho com dados pessoais; fora do git
 ```
 
 ## Nunca fazer
@@ -62,6 +63,9 @@ diarias/     # regras e ferramentas; o que as ferramentas leem o agente vê, ent
 - Env e segredos: chave só no `.env` da raiz do repositório, lido com load_dotenv; um
   .env.example versionado traz só os nomes.
 - Código, nomes e documentos em português, como `exemplos/gerar_dados.py` e o enunciado.
+- Memória: histórico da sessão com teto de 3 execuções e memórias do usuário desligadas — mediu-se
+  que só o histórico aplica a complementação, e as memórias custam mais e gravam dados de uma
+  pessoa sob o user_id de outra (0112).
 
 ## Gotchas
 
@@ -75,6 +79,10 @@ diarias/     # regras e ferramentas; o que as ferramentas leem o agente vê, ent
   úteis) não impede; só a vencida impede.
 - DIA-2026-0106 e DIA-2026-0107 têm a mesma antecedência curta → urgência é julgamento sobre o
   texto; autorização verbal não supre a escrita (art. 5º, § 2º).
+- Teste que monta banco não grava execuções com upsert_session → no Agno 3.0.9 elas vão para
+  agno_runs por upsert_run; use-o, como o agente faz.
+- Memória do usuário do 0112 fica sob o user_id 207481 (de outro servidor) → mais um motivo para a
+  eliminação procurar por conteúdo, e para a memória do usuário ficar desligada.
 
 ## Como rodar
 
@@ -83,12 +91,13 @@ python3 -m venv .venv && .venv/bin/pip install -r requirements.lock
 .venv/bin/python scripts/estimar_desenho.py
 .venv/bin/python scripts/testar_ferramentas.py
 .venv/bin/python scripts/rodar_casos.py   # chama o modelo: precisa da chave no .env
+.venv/bin/python scripts/medir_memoria.py      # chama o modelo
+.venv/bin/python scripts/eliminar_titulares.py
 .venv/bin/ruff check . && .venv/bin/python -m pytest -q
 ```
 
 ## Em andamento
 
-- [ ] Etapa 4 — memória por pedido, custo por turno em três configurações, eliminação provada.
 - [ ] Etapa 5 — formulário Streamlit com despacho editável e decisão do conferente registrada.
 - [ ] Etapa 6 — medição e falhas provocadas; relatório e LEIA-ME com os números medidos.
 
