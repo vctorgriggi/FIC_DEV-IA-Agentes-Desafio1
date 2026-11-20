@@ -4,103 +4,124 @@ rootdir: /Users/victor/Desktop/Workspaces/FIC_DEV/IA Agentes/desafio-01
 configfile: pyproject.toml
 testpaths: tests
 plugins: anyio-4.16.0
-collecting ... collected 96 items
+collecting ... collected 117 items
 
-tests/test_barreira.py::test_execucao_honesta_e_aprovada[DIA-2026-0101] PASSED
-tests/test_barreira.py::test_execucao_honesta_e_aprovada[DIA-2026-0102] PASSED
-tests/test_barreira.py::test_execucao_honesta_e_aprovada[DIA-2026-0103] PASSED
-tests/test_barreira.py::test_execucao_honesta_e_aprovada[DIA-2026-0104] PASSED
-tests/test_barreira.py::test_execucao_honesta_e_aprovada[DIA-2026-0105] PASSED
-tests/test_barreira.py::test_execucao_honesta_e_aprovada[DIA-2026-0107] PASSED
-tests/test_barreira.py::test_execucao_honesta_e_aprovada[DIA-2026-0108] PASSED
-tests/test_barreira.py::test_execucao_honesta_e_aprovada[DIA-2026-0109] PASSED
-tests/test_barreira.py::test_execucao_honesta_e_aprovada[DIA-2026-0110] PASSED
-tests/test_barreira.py::test_execucao_honesta_e_aprovada[DIA-2026-0111] PASSED
-tests/test_barreira.py::test_execucao_honesta_e_aprovada[DIA-2026-0112] PASSED
-tests/test_barreira.py::test_urgencia_legitima_aceita_com_autorizacao_superior PASSED
-tests/test_barreira.py::test_dado_da_complementacao_e_aceito[DIA-2026-0111-efetivo0] PASSED
-tests/test_barreira.py::test_dado_da_complementacao_e_aceito[DIA-2026-0112-efetivo1] PASSED
-tests/test_barreira.py::test_complementacao_sem_o_texto_dela_e_recusada PASSED
-tests/test_barreira.py::test_data_de_retorno_inventada_e_recusada PASSED
-tests/test_barreira.py::test_matricula_consultada_fora_do_pedido_e_recusada PASSED
-tests/test_barreira.py::test_valor_diferente_do_calculo_e_recusado PASSED
-tests/test_barreira.py::test_quantidade_diferente_do_calculo_e_recusada PASSED
-tests/test_barreira.py::test_grupo_suposto_no_calculo_e_recusado PASSED
-tests/test_barreira.py::test_saldo_consultado_em_outra_unidade_e_recusado PASSED
-tests/test_barreira.py::test_prestacao_vencida_dada_como_atendida_e_recusada PASSED
-tests/test_barreira.py::test_recomendacao_que_nao_decorre_das_verificacoes_e_recusada PASSED
-tests/test_barreira.py::test_0107_antecedencia_aceita_sem_autorizacao_e_recusada PASSED
-tests/test_barreira.py::test_diligencia_com_valor_calculado_e_recusada PASSED
-tests/test_barreira.py::test_merito_sem_as_quatro_consultas_e_recusado PASSED
-tests/test_barreira.py::test_execucao_com_erro_ou_sem_objeto_e_recusada[None] PASSED
-tests/test_barreira.py::test_execucao_com_erro_ou_sem_objeto_e_recusada[resposta1] PASSED
-tests/test_barreira.py::test_execucao_com_erro_ou_sem_objeto_e_recusada[resposta2] PASSED
-tests/test_barreira.py::test_0107_autorizacao_exigida_com_urgencia_negada_e_recusada PASSED
-tests/test_barreira.py::test_urgencia_aceita_sem_exigir_autorizacao_e_recusada PASSED
-tests/test_barreira.py::test_historico_de_outro_servidor_na_complementacao_e_recusado PASSED
-tests/test_barreira.py::test_instrucao_com_matricula_diferente_da_do_cadastro_e_recusada PASSED
-tests/test_barreira.py::test_data_do_pedido_usada_como_partida_e_recusada PASSED
-tests/test_barreira.py::test_diligencia_sem_causa_real_e_recusada PASSED
-tests/test_barreira.py::test_argumento_em_formato_inesperado_vira_recusa_e_nao_excecao PASSED
-tests/test_barreira.py::test_0111_sem_retorno_calculado_com_a_partida_como_retorno_e_recusado PASSED
-tests/test_barreira.py::test_0109_historico_com_data_trocada_e_recusado PASSED
-tests/test_barreira.py::test_cadastro_com_nome_que_nao_e_o_do_pedido_e_recusado PASSED
-tests/test_barreira.py::test_cadastro_dado_como_divergente_quando_a_ferramenta_confere_e_recusado PASSED
-tests/test_barreira.py::test_diligencia_com_autorizacao_superior_e_recusada PASSED
-tests/test_ferramentas.py::test_0112_matricula_trocada_vai_a_diligencia_sem_expor_o_outro_servidor PASSED
-tests/test_ferramentas.py::test_0112_matricula_corrigida_confere PASSED
-tests/test_ferramentas.py::test_0108_prestacao_vencida_impede PASSED
-tests/test_ferramentas.py::test_0102_pendente_no_prazo_nao_impede PASSED
-tests/test_ferramentas.py::test_0103_meia_diaria_sem_pernoite PASSED
-tests/test_ferramentas.py::test_0110_saldo_insuficiente PASSED
-tests/test_ferramentas.py::test_0109_limite_mensal_excedido PASSED
-tests/test_ferramentas.py::test_nenhuma_ferramenta_devolve_cpf_ou_email_de_ninguem PASSED
-tests/test_ferramentas.py::test_argumento_invalido_volta_como_texto_explicando_o_formato[<lambda>-n\xe3o consta do cadastro] PASSED
-tests/test_ferramentas.py::test_argumento_invalido_volta_como_texto_explicando_o_formato[<lambda>-Data de retorno n\xe3o informada0] PASSED
-tests/test_ferramentas.py::test_argumento_invalido_volta_como_texto_explicando_o_formato[<lambda>-Data de retorno n\xe3o informada1] PASSED
-tests/test_ferramentas.py::test_argumento_invalido_volta_como_texto_explicando_o_formato[<lambda>-use A, B ou C] PASSED
-tests/test_ferramentas.py::test_argumento_invalido_volta_como_texto_explicando_o_formato[<lambda>-duas letras] PASSED
-tests/test_ferramentas.py::test_argumento_invalido_volta_como_texto_explicando_o_formato[<lambda>-AAAA-MM-DD] PASSED
-tests/test_ferramentas.py::test_argumento_invalido_volta_como_texto_explicando_o_formato[<lambda>-anterior \xe0 partida] PASSED
-tests/test_ferramentas.py::test_argumento_invalido_volta_como_texto_explicando_o_formato[<lambda>-n\xe3o localizada] PASSED
-tests/test_ferramentas.py::test_ferramentas_encadeadas_chegam_ao_gabarito[DIA-2026-0101] PASSED
-tests/test_ferramentas.py::test_ferramentas_encadeadas_chegam_ao_gabarito[DIA-2026-0102] PASSED
-tests/test_ferramentas.py::test_ferramentas_encadeadas_chegam_ao_gabarito[DIA-2026-0103] PASSED
-tests/test_ferramentas.py::test_ferramentas_encadeadas_chegam_ao_gabarito[DIA-2026-0104] PASSED
-tests/test_ferramentas.py::test_ferramentas_encadeadas_chegam_ao_gabarito[DIA-2026-0105] PASSED
-tests/test_ferramentas.py::test_ferramentas_encadeadas_chegam_ao_gabarito[DIA-2026-0106] PASSED
-tests/test_ferramentas.py::test_ferramentas_encadeadas_chegam_ao_gabarito[DIA-2026-0107] PASSED
-tests/test_ferramentas.py::test_ferramentas_encadeadas_chegam_ao_gabarito[DIA-2026-0108] PASSED
-tests/test_ferramentas.py::test_ferramentas_encadeadas_chegam_ao_gabarito[DIA-2026-0109] PASSED
-tests/test_ferramentas.py::test_ferramentas_encadeadas_chegam_ao_gabarito[DIA-2026-0110] PASSED
-tests/test_ferramentas.py::test_ferramentas_encadeadas_chegam_ao_gabarito[DIA-2026-0111] PASSED
-tests/test_ferramentas.py::test_ferramentas_encadeadas_chegam_ao_gabarito[DIA-2026-0112] PASSED
-tests/test_ferramentas.py::test_ferramentas_encadeadas_chegam_ao_gabarito[DIA-2026-0111 complementado] PASSED
-tests/test_ferramentas.py::test_ferramentas_encadeadas_chegam_ao_gabarito[DIA-2026-0112 complementado] PASSED
-tests/test_filtro.py::test_0104_cpf_conta_e_agencia_nao_passam PASSED
-tests/test_filtro.py::test_nenhuma_matricula_data_ou_numero_de_pedido_e_mascarado PASSED
-tests/test_filtro.py::test_so_o_0104_muda PASSED
-tests/test_filtro.py::test_complementacoes_passam_intactas PASSED
-tests/test_formulario.py::test_abre_sem_chamar_o_modelo PASSED
-tests/test_formulario.py::test_recusa_mostra_so_a_mensagem_padrao PASSED
-tests/test_formulario.py::test_instrucao_aprovada_mostra_verificacoes_consultas_e_minuta PASSED
-tests/test_formulario.py::test_divergir_sem_motivo_nao_registra PASSED
-tests/test_formulario.py::test_divergir_com_motivo_registra_ao_lado_da_sugestao PASSED
-tests/test_formulario.py::test_registro_exige_encaminhamento_conhecido PASSED
-tests/test_formulario.py::test_taxa_de_divergencia PASSED
-tests/test_formulario.py::test_falha_no_expurgo_avisa_e_nao_derruba_o_formulario PASSED
-tests/test_guarda.py::test_vencidos_conta_a_partir_da_ultima_conferencia PASSED
-tests/test_guarda.py::test_expurga_so_o_vencido_e_prova_que_saiu PASSED
-tests/test_guarda.py::test_sem_vencidos_nao_toca_no_banco PASSED
-tests/test_guarda.py::test_pedido_vencido_que_ja_saiu_do_banco_e_ignorado PASSED
-tests/test_guarda.py::test_log_de_recusas_guarda_so_o_que_esta_no_prazo PASSED
-tests/test_medicao.py::test_matricula_errada_nao_conta_como_acerto PASSED
-tests/test_medicao.py::test_sem_complementacao_a_matricula_esperada_e_a_do_pedido PASSED
-tests/test_memoria.py::test_beatriz_sai_do_banco_e_ana_fica PASSED
-tests/test_memoria.py::test_carla_e_encontrada_mesmo_sob_o_user_id_de_outro PASSED
-tests/test_memoria.py::test_sem_compactar_o_texto_apagado_fica_no_arquivo PASSED
-tests/test_memoria.py::test_sobra_em_tabela_que_a_rotina_nao_alcanca_e_acusada PASSED
-tests/test_memoria.py::test_grafia_do_json_com_acento_escapado_tambem_e_procurada PASSED
-tests/test_memoria.py::test_eliminacao_alcanca_os_registros_que_citam_o_titular PASSED
+tests/test_barreira.py::test_execucao_honesta_e_aprovada[DIA-2026-0101] PASSED [  0%]
+tests/test_barreira.py::test_execucao_honesta_e_aprovada[DIA-2026-0102] PASSED [  1%]
+tests/test_barreira.py::test_execucao_honesta_e_aprovada[DIA-2026-0103] PASSED [  2%]
+tests/test_barreira.py::test_execucao_honesta_e_aprovada[DIA-2026-0104] PASSED [  3%]
+tests/test_barreira.py::test_execucao_honesta_e_aprovada[DIA-2026-0105] PASSED [  4%]
+tests/test_barreira.py::test_execucao_honesta_e_aprovada[DIA-2026-0107] PASSED [  5%]
+tests/test_barreira.py::test_execucao_honesta_e_aprovada[DIA-2026-0108] PASSED [  5%]
+tests/test_barreira.py::test_execucao_honesta_e_aprovada[DIA-2026-0109] PASSED [  6%]
+tests/test_barreira.py::test_execucao_honesta_e_aprovada[DIA-2026-0110] PASSED [  7%]
+tests/test_barreira.py::test_execucao_honesta_e_aprovada[DIA-2026-0111] PASSED [  8%]
+tests/test_barreira.py::test_execucao_honesta_e_aprovada[DIA-2026-0112] PASSED [  9%]
+tests/test_barreira.py::test_urgencia_legitima_aceita_com_autorizacao_superior PASSED [ 10%]
+tests/test_barreira.py::test_dado_da_complementacao_e_aceito[DIA-2026-0111-efetivo0] PASSED [ 11%]
+tests/test_barreira.py::test_dado_da_complementacao_e_aceito[DIA-2026-0112-efetivo1] PASSED [ 11%]
+tests/test_barreira.py::test_complementacao_sem_o_texto_dela_e_recusada PASSED [ 12%]
+tests/test_barreira.py::test_data_de_retorno_inventada_e_recusada PASSED [ 13%]
+tests/test_barreira.py::test_matricula_consultada_fora_do_pedido_e_recusada PASSED [ 14%]
+tests/test_barreira.py::test_valor_diferente_do_calculo_e_recusado PASSED [ 15%]
+tests/test_barreira.py::test_quantidade_diferente_do_calculo_e_recusada PASSED [ 16%]
+tests/test_barreira.py::test_grupo_suposto_no_calculo_e_recusado PASSED  [ 17%]
+tests/test_barreira.py::test_saldo_consultado_em_outra_unidade_e_recusado PASSED [ 17%]
+tests/test_barreira.py::test_prestacao_vencida_dada_como_atendida_e_recusada PASSED [ 18%]
+tests/test_barreira.py::test_recomendacao_que_nao_decorre_das_verificacoes_e_recusada PASSED [ 19%]
+tests/test_barreira.py::test_0107_antecedencia_aceita_sem_autorizacao_e_recusada PASSED [ 20%]
+tests/test_barreira.py::test_diligencia_com_valor_calculado_e_recusada PASSED [ 21%]
+tests/test_barreira.py::test_merito_sem_as_quatro_consultas_e_recusado PASSED [ 22%]
+tests/test_barreira.py::test_execucao_com_erro_ou_sem_objeto_e_recusada[None] PASSED [ 23%]
+tests/test_barreira.py::test_execucao_com_erro_ou_sem_objeto_e_recusada[resposta1] PASSED [ 23%]
+tests/test_barreira.py::test_execucao_com_erro_ou_sem_objeto_e_recusada[resposta2] PASSED [ 24%]
+tests/test_barreira.py::test_0107_autorizacao_exigida_com_urgencia_negada_e_recusada PASSED [ 25%]
+tests/test_barreira.py::test_urgencia_aceita_sem_exigir_autorizacao_e_recusada PASSED [ 26%]
+tests/test_barreira.py::test_historico_de_outro_servidor_na_complementacao_e_recusado PASSED [ 27%]
+tests/test_barreira.py::test_instrucao_com_matricula_diferente_da_do_cadastro_e_recusada PASSED [ 28%]
+tests/test_barreira.py::test_data_do_pedido_usada_como_partida_e_recusada PASSED [ 29%]
+tests/test_barreira.py::test_diligencia_sem_causa_real_e_recusada PASSED [ 29%]
+tests/test_barreira.py::test_argumento_em_formato_inesperado_vira_recusa_e_nao_excecao PASSED [ 30%]
+tests/test_barreira.py::test_0111_sem_retorno_calculado_com_a_partida_como_retorno_e_recusado PASSED [ 31%]
+tests/test_barreira.py::test_0109_historico_com_data_trocada_e_recusado PASSED [ 32%]
+tests/test_barreira.py::test_cadastro_com_nome_que_nao_e_o_do_pedido_e_recusado PASSED [ 33%]
+tests/test_barreira.py::test_cadastro_dado_como_divergente_quando_a_ferramenta_confere_e_recusado PASSED [ 34%]
+tests/test_barreira.py::test_diligencia_com_autorizacao_superior_e_recusada PASSED [ 35%]
+tests/test_barreira.py::test_historico_com_data_vazia_nao_esconde_o_impedimento[DIA-2026-0108-prestacao_contas] PASSED [ 35%]
+tests/test_barreira.py::test_historico_com_data_vazia_nao_esconde_o_impedimento[DIA-2026-0109-limite_mensal] PASSED [ 36%]
+tests/test_barreira.py::test_historico_certo_seguido_de_um_com_data_vazia_e_recusado PASSED [ 37%]
+tests/test_barreira.py::test_complementacao_com_duas_datas_e_ambigua_e_nao_vale_como_retorno PASSED [ 38%]
+tests/test_barreira.py::test_historico_e_calculo_com_retornos_diferentes_sao_recusados PASSED [ 39%]
+tests/test_barreira.py::test_diligencia_com_criterio_sem_ferramenta_e_recusada PASSED [ 40%]
+tests/test_barreira.py::test_diligencia_por_cadastro_com_outras_consultas_e_recusada PASSED [ 41%]
+tests/test_barreira.py::test_cadastro_rechecado_com_outra_matricula_e_recusado PASSED [ 41%]
+tests/test_barreira.py::test_minuta_com_outro_servidor_e_recusada[Pedido de Rafael Lima Antunes, valor de R$ 980,00.] PASSED [ 42%]
+tests/test_barreira.py::test_minuta_com_outro_servidor_e_recusada[Pedido da servidora de matr\xedcula 207481.] PASSED [ 43%]
+tests/test_barreira.py::test_alerta_citando_a_matricula_digitada_no_0112_continua_aceito PASSED [ 44%]
+tests/test_barreira.py::test_correcao_de_matricula_para_um_homonimo_e_recusada PASSED [ 45%]
+tests/test_barreira.py::test_alerta_sobre_injecao_que_cita_matricula_do_proprio_pedido_e_aceito PASSED [ 46%]
+tests/test_ferramentas.py::test_0112_matricula_trocada_vai_a_diligencia_sem_expor_o_outro_servidor PASSED [ 47%]
+tests/test_ferramentas.py::test_0112_matricula_corrigida_confere PASSED  [ 47%]
+tests/test_ferramentas.py::test_0108_prestacao_vencida_impede PASSED     [ 48%]
+tests/test_ferramentas.py::test_0102_pendente_no_prazo_nao_impede PASSED [ 49%]
+tests/test_ferramentas.py::test_0103_meia_diaria_sem_pernoite PASSED     [ 50%]
+tests/test_ferramentas.py::test_0110_saldo_insuficiente PASSED           [ 51%]
+tests/test_ferramentas.py::test_0109_limite_mensal_excedido PASSED       [ 52%]
+tests/test_ferramentas.py::test_nenhuma_ferramenta_devolve_cpf_ou_email_de_ninguem PASSED [ 52%]
+tests/test_ferramentas.py::test_argumento_invalido_volta_como_texto_explicando_o_formato[<lambda>-n\xe3o consta do cadastro] PASSED [ 53%]
+tests/test_ferramentas.py::test_argumento_invalido_volta_como_texto_explicando_o_formato[<lambda>-Data de retorno n\xe3o informada0] PASSED [ 54%]
+tests/test_ferramentas.py::test_argumento_invalido_volta_como_texto_explicando_o_formato[<lambda>-Data de retorno n\xe3o informada1] PASSED [ 55%]
+tests/test_ferramentas.py::test_argumento_invalido_volta_como_texto_explicando_o_formato[<lambda>-use A, B ou C] PASSED [ 56%]
+tests/test_ferramentas.py::test_argumento_invalido_volta_como_texto_explicando_o_formato[<lambda>-duas letras] PASSED [ 57%]
+tests/test_ferramentas.py::test_argumento_invalido_volta_como_texto_explicando_o_formato[<lambda>-AAAA-MM-DD] PASSED [ 58%]
+tests/test_ferramentas.py::test_argumento_invalido_volta_como_texto_explicando_o_formato[<lambda>-anterior \xe0 partida] PASSED [ 58%]
+tests/test_ferramentas.py::test_argumento_invalido_volta_como_texto_explicando_o_formato[<lambda>-n\xe3o localizada] PASSED [ 59%]
+tests/test_ferramentas.py::test_ferramentas_encadeadas_chegam_ao_gabarito[DIA-2026-0101] PASSED [ 60%]
+tests/test_ferramentas.py::test_ferramentas_encadeadas_chegam_ao_gabarito[DIA-2026-0102] PASSED [ 61%]
+tests/test_ferramentas.py::test_ferramentas_encadeadas_chegam_ao_gabarito[DIA-2026-0103] PASSED [ 62%]
+tests/test_ferramentas.py::test_ferramentas_encadeadas_chegam_ao_gabarito[DIA-2026-0104] PASSED [ 63%]
+tests/test_ferramentas.py::test_ferramentas_encadeadas_chegam_ao_gabarito[DIA-2026-0105] PASSED [ 64%]
+tests/test_ferramentas.py::test_ferramentas_encadeadas_chegam_ao_gabarito[DIA-2026-0106] PASSED [ 64%]
+tests/test_ferramentas.py::test_ferramentas_encadeadas_chegam_ao_gabarito[DIA-2026-0107] PASSED [ 65%]
+tests/test_ferramentas.py::test_ferramentas_encadeadas_chegam_ao_gabarito[DIA-2026-0108] PASSED [ 66%]
+tests/test_ferramentas.py::test_ferramentas_encadeadas_chegam_ao_gabarito[DIA-2026-0109] PASSED [ 67%]
+tests/test_ferramentas.py::test_ferramentas_encadeadas_chegam_ao_gabarito[DIA-2026-0110] PASSED [ 68%]
+tests/test_ferramentas.py::test_ferramentas_encadeadas_chegam_ao_gabarito[DIA-2026-0111] PASSED [ 69%]
+tests/test_ferramentas.py::test_ferramentas_encadeadas_chegam_ao_gabarito[DIA-2026-0112] PASSED [ 70%]
+tests/test_ferramentas.py::test_ferramentas_encadeadas_chegam_ao_gabarito[DIA-2026-0111 complementado] PASSED [ 70%]
+tests/test_ferramentas.py::test_ferramentas_encadeadas_chegam_ao_gabarito[DIA-2026-0112 complementado] PASSED [ 71%]
+tests/test_filtro.py::test_0104_cpf_conta_e_agencia_nao_passam PASSED    [ 72%]
+tests/test_filtro.py::test_nenhuma_matricula_data_ou_numero_de_pedido_e_mascarado PASSED [ 73%]
+tests/test_filtro.py::test_so_o_0104_muda PASSED                         [ 74%]
+tests/test_filtro.py::test_complementacoes_passam_intactas PASSED        [ 75%]
+tests/test_formulario.py::test_abre_sem_chamar_o_modelo PASSED           [ 76%]
+tests/test_formulario.py::test_recusa_mostra_so_a_mensagem_padrao PASSED [ 76%]
+tests/test_formulario.py::test_instrucao_aprovada_mostra_verificacoes_consultas_e_minuta PASSED [ 77%]
+tests/test_formulario.py::test_divergir_sem_motivo_nao_registra PASSED   [ 78%]
+tests/test_formulario.py::test_divergir_com_motivo_registra_ao_lado_da_sugestao PASSED [ 79%]
+tests/test_formulario.py::test_registro_exige_encaminhamento_conhecido PASSED [ 80%]
+tests/test_formulario.py::test_taxa_de_divergencia PASSED                [ 81%]
+tests/test_formulario.py::test_falha_no_expurgo_avisa_e_nao_derruba_o_formulario PASSED [ 82%]
+tests/test_formulario.py::test_eliminacao_tira_a_instrucao_da_tela PASSED [ 82%]
+tests/test_formulario.py::test_clique_duplo_na_conferencia_grava_uma_linha PASSED [ 83%]
+tests/test_formulario.py::test_confirmacao_da_eliminacao_nao_atravessa_a_troca_de_pedido PASSED [ 84%]
+tests/test_formulario.py::test_banco_travado_no_expurgo_avisa_e_nao_derruba PASSED [ 85%]
+tests/test_formulario.py::test_linha_corrompida_no_registro_nao_derruba PASSED [ 86%]
+tests/test_guarda.py::test_vencidos_conta_a_partir_da_ultima_conferencia PASSED [ 87%]
+tests/test_guarda.py::test_expurga_so_o_vencido_e_prova_que_saiu PASSED  [ 88%]
+tests/test_guarda.py::test_sem_vencidos_nao_toca_no_banco PASSED         [ 88%]
+tests/test_guarda.py::test_pedido_vencido_que_ja_saiu_do_banco_e_ignorado PASSED [ 89%]
+tests/test_guarda.py::test_log_de_recusas_guarda_so_o_que_esta_no_prazo PASSED [ 90%]
+tests/test_guarda.py::test_pedido_usado_depois_da_conferencia_antiga_nao_e_apagado PASSED [ 91%]
+tests/test_guarda.py::test_compactacao_que_falhou_e_refeita_na_proxima_vez PASSED [ 92%]
+tests/test_guarda.py::test_recusa_conta_para_o_prazo PASSED              [ 93%]
+tests/test_medicao.py::test_matricula_errada_nao_conta_como_acerto PASSED [ 94%]
+tests/test_medicao.py::test_sem_complementacao_a_matricula_esperada_e_a_do_pedido PASSED [ 94%]
+tests/test_memoria.py::test_beatriz_sai_do_banco_e_ana_fica PASSED       [ 95%]
+tests/test_memoria.py::test_carla_e_encontrada_mesmo_sob_o_user_id_de_outro PASSED [ 96%]
+tests/test_memoria.py::test_sem_compactar_o_texto_apagado_fica_no_arquivo PASSED [ 97%]
+tests/test_memoria.py::test_sobra_em_tabela_que_a_rotina_nao_alcanca_e_acusada PASSED [ 98%]
+tests/test_memoria.py::test_grafia_do_json_com_acento_escapado_tambem_e_procurada PASSED [ 99%]
+tests/test_memoria.py::test_eliminacao_alcanca_os_registros_que_citam_o_titular PASSED [100%]
 
-============================== 96 passed in 1.96s ==============================
+============================= 117 passed in 2.41s ==============================

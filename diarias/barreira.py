@@ -9,7 +9,11 @@ Cada dado é conferido no lugar em que foi usado, e não só pela presença no p
 a data de partida tem de ser a partida do pedido, a matrícula das consultas tem de
 ser a que o cadastro conferiu, e uma diligência precisa de causa comprovada. Uma
 complementação pode corrigir a matrícula e a data de retorno, como as do acervo;
-outra correção não é reconhecida e o pedido cai na análise manual.
+outra correção não é reconhecida e o pedido cai na análise manual. Complementação
+com mais de uma data ou de uma matrícula não corrige nada, e a correção para um
+nome que tem homônimo no cadastro também vai para a análise manual. O texto livre
+(minuta, alertas, pendências, detalhes) não pode citar outra matrícula nem outro
+servidor do cadastro.
 
 O único julgamento que o modelo faz sem ferramenta que o confirme é a urgência:
 ele pode considerar atendida a antecedência curta, desde que marque
@@ -137,13 +141,15 @@ def _conferir(resposta: RunOutput | None, pedido: dict, complementacao: dict | N
         if efetiva != str(pedido["matricula"]) and nomes.count(str(pedido["nome"]).strip()) > 1:
             motivos.append("matrícula corrigida para um nome que outro servidor também tem: análise manual")
 
-    # Texto que o conferente lê: não pode citar outro servidor nem matrícula fora do pedido.
+    # Texto que o conferente lê: não pode citar outro servidor nem matrícula que não esteja no pedido.
+    # Citar o que o pedido traz é legítimo: o alerta sobre uma ordem embutida repete a matrícula dela.
     livre = " ".join([instrucao.minuta_despacho, *instrucao.alertas, *instrucao.pendencias,
                       *(v.detalhe for v in instrucao.verificacoes)])
-    for numero in set(MATRICULA.findall(livre)) - aceitos["matricula"]:
+    origem = " ".join([*(str(v) for v in pedido.values()), str((complementacao or {}).get("texto", ""))])
+    for numero in set(MATRICULA.findall(livre)) - aceitos["matricula"] - set(MATRICULA.findall(origem)):
         motivos.append(f"texto da instrução cita a matrícula {numero}, que não é do pedido")
     for nome in {s["nome"] for s in carregar().servidores.values()} - aceitos["nome_informado"]:
-        if nome in livre:
+        if nome in livre and nome not in origem:
             motivos.append(f"texto da instrução cita outro servidor: {nome}")
 
     # 3. Cada critério uma vez, e a recomendação e o sinal de autorização como consequência deles.

@@ -62,8 +62,8 @@ só precisa da matrícula e do mês, que estão no pedido, e por isso pode corre
 | Diligência: cadastro → resposta | 2 | 90,2% | 98,0% |
 
 Na composição do acervo (10 instruções completas, 2 diligências e 2 complementações que refazem
-a cadeia a cada 12 pedidos), a média é de 5,33 passos por pedido. Com 5 passos e 300 pedidos por
-mês, espera-se que **68 instruções** (p = 95%) ou **15** (p = 99%) tenham algum passo errado. É
+a cadeia a cada 12 pedidos), a média é de 5,33 passos por pedido. Tratando os 300 pedidos do mês como instruções completas de
+5 passos, espera-se que **68 instruções** (p = 95%) ou **15** (p = 99%) tenham algum passo errado. É
 esse número, e não a média de acerto, que obriga a conferência humana.
 
 ## 5. Custo por passos

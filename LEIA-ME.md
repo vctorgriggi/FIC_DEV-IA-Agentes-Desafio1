@@ -52,10 +52,14 @@ guardam dados pessoais.
   - Cada argumento é conferido no seu campo: a partida tem de ser a partida do pedido, e o retorno
     o do pedido ou o da complementação.
   - O nome é o do pedido, e a matrícula que o cadastro conferiu vale para todas as consultas e para
-    a instrução.
+    a instrução. Todas as chamadas usam os mesmos valores, e um campo só fica vazio quando o pedido
+    não o informa.
+  - Uma complementação com mais de uma data ou de uma matrícula não corrige nada, e a correção para
+    um nome com homônimo no cadastro vai para a análise manual.
+  - A minuta, os alertas e as pendências não citam outra matrícula nem outro servidor do cadastro.
   - O grupo e a unidade vêm do cadastro, e quantidade e valor são os do cálculo.
   - A situação de cada critério numérico bate com o texto da ferramenta, e uma diligência precisa
-    de causa comprovada.
+    de causa comprovada, sem consultas além do cadastro quando ele diverge e sem julgar o mérito.
   - A recomendação e o sinal de autorização superior decorrem das verificações.
   - Recusa, erro de execução e qualquer imprevisto na própria conferência viram a mesma mensagem
     padrão.
@@ -76,16 +80,20 @@ precisa ser confirmada com o professor.
 **Que configuração de chamadas paralelas, teto de chamadas e memória você escolheu, e com base em
 que número?**
 
-- **Chamadas paralelas desligadas.** Desligadas, deram 126 acertos em 126 casos nas três
-  medições. Ligadas, cortam 9% do custo (US$ 0,00379 contra 0,00418 por pedido), mas todos os erros
-  das três medições aconteceram com elas: o 0107 nas três e uma complementação sem cadastro.
-- **Teto de 8 chamadas de ferramenta** (`tool_call_limit=8`). O máximo medido foi 4 consultas por
-  turno e 5 chamadas ao modelo. O teto deixa folga para o modelo corrigir um argumento e impede um
-  laço sem fim. Com teto 2 (falha provocada 4), a instrução fica incompleta e é recusada.
+- **Chamadas paralelas desligadas.** Desligadas, deram 168 acertos em 168 casos nas quatro
+  medições. Ligadas, cortam cerca de 10% do custo (US$ 0,00373 contra 0,00417 por pedido), mas
+  todos os erros das quatro medições aconteceram com elas: o 0107 em três e uma complementação sem
+  cadastro.
+- **Teto de 8 chamadas de ferramenta** (`tool_call_limit=8`). Nas medições, o máximo foi 4
+  consultas por turno e 5 chamadas ao modelo. Numa execução da falha provocada 1, o modelo repetiu
+  as quatro consultas e chegou às 8, ainda com a instrução certa (versão de
+  `resultados/etapa6_falhas.txt` no commit `76a8441`). O teto deixa essa folga e impede um laço sem
+  fim. Com teto 2 (falha provocada 4), a instrução fica incompleta e é recusada.
 - **Memória: histórico da sessão com teto de 3 execuções, sem memórias do usuário.** Só com o
   histórico a complementação foi aplicada ao pedido certo (2 de 2; sem memória, 0 de 2). As memórias
-  do usuário custaram de 8% a 22% a mais por turno sem acertar mais. Numa das medições, gravaram os
-  dados de uma servidora sob a matrícula de outro (0112). Um pedido tem no máximo dois turnos, então
+  do usuário custaram de 7% a 24% a mais por turno sem acertar mais. Numa medição vista nesta sessão,
+  cujo banco a repetição substituiu, gravaram os dados de uma servidora sob a matrícula de outro
+  (0112). Um pedido tem no máximo dois turnos, então
   3 é folga.
 
 **Como o sistema impede que uma instrução fundamentada em dado inventado chegue ao conferente?**
@@ -94,17 +102,17 @@ Em quatro camadas:
 
 1. As contas não são do modelo: ele não tem número para inventar, porque o número vem pronto.
 2. A barreira em código confere cada argumento no seu campo do pedido, uma só pessoa em todas as
-   consultas e cada número contra o retorno real das ferramentas, registrado pelo Agno. São 41 testes
+   consultas e cada número contra o retorno real das ferramentas, registrado pelo Agno. São 53 testes
    em `tests/test_barreira.py`, que montam execuções honestas e execuções com um dado inventado ou
    usado no lugar errado.
 3. `resposta.status` é conferido antes de usar o conteúdo, e um erro da API vira recusa.
 4. O que a barreira recusa não aparece na tela: o servidor vê a mensagem padrão e o pedido volta à
    análise manual.
 
-A medição achou um caso que passava (o sinal de autorização do 0107), e a revisão do código achou
-furos que nenhuma medição tinha mostrado: dados do pedido usados no campo errado ou para outra
-pessoa. A barreira foi corrigida nas duas vezes e a medição refeita. Na medição final, nenhum erro
-foi entregue em 84 casos (`relatorio.md`, seções 1 e 2).
+A medição achou um caso que passava (o sinal de autorização do 0107), e duas revisões do código
+acharam furos que nenhuma medição tinha mostrado: dados do pedido usados no campo errado, para
+outra pessoa ou citados no texto livre. A barreira foi corrigida nas três vezes e a medição
+refeita. Na medição final, os 84 casos acertaram, sem recusa (`relatorio.md`, seções 1 e 2).
 
 **Que dados do servidor o agente guarda, por quanto tempo, e como o titular os elimina?**
 
@@ -115,13 +123,15 @@ foi entregue em 84 casos (`relatorio.md`, seções 1 e 2).
   - **No registro da conferência**: só o número do pedido, a sugestão, a decisão, o motivo e se a
     minuta foi editada.
   - **No log de recusas**: o número do pedido e os motivos internos da recusa.
-- **Por quanto tempo:** 30 dias depois da última conferência do pedido. O prazo recomeça se o
-  pedido for conferido de novo, depois de uma complementação. Vencido o prazo, o formulário apaga
-  sozinho a sessão do pedido e as execuções, compacta o arquivo e confere que nada restou
-  (`diarias/guarda.py`). O log de recusas, que pode citar matrículas, segue o mesmo prazo. O
-  registro da conferência fica, porque não guarda dados do solicitante e é o que mede a
-  discordância com o agente. Pedido nunca conferido fica até ser conferido ou até a eliminação
-  pelo titular.
+- **Por quanto tempo:** 30 dias depois do último evento do pedido: a conferência, a recusa pela
+  barreira ou o último uso da sessão no banco, o que vier por último. Por isso o prazo recomeça
+  quando o pedido é conferido de novo ou recebe uma complementação. Vencido o prazo, o formulário
+  apaga sozinho a sessão do pedido e as execuções, compacta o arquivo e confere que nada restou
+  (`diarias/guarda.py`). Se a compactação falhar, ela é refeita na abertura seguinte. No log de
+  recusas, cada linha sai 30 dias depois da própria recusa. O registro da conferência fica, porque
+  não guarda dados do solicitante e é o que mede a discordância com o agente. Pedido instruído e
+  nunca conferido nem recusado não tem de onde contar o prazo: fica até ser conferido ou até a
+  eliminação pelo titular.
 - **Como eliminar:** na aba "Eliminação de dados" do formulário, ou com a função
   `eliminar_titular`. A rotina apaga as sessões do titular (que levam junto as execuções) e as
   memórias, procurando pelo nome e pela matrícula no conteúdo de todas as tabelas, e não só pelo

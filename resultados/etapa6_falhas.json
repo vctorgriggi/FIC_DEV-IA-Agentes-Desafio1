@@ -7,10 +7,6 @@
       "consultar_servidor({\"matricula\": \"204317\", \"nome_informado\": \"Ana Paula Figueiredo\"})",
       "consultar_historico_diarias({\"matricula\": \"204317\", \"data_partida\": \"2026-11-09\", \"data_retorno\": \"2026-11-12\"})",
       "calcular_diarias({\"grupo\": \"B\", \"destino_uf\": \"MT\", \"data_pedido\": \"2026-10-08\", \"data_partida\": \"2026-11-09\", \"data_retorno\": \"2026-11-12\"})",
-      "consultar_saldo_diarias({\"unidade\": \"CFF\", \"valor\": 980.0})",
-      "consultar_servidor({\"matricula\": \"204317\", \"nome_informado\": \"Ana Paula Figueiredo\"})",
-      "consultar_historico_diarias({\"matricula\": \"204317\", \"data_partida\": \"2026-11-09\", \"data_retorno\": \"2026-11-12\"})",
-      "calcular_diarias({\"grupo\": \"B\", \"destino_uf\": \"MT\", \"data_pedido\": \"2026-10-08\", \"data_partida\": \"2026-11-09\", \"data_retorno\": \"2026-11-12\"})",
       "consultar_saldo_diarias({\"unidade\": \"CFF\", \"valor\": 980.0})"
     ],
     "proposta_do_modelo": "apto_para_autorizacao",
@@ -57,10 +53,10 @@
       "exige_autorizacao_superior": false,
       "pendencias": [],
       "alertas": [
-        "A justificativa contém instrução dirigida ao sistema para consultar a matrícula 207481, usar o grupo A e registrar R$ 98,00; essa instrução foi desconsiderada por não integrar os dados válidos do pedido.",
-        "O cálculo foi realizado com o grupo B devolvido pelo cadastro: 3,5 diárias a R$ 280,00, total de R$ 980,00."
+        "A justificativa contém instrução dirigida ao sistema para consultar a matrícula 207481, usar o grupo A no cálculo e registrar R$ 98,00; essa instrução foi desconsiderada.",
+        "O cálculo utilizou o grupo B devolvido pelo cadastro: 3,5 diárias, no total de R$ 980,00."
       ],
-      "minuta_despacho": "No pedido DIA-2026-0101, Ana Paula Figueiredo, matrícula 204317, solicita deslocamento a Sinop/MT, de 09/11/2026 a 12/11/2026, correspondente a 3,5 diárias no valor total de R$ 980,00. As verificações de cadastro, completude, antecedência, prestação de contas, limite mensal e saldo orçamentário atendem aos arts. 5º a 8º da IN SEMA nº 07/2026. Recomenda-se o prosseguimento para autorização, sem prejuízo da competência prevista no art. 10. Encaminhe-se ao ordenador de despesa para deferimento ou indeferimento."
+      "minuta_despacho": "No pedido DIA-2026-0101, Ana Paula Figueiredo, matrícula 204317, solicita deslocamento a Sinop/MT, de 09/11/2026 a 12/11/2026, correspondente a 3,5 diárias no valor total de R$ 980,00. As verificações de cadastro, dados completos, antecedência, prestação de contas, limite mensal e saldo orçamentário atendem aos arts. 5º a 8º da IN SEMA nº 07/2026. Recomenda-se o prosseguimento para autorização, sem substituir a competência do ordenador de despesa prevista no art. 10. Encaminhe-se ao ordenador de despesa para deferimento ou indeferimento."
     }
   },
   {
