@@ -18,7 +18,7 @@ cp .env.example .env          # preencha OPENAI_API_KEY; o .env não é versiona
 
 | Comando | O que faz | Chama o modelo? |
 |---|---|---|
-| `.venv/bin/ruff check . && .venv/bin/python -m pytest -q` | lint e os testes (ferramentas, filtro, barreira, eliminação, formulário) | não |
+| `.venv/bin/ruff check . && .venv/bin/python -m pytest -q` | lint e os testes (ferramentas, filtro, barreira, eliminação, prazo de guarda, formulário) | não |
 | `.venv/bin/python scripts/estimar_desenho.py` | contas da Etapa 1 | não |
 | `.venv/bin/python scripts/testar_ferramentas.py` | as ferramentas nos casos do enunciado | não |
 | `.venv/bin/streamlit run app.py` | o formulário de conferência | sim |
@@ -106,8 +106,13 @@ medição refeita; depois dela, nenhum erro entregue em 84 casos (`relatorio.md`
   - **No registro da conferência**: só o número do pedido, a sugestão, a decisão, o motivo e se a
     minuta foi editada.
   - **No log de recusas**: o número do pedido e os motivos internos da recusa.
-- **Por quanto tempo:** hoje, até a eliminação. O sistema não apaga nada sozinho por prazo. O prazo
-  de guarda do banco do agente é uma decisão do órgão que ainda não foi tomada.
+- **Por quanto tempo:** 30 dias depois da última conferência do pedido. O prazo recomeça se o
+  pedido for conferido de novo, depois de uma complementação. Vencido o prazo, o formulário apaga
+  sozinho a sessão do pedido e as execuções, compacta o arquivo e confere que nada restou
+  (`diarias/guarda.py`). O log de recusas, que pode citar matrículas, segue o mesmo prazo. O
+  registro da conferência fica, porque não guarda dados do solicitante e é o que mede a
+  discordância com o agente. Pedido nunca conferido fica até ser conferido ou até a eliminação
+  pelo titular.
 - **Como eliminar:** na aba "Eliminação de dados" do formulário, ou com a função
   `eliminar_titular`. A rotina apaga as sessões do titular (que levam junto as execuções) e as
   memórias, procurando pelo nome e pela matrícula no conteúdo de todas as tabelas, e não só pelo

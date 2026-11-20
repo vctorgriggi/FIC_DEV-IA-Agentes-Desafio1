@@ -4,7 +4,7 @@ rootdir: /Users/victor/Desktop/Workspaces/FIC_DEV/IA Agentes/desafio-01
 configfile: pyproject.toml
 testpaths: tests
 plugins: anyio-4.16.0
-collecting ... collected 77 items
+collecting ... collected 82 items
 
 tests/test_barreira.py::test_execucao_honesta_e_aprovada[DIA-2026-0101] PASSED
 tests/test_barreira.py::test_execucao_honesta_e_aprovada[DIA-2026-0102] PASSED
@@ -78,10 +78,15 @@ tests/test_formulario.py::test_divergir_sem_motivo_nao_registra PASSED
 tests/test_formulario.py::test_divergir_com_motivo_registra_ao_lado_da_sugestao PASSED
 tests/test_formulario.py::test_registro_exige_encaminhamento_conhecido PASSED
 tests/test_formulario.py::test_taxa_de_divergencia PASSED
+tests/test_guarda.py::test_vencidos_conta_a_partir_da_ultima_conferencia PASSED
+tests/test_guarda.py::test_expurga_so_o_vencido_e_prova_que_saiu PASSED
+tests/test_guarda.py::test_sem_vencidos_nao_toca_no_banco PASSED
+tests/test_guarda.py::test_pedido_vencido_que_ja_saiu_do_banco_e_ignorado PASSED
+tests/test_guarda.py::test_log_de_recusas_guarda_so_o_que_esta_no_prazo PASSED
 tests/test_memoria.py::test_beatriz_sai_do_banco_e_ana_fica PASSED
 tests/test_memoria.py::test_carla_e_encontrada_mesmo_sob_o_user_id_de_outro PASSED
 tests/test_memoria.py::test_sem_compactar_o_texto_apagado_fica_no_arquivo PASSED
 tests/test_memoria.py::test_sobra_em_tabela_que_a_rotina_nao_alcanca_e_acusada PASSED
 tests/test_memoria.py::test_grafia_do_json_com_acento_escapado_tambem_e_procurada PASSED
 
-============================== 77 passed in 1.45s ==============================
+============================== 82 passed in 1.50s ==============================

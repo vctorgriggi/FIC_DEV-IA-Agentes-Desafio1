@@ -12,7 +12,7 @@ from pathlib import Path
 import streamlit as st
 
 from diarias import agente as ag
-from diarias import barreira, conferencia, memoria
+from diarias import barreira, conferencia, guarda, memoria
 from diarias.dados import carregar
 from diarias.filtro import CONTA_OU_AGENCIA, CPF
 
@@ -44,6 +44,17 @@ def recursos():
     """Um agente e um banco por processo do Streamlit."""
     db, arquivo = memoria.abrir_banco("agente")
     return ag.criar_agente(db=db, **memoria.CONFIGURACOES["historico"]), db, arquivo
+
+
+def aplicar_prazo_de_guarda() -> None:
+    """Apaga do banco os pedidos conferidos há 30 dias ou mais (decisão do órgão)."""
+    _, db, arquivo = recursos()
+    apagados = guarda.expurgar(db, arquivo)
+    guarda.podar_recusas()
+    if apagados:
+        recursos.clear()   # o banco foi fechado para compactar; o próximo uso reabre
+        st.toast(f"Prazo de guarda: {len(apagados)} pedido(s) conferido(s) há {guarda.PRAZO_DIAS} dias ou "
+                 "mais saíram do banco do agente.")
 
 
 def mascarar(texto: str) -> str:
@@ -184,6 +195,8 @@ def aba_eliminacao(pedido: dict) -> None:
 def aba_conferencias() -> None:
     linhas = conferencia.ler()
     taxa = conferencia.taxa_de_divergencia()
+    st.caption(f"Prazo de guarda: o banco do agente mantém cada pedido por {guarda.PRAZO_DIAS} dias depois "
+               "da última conferência; depois disso ele é apagado automaticamente.")
     st.metric("Conferências registradas", len(linhas),
               help="Cada linha é uma decisão do servidor ao lado da sugestão do agente.")
     if taxa is not None:
@@ -196,6 +209,7 @@ def main() -> None:
     st.set_page_config(page_title="Instrução de diárias · SEMA-MT", layout="wide")
     st.title("Instrução de pedidos de diárias")
     st.caption("O agente instrui; o servidor confere; o ordenador de despesa decide (art. 10). Dados hipotéticos.")
+    aplicar_prazo_de_guarda()
     numero = st.sidebar.selectbox("Pedido", list(PEDIDOS))
     pedido = PEDIDOS[numero]
     mostrar_pedido(pedido)
