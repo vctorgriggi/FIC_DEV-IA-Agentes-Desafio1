@@ -15,7 +15,7 @@ sys.path.insert(0, str(RAIZ))
 
 from diarias import memoria  # noqa: E402  (depende do sys.path acima)
 from diarias.agente import criar_agente, instruir  # noqa: E402
-from scripts.rodar_casos import acertou  # noqa: E402
+from scripts.rodar_casos import acertou, matricula_esperada  # noqa: E402
 
 DADOS = RAIZ / "exemplos" / "dados"
 PEDIDOS = {p["numero"]: p for p in json.loads((DADOS / "pedidos.json").read_text(encoding="utf-8"))}
@@ -53,7 +53,8 @@ def main() -> None:
         sugestao = getattr(bruto, "recomendacao", None)
         status = getattr(getattr(r.resposta, "status", None), "value", "sem resposta")
         # o que o caso original exige: a variação não muda a resposta certa do pedido
-        certo = acertou(r.instrucao, GABARITO[pedido["numero"]]) if r.instrucao else None
+        certo = (acertou(r.instrucao, GABARITO[pedido["numero"]], matricula_esperada(pedido, None))
+                 if r.instrucao else None)
         linhas += [f"## Falha {i}: {titulo}", f"esperado: {esperado}",
                    f"status da execução: {status} · barreira: {'APROVADA' if r.aprovada else 'RECUSADA'}"
                    f" · instrução que o modelo propôs: {sugestao or 'nenhuma'}"]

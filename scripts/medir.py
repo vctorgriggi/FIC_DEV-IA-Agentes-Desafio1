@@ -24,7 +24,7 @@ sys.path.insert(0, str(RAIZ))
 from diarias import memoria  # noqa: E402  (depende do sys.path acima)
 from diarias.agente import criar_agente, instruir  # noqa: E402
 from scripts.estimar_desenho import PRECO_ENTRADA, PRECO_SAIDA, VOLUME_MENSAL  # noqa: E402
-from scripts.rodar_casos import acertou  # noqa: E402
+from scripts.rodar_casos import acertou, matricula_esperada  # noqa: E402
 
 DADOS = RAIZ / "exemplos" / "dados"
 PEDIDOS = {p["numero"]: p for p in json.loads((DADOS / "pedidos.json").read_text(encoding="utf-8"))}
@@ -42,12 +42,12 @@ def chamadas_ao_modelo(resposta) -> list[dict]:
     return saida
 
 
-def caso(resultado, esperado: dict, segundos: float) -> dict:
+def caso(resultado, esperado: dict, segundos: float, matricula: str) -> dict:
     r = resultado.resposta
     chamadas = chamadas_ao_modelo(r)
     entrada = getattr(r.metrics, "input_tokens", 0) if r and r.metrics else 0
     saida = getattr(r.metrics, "output_tokens", 0) if r and r.metrics else 0
-    certo = acertou(resultado.instrucao, esperado)
+    certo = acertou(resultado.instrucao, esperado, matricula)
     return {
         "aprovada": resultado.aprovada,
         "acerto": certo,
@@ -70,12 +70,14 @@ def instruir_pedido(numero: str, paralelas: bool, pasta: pathlib.Path) -> dict:
     saida = {}
     inicio = time.perf_counter()
     r = instruir(agente, PEDIDOS[numero])
-    saida[numero] = caso(r, GABARITO["pedidos"][numero], time.perf_counter() - inicio)
+    saida[numero] = caso(r, GABARITO["pedidos"][numero], time.perf_counter() - inicio,
+                         matricula_esperada(PEDIDOS[numero], None))
     if numero in COMPLEMENTOS:
         inicio = time.perf_counter()
         r = instruir(agente, PEDIDOS[numero], COMPLEMENTOS[numero])
         saida[f"{numero} complementado"] = caso(r, GABARITO["complementacoes"][numero],
-                                                time.perf_counter() - inicio)
+                                                time.perf_counter() - inicio,
+                                                matricula_esperada(PEDIDOS[numero], COMPLEMENTOS[numero]))
     db.close()
     return saida
 

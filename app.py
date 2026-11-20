@@ -49,8 +49,13 @@ def recursos():
 def aplicar_prazo_de_guarda() -> None:
     """Apaga do banco os pedidos conferidos há 30 dias ou mais (decisão do órgão)."""
     _, db, arquivo = recursos()
-    apagados = guarda.expurgar(db, arquivo)
-    guarda.podar_recusas()
+    try:
+        apagados = guarda.expurgar(db, arquivo)
+        guarda.podar_recusas()
+    except memoria.EliminacaoIncompleta as erro:   # banco ocupado: tenta de novo na próxima interação
+        recursos.clear()
+        st.warning(f"O prazo de guarda não pôde ser aplicado agora e será tentado de novo: {erro}")
+        return
     if apagados:
         recursos.clear()   # o banco foi fechado para compactar; o próximo uso reabre
         st.toast(f"Prazo de guarda: {len(apagados)} pedido(s) conferido(s) há {guarda.PRAZO_DIAS} dias ou "
@@ -177,12 +182,14 @@ def aba_eliminacao(pedido: dict) -> None:
         _, db, arquivo = recursos()
         lista = [m.strip() for m in matriculas.split(",") if m.strip()]
         try:
-            rel = memoria.eliminar_titular(db, arquivo, nome.strip(), lista)
+            rel = memoria.eliminar_titular(db, arquivo, nome.strip(), lista,
+                                           registros=[conferencia.LOG_RECUSAS, conferencia.ARQUIVO])
         except memoria.EliminacaoIncompleta as erro:
             st.error(f"A eliminação não se completou: {erro}")
         else:
-            st.success(f"Eliminação concluída: {len(rel.sessoes_apagadas)} sessão(ões) e "
-                       f"{rel.memorias_apagadas} memória(s) apagadas.")
+            st.success(f"Eliminação concluída: {len(rel.sessoes_apagadas)} sessão(ões), "
+                       f"{rel.memorias_apagadas} memória(s) e {rel.linhas_de_registro_apagadas} linha(s) "
+                       "de registro que citavam o titular apagadas.")
             st.table([{"Tabela": t, "Linhas com o titular antes": n,
                        "Depois": rel.depois.get(t, 0)} for t, n in rel.antes.items()] or
                      [{"Tabela": "—", "Linhas com o titular antes": 0, "Depois": 0}])

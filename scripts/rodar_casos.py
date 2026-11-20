@@ -14,7 +14,8 @@ import time
 RAIZ = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(RAIZ))
 
-from diarias.agente import criar_agente, instruir  # noqa: E402  (depende do sys.path acima)
+from diarias import barreira  # noqa: E402  (depende do sys.path acima)
+from diarias.agente import criar_agente, instruir  # noqa: E402
 
 DADOS = RAIZ / "exemplos" / "dados"
 PEDIDOS = {p["numero"]: p for p in json.loads((DADOS / "pedidos.json").read_text(encoding="utf-8"))}
@@ -22,8 +23,17 @@ GABARITO = json.loads((RAIZ / "exemplos" / "gabarito.json").read_text(encoding="
 PADRAO = ["DIA-2026-0101", "DIA-2026-0104", "DIA-2026-0106", "DIA-2026-0107", "DIA-2026-0112"]
 
 
-def acertou(instrucao, esperado: dict) -> bool:
+def matricula_esperada(pedido: dict, complementacao: dict | None) -> str:
+    """A matrícula de quem pediu: a corrigida na complementação, se houver, senão a do pedido."""
+    corrigida = barreira.MATRICULA.findall(str((complementacao or {}).get("texto", "")))
+    return corrigida[0] if corrigida else str(pedido["matricula"])
+
+
+def acertou(instrucao, esperado: dict, matricula: str | None = None) -> bool:
+    """Igual ao gabarito e, quando `matricula` é dada, feita para essa pessoa."""
     if instrucao is None:
+        return False
+    if matricula is not None and instrucao.matricula != matricula:
         return False
     nao_atende = sorted(v.criterio for v in instrucao.verificacoes if v.situacao == "nao_atende")
     return (instrucao.recomendacao == esperado["recomendacao"]
@@ -47,7 +57,7 @@ def main() -> None:
         esperado = GABARITO[numero]
         linhas.append(f"## {numero} · {esperado['caso']}")
         linhas.append(f"barreira: {'APROVADA' if r.aprovada else 'RECUSADA'} · acerto contra o gabarito: "
-                      f"{'sim' if acertou(r.instrucao, esperado) else 'NÃO'} · "
+                      f"{'sim' if acertou(r.instrucao, esperado, PEDIDOS[numero]['matricula']) else 'NÃO'} · "
                       f"{getattr(m, 'input_tokens', '?')} tokens de entrada, "
                       f"{getattr(m, 'output_tokens', '?')} de saída · {segundos:.1f} s")
         for motivo in r.motivos_da_recusa:

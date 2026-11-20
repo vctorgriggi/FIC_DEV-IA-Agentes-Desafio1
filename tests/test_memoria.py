@@ -73,3 +73,17 @@ def test_sobra_em_tabela_que_a_rotina_nao_alcanca_e_acusada(banco):
 
 def test_grafia_do_json_com_acento_escapado_tambem_e_procurada():
     assert "Ant\\u00f4nio" in memoria._grafias(["Antônio"])
+
+
+def test_eliminacao_alcanca_os_registros_que_citam_o_titular(banco, tmp_path):
+    db, arquivo = banco
+    recusas, conferencias = tmp_path / "recusas.jsonl", tmp_path / "conferencias.jsonl"
+    recusas.write_text('{"pedido": "DIA-2026-0111", "motivos": ["consultou 206689 fora do pedido"]}\n'
+                       '{"pedido": "DIA-2026-0101", "motivos": ["valor difere"]}\n', encoding="utf-8")
+    conferencias.write_text('{"pedido": "DIA-2026-0111", "motivo": "Beatriz Moraes Cunha ligou e confirmou"}\n'
+                            '{"pedido": "DIA-2026-0101", "motivo": ""}\n', encoding="utf-8")
+    rel = memoria.eliminar_titular(db, arquivo, *BEATRIZ, registros=[recusas, conferencias])
+    assert rel.linhas_de_registro_apagadas == 2
+    assert "206689" not in recusas.read_text(encoding="utf-8")
+    assert "Beatriz" not in conferencias.read_text(encoding="utf-8")
+    assert "DIA-2026-0101" in recusas.read_text(encoding="utf-8")   # o que não é do titular fica

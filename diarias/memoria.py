@@ -39,6 +39,7 @@ class Relatorio:
     antes: dict[str, int] = field(default_factory=dict)    # tabela -> linhas com o titular
     depois: dict[str, int] = field(default_factory=dict)
     bytes_residuais: list[str] = field(default_factory=list)
+    linhas_de_registro_apagadas: int = 0
 
 
 def abrir_banco(nome: str = "agente") -> tuple[SqliteDb, Path]:
@@ -117,11 +118,27 @@ def _sessoes_e_memorias_do_titular(arquivo: Path, termos: list[str]) -> tuple[se
     return sessoes, memorias
 
 
-def eliminar_titular(db: SqliteDb, arquivo: Path, nome: str, matriculas: list[str]) -> Relatorio:
+def apagar_dos_registros(arquivos: list[Path], termos: list[str]) -> int:
+    """Tira, dos registros em JSON Lines, as linhas que citam o titular. Devolve quantas saíram."""
+    grafias = _grafias(termos)
+    apagadas = 0
+    for arquivo in arquivos:
+        if not arquivo.exists():
+            continue
+        linhas = arquivo.read_text(encoding="utf-8").splitlines(keepends=True)
+        ficam = [linha for linha in linhas if not any(g in linha for g in grafias)]
+        apagadas += len(linhas) - len(ficam)
+        arquivo.write_text("".join(ficam), encoding="utf-8")
+    return apagadas
+
+
+def eliminar_titular(db: SqliteDb, arquivo: Path, nome: str, matriculas: list[str],
+                     registros: list[Path] = ()) -> Relatorio:
     """Apaga sessões (com as execuções) e memórias do titular e prova, no banco, que nada restou.
 
     `matriculas` são as do titular, inclusive a corrigida numa complementação. Não inclua a
-    matrícula de outra pessoa: ela não é dado do titular.
+    matrícula de outra pessoa: ela não é dado do titular. `registros` são os arquivos em JSON
+    Lines fora do banco (log de recusas, registro da conferência) que também podem citá-lo.
     """
     termos = [nome, *matriculas]
     relatorio = Relatorio(titular=nome, antes=ocorrencias(arquivo, termos))
@@ -146,6 +163,9 @@ def eliminar_titular(db: SqliteDb, arquivo: Path, nome: str, matriculas: list[st
     compactar(arquivo)
     relatorio.depois = ocorrencias(arquivo, termos)
     relatorio.bytes_residuais = bytes_residuais(arquivo, termos)
+    relatorio.linhas_de_registro_apagadas = apagar_dos_registros(list(registros), termos)
+    relatorio.bytes_residuais += [f"{r.name}: {g}" for r in registros if r.exists()
+                                  for g in _grafias(termos) if g in r.read_text(encoding="utf-8")]
     if relatorio.depois or relatorio.bytes_residuais:
         raise EliminacaoIncompleta(f"restou dado de {nome}: {relatorio.depois} {relatorio.bytes_residuais}")
     return relatorio

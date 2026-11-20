@@ -214,3 +214,78 @@ def test_0107_autorizacao_exigida_com_urgencia_negada_e_recusada():
 def test_urgencia_aceita_sem_exigir_autorizacao_e_recusada():
     resposta = alterar(execucao_honesta(PEDIDOS["DIA-2026-0106"], urgente=True), exige_autorizacao_superior=False)
     assert not conferir(resposta, "DIA-2026-0106").aprovada
+
+
+# ------------------------------------------------------------- furos achados na revisão
+
+
+def test_historico_de_outro_servidor_na_complementacao_e_recusado():
+    r = execucao_honesta(PEDIDOS["DIA-2026-0112"], matricula="207418")
+    r.tools[1] = chamada("consultar_historico_diarias", consultar_historico_diarias, matricula="207481",
+                         data_partida="2026-11-24", data_retorno="2026-11-27")
+    assert not conferir(r, "DIA-2026-0112", COMPLEMENTOS["DIA-2026-0112"]).aprovada
+
+
+def test_instrucao_com_matricula_diferente_da_do_cadastro_e_recusada():
+    r = alterar(execucao_honesta(PEDIDOS["DIA-2026-0112"], matricula="207418"), matricula="207481")
+    assert not conferir(r, "DIA-2026-0112", COMPLEMENTOS["DIA-2026-0112"]).aprovada
+
+
+def test_data_do_pedido_usada_como_partida_e_recusada():
+    p = PEDIDOS["DIA-2026-0101"]
+    r = execucao_honesta(p)
+    r.tools[2] = chamada("calcular_diarias", calcular_diarias, grupo="B", destino_uf="MT", data_pedido=p["data_pedido"],
+                         data_partida=p["data_pedido"], data_retorno=p["data_retorno"])
+    valor = float(re.search(r"= R\$ ([\d.]+) \(Anexo I\)", r.tools[2].result).group(1))
+    qtd = float(re.search(r"Quantidade: ([\d.]+)", r.tools[2].result).group(1))
+    r.tools[3] = chamada("consultar_saldo_diarias", consultar_saldo_diarias, unidade="CFF", valor=valor)
+    r = alterar(situacao(r, "antecedencia", "nao_atende"), quantidade_diarias=qtd, valor_total=valor,
+                recomendacao="nao_recomendado")
+    assert not conferir(r, "DIA-2026-0101").aprovada
+
+
+def test_diligencia_sem_causa_real_e_recusada():
+    r = execucao_honesta(PEDIDOS["DIA-2026-0101"])
+    r = alterar(situacao(r, "dados_completos", "nao_atende"), recomendacao="diligencia",
+                quantidade_diarias=None, valor_total=None)
+    assert not conferir(r, "DIA-2026-0101").aprovada
+
+
+def test_argumento_em_formato_inesperado_vira_recusa_e_nao_excecao():
+    r = execucao_honesta(PEDIDOS["DIA-2026-0101"])
+    r.tools[3].tool_args = {"unidade": "CFF", "valor": "980,00"}
+    assert not barreira.conferir(r, PEDIDOS["DIA-2026-0101"]).aprovada
+
+
+def test_0111_sem_retorno_calculado_com_a_partida_como_retorno_e_recusado():
+    p = PEDIDOS["DIA-2026-0111"]
+    resposta = execucao_honesta({**p, "data_retorno": p["data_partida"]})
+    assert resposta.content.recomendacao == "apto_para_autorizacao"
+    assert not conferir(resposta, "DIA-2026-0111").aprovada
+
+
+def test_0109_historico_com_data_trocada_e_recusado():
+    p = PEDIDOS["DIA-2026-0109"]
+    resposta = execucao_honesta(p)
+    resposta.tools[1] = chamada("consultar_historico_diarias", consultar_historico_diarias, matricula=p["matricula"],
+                                data_partida=p["data_partida"], data_retorno=p["data_partida"])
+    resposta = alterar(situacao(resposta, "limite_mensal", "atende"), recomendacao="apto_para_autorizacao")
+    assert not conferir(resposta, "DIA-2026-0109").aprovada
+
+
+def test_cadastro_com_nome_que_nao_e_o_do_pedido_e_recusado():
+    resposta = execucao_honesta({**PEDIDOS["DIA-2026-0112"], "nome": "Rafael Lima Antunes"})
+    assert not conferir(resposta, "DIA-2026-0112").aprovada
+
+
+def test_cadastro_dado_como_divergente_quando_a_ferramenta_confere_e_recusado():
+    resposta = execucao_honesta(PEDIDOS["DIA-2026-0101"])
+    resposta.tools = resposta.tools[:1]
+    resposta = alterar(situacao(resposta, "cadastro", "nao_atende"), recomendacao="diligencia",
+                       quantidade_diarias=None, valor_total=None)
+    assert not conferir(resposta, "DIA-2026-0101").aprovada
+
+
+def test_diligencia_com_autorizacao_superior_e_recusada():
+    resposta = alterar(execucao_honesta(PEDIDOS["DIA-2026-0111"]), exige_autorizacao_superior=True)
+    assert not conferir(resposta, "DIA-2026-0111").aprovada

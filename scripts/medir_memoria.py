@@ -18,7 +18,7 @@ sys.path.insert(0, str(RAIZ))
 
 from diarias import memoria  # noqa: E402  (depende do sys.path acima)
 from diarias.agente import criar_agente, instruir  # noqa: E402
-from scripts.rodar_casos import acertou  # noqa: E402
+from scripts.rodar_casos import acertou, matricula_esperada  # noqa: E402
 
 DADOS = RAIZ / "exemplos" / "dados"
 PEDIDOS = {p["numero"]: p for p in json.loads((DADOS / "pedidos.json").read_text(encoding="utf-8"))}
@@ -49,7 +49,8 @@ def medir() -> dict:
             inicio = time.perf_counter()
             t1 = instruir(agente, PEDIDOS[numero])
             t2 = instruir(agente, PEDIDOS[numero], COMPLEMENTOS[numero])
-            aplicada = t2.aprovada and acertou(t2.instrucao, GABARITO["complementacoes"][numero])
+            certa = matricula_esperada(PEDIDOS[numero], COMPLEMENTOS[numero])
+            aplicada = t2.aprovada and acertou(t2.instrucao, GABARITO["complementacoes"][numero], certa)
             medicoes[f"{nome} · {numero}"] = {
                 "configuracao": nome, "pedido": numero,
                 "entrada_turno_1": entrada(t1), "entrada_complementacao": entrada(t2),

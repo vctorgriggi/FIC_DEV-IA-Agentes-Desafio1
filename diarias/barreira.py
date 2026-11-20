@@ -5,9 +5,15 @@ contra o pedido que a aplicação tem em mãos e contra o texto que as ferrament
 de fato devolveram. Nada aqui chama o modelo. Os motivos da recusa servem ao log
 e à medição; a tela mostra só a mensagem padrão.
 
-O único ponto em que o modelo pode divergir de uma ferramenta é a antecedência:
-urgência é julgamento sobre o texto, e o modelo pode considerá-la atendida desde
-que marque exige_autorizacao_superior.
+Cada dado é conferido no lugar em que foi usado, e não só pela presença no pedido:
+a data de partida tem de ser a partida do pedido, a matrícula das consultas tem de
+ser a que o cadastro conferiu, e uma diligência precisa de causa comprovada. Uma
+complementação pode corrigir a matrícula e a data de retorno, como as do acervo;
+outra correção não é reconhecida e o pedido cai na análise manual.
+
+O único julgamento que o modelo faz sem ferramenta que o confirme é a urgência:
+ele pode considerar atendida a antecedência curta, desde que marque
+exige_autorizacao_superior, e só quando nada mais impede o pedido.
 """
 import re
 from dataclasses import dataclass, field
@@ -22,7 +28,6 @@ MENSAGEM_PADRAO = ("Não foi possível instruir este pedido automaticamente. "
 
 CRITERIOS = ("cadastro", "dados_completos", "antecedencia", "prestacao_contas",
              "limite_mensal", "saldo_orcamentario")
-CAMPOS_DE_DATA = ("data_pedido", "data_partida", "data_retorno")
 FERRAMENTAS_CONHECIDAS = {"consultar_servidor", "consultar_historico_diarias",
                           "calcular_diarias", "consultar_saldo_diarias"}
 
@@ -39,15 +44,18 @@ class Veredito:
     motivos: list[str] = field(default_factory=list)
 
 
-def _permitidos(pedido: dict, complementacao: dict | None) -> tuple[set[str], set[str]]:
-    """Matrículas e datas que podem aparecer: as do pedido e as escritas na complementação."""
-    matriculas = {str(pedido["matricula"])}
-    datas = {str(pedido[c]) for c in CAMPOS_DE_DATA if pedido.get(c)}
-    if complementacao:
-        texto = str(complementacao.get("texto", ""))
-        matriculas |= set(MATRICULA.findall(texto))
-        datas |= set(DATA.findall(texto))
-    return matriculas, datas
+def permitidos(pedido: dict, complementacao: dict | None) -> dict[str, set[str]]:
+    """Por argumento de ferramenta, os valores aceitos: o campo do pedido e a correção escrita."""
+    texto = str((complementacao or {}).get("texto", ""))
+    retorno = {str(pedido["data_retorno"])} if pedido.get("data_retorno") else set()
+    return {
+        "matricula": {str(pedido["matricula"])} | set(MATRICULA.findall(texto)),
+        "nome_informado": {str(pedido["nome"]).strip()},
+        "destino_uf": {str(pedido["destino_uf"]).strip().upper()},
+        "data_pedido": {str(pedido["data_pedido"])},
+        "data_partida": {str(pedido["data_partida"])},
+        "data_retorno": retorno | set(DATA.findall(texto)),
+    }
 
 
 def _ultimo_resultado(resposta: RunOutput, nome: str) -> tuple[dict, str] | None:
@@ -58,7 +66,20 @@ def _ultimo_resultado(resposta: RunOutput, nome: str) -> tuple[dict, str] | None
     return None
 
 
+def _normal(campo: str, valor) -> str:
+    texto = str(valor).strip()
+    return texto.upper() if campo == "destino_uf" else texto
+
+
 def conferir(resposta: RunOutput | None, pedido: dict, complementacao: dict | None = None) -> Veredito:
+    """Nunca lança: qualquer imprevisto na conferência vira recusa, e a tela mostra a mensagem padrão."""
+    try:
+        return _conferir(resposta, pedido, complementacao)
+    except Exception as erro:  # saída em formato que a conferência não previu: recusar, não quebrar
+        return Veredito(False, [f"conferência não concluída: {type(erro).__name__}"])
+
+
+def _conferir(resposta: RunOutput | None, pedido: dict, complementacao: dict | None) -> Veredito:
     motivos: list[str] = []
 
     if resposta is None or resposta.status != RunStatus.completed:
@@ -67,25 +88,34 @@ def conferir(resposta: RunOutput | None, pedido: dict, complementacao: dict | No
     if not isinstance(instrucao, Instrucao):
         return Veredito(False, ["saída não é um objeto Instrucao validado"])
 
-    matriculas, datas = _permitidos(pedido, complementacao)
+    aceitos = permitidos(pedido, complementacao)
+    retorno_ausente = not aceitos["data_retorno"]
 
-    # 1. Origem dos argumentos: nenhuma matrícula ou data fora do pedido ou da complementação.
+    # 1. Cada argumento no seu campo: valor do pedido ou da correção escrita na complementação.
     if instrucao.numero_pedido != pedido["numero"]:
         motivos.append(f"número do pedido trocado: {instrucao.numero_pedido}")
-    if instrucao.matricula not in matriculas:
-        motivos.append(f"matrícula da instrução fora do pedido: {instrucao.matricula}")
     for t in resposta.tools or []:
-        args = t.tool_args or {}
         if t.tool_name not in FERRAMENTAS_CONHECIDAS:
             motivos.append(f"ferramenta desconhecida: {t.tool_name}")
-        if "matricula" in args and str(args["matricula"]).strip() not in matriculas:
-            motivos.append(f"{t.tool_name} consultou matrícula fora do pedido: {args['matricula']}")
-        for campo in CAMPOS_DE_DATA:
-            valor = args.get(campo)
-            if valor and str(valor).strip() not in datas:
-                motivos.append(f"{t.tool_name} usou {campo} fora do pedido: {valor}")
+        for campo, valor in (t.tool_args or {}).items():
+            if campo in aceitos and valor not in (None, "") and _normal(campo, valor) not in aceitos[campo]:
+                motivos.append(f"{t.tool_name} usou {campo}={valor}, que não é o do pedido")
 
-    # 2. Cada critério uma vez, e a recomendação como consequência das verificações.
+    # 2. Uma pessoa só: a matrícula que o cadastro conferiu vale para todas as consultas e para a instrução.
+    cadastro = _ultimo_resultado(resposta, "consultar_servidor")
+    conferido = CADASTRO_OK.search(cadastro[1]) if cadastro else None
+    if instrucao.matricula not in aceitos["matricula"]:
+        motivos.append(f"matrícula da instrução fora do pedido: {instrucao.matricula}")
+    if conferido:
+        efetiva = conferido.group(1)
+        if instrucao.matricula != efetiva:
+            motivos.append(f"instrução com matrícula {instrucao.matricula}, cadastro conferiu {efetiva}")
+        for t in resposta.tools or []:
+            usada = (t.tool_args or {}).get("matricula")
+            if usada is not None and str(usada).strip() != efetiva:
+                motivos.append(f"{t.tool_name} consultou {usada}, cadastro conferiu {efetiva}")
+
+    # 3. Cada critério uma vez, e a recomendação e o sinal de autorização como consequência deles.
     situacao = {v.criterio: v.situacao for v in instrucao.verificacoes}
     if sorted(v.criterio for v in instrucao.verificacoes) != sorted(CRITERIOS):
         motivos.append("verificações incompletas ou repetidas")
@@ -95,33 +125,38 @@ def conferir(resposta: RunOutput | None, pedido: dict, complementacao: dict | No
     if instrucao.recomendacao != esperada:
         motivos.append(f"recomendação {instrucao.recomendacao} não decorre das verificações ({esperada})")
 
-    cadastro = _ultimo_resultado(resposta, "consultar_servidor")
-    historico = _ultimo_resultado(resposta, "consultar_historico_diarias")
-    calculo = _ultimo_resultado(resposta, "calcular_diarias")
-    saldo = _ultimo_resultado(resposta, "consultar_saldo_diarias")
-
+    # 4. Diligência: a causa tem de estar no texto da ferramenta ou na falta real do dado.
     if instrucao.recomendacao == "diligencia":
         if instrucao.quantidade_diarias is not None or instrucao.valor_total is not None:
             motivos.append("diligência com quantidade ou valor calculados")
+        if instrucao.exige_autorizacao_superior:
+            motivos.append("diligência com autorização superior exigida")
         if cadastro is None:
             motivos.append("diligência sem consulta ao cadastro")
-        elif situacao.get("cadastro") == "atende" and not CADASTRO_OK.search(cadastro[1]):
-            motivos.append("cadastro dado como atendido sem conferência na ferramenta")
+        elif situacao.get("cadastro") == ("nao_atende" if conferido else "atende"):
+            motivos.append(f"cadastro '{situacao.get('cadastro')}', ferramenta indica "
+                           f"'{'atende' if conferido else 'nao_atende'}'")
+        if situacao.get("dados_completos") == "nao_atende" and not retorno_ausente:
+            motivos.append("dados incompletos alegados com o pedido completo")
+        if situacao.get("dados_completos") == "atende" and retorno_ausente:
+            motivos.append("dados completos alegados sem data de retorno")
         return Veredito(not motivos, motivos)
 
-    # 3. Instrução de mérito: toda consulta feita, e os números iguais aos das ferramentas.
+    # 5. Instrução de mérito: toda consulta feita, e os números iguais aos das ferramentas.
+    historico = _ultimo_resultado(resposta, "consultar_historico_diarias")
+    calculo = _ultimo_resultado(resposta, "calcular_diarias")
+    saldo = _ultimo_resultado(resposta, "consultar_saldo_diarias")
     if None in (cadastro, historico, calculo, saldo):
         return Veredito(False, [*motivos, "instrução de mérito sem as quatro consultas"])
-    ok = CADASTRO_OK.search(cadastro[1])
-    if not ok:
+    if not conferido:
         return Veredito(False, [*motivos, "instrução de mérito sem cadastro conferido"])
-    _, grupo, unidade = ok.groups()
+    if retorno_ausente:
+        return Veredito(False, [*motivos, "instrução de mérito sem data de retorno no pedido"])
+    _, grupo, unidade = conferido.groups()
 
     args_calc, texto_calc = calculo
     if str(args_calc.get("grupo", "")).strip().upper() != grupo:
         motivos.append(f"cálculo com grupo {args_calc.get('grupo')}, cadastro diz {grupo}")
-    if str(args_calc.get("destino_uf", "")).strip().upper() != str(pedido["destino_uf"]).upper():
-        motivos.append(f"cálculo com UF {args_calc.get('destino_uf')}, pedido diz {pedido['destino_uf']}")
     qtd, valor = QUANTIDADE.search(texto_calc), VALOR.search(texto_calc)
     if not (qtd and valor):
         return Veredito(False, [*motivos, "cálculo sem quantidade e valor legíveis"])
@@ -136,7 +171,7 @@ def conferir(resposta: RunOutput | None, pedido: dict, complementacao: dict | No
     if float(args_saldo.get("valor", -1)) != float(valor.group(1)):
         motivos.append(f"saldo consultado para {args_saldo.get('valor')}, cálculo diz {valor.group(1)}")
 
-    # 4. Situação de cada critério numérico igual à da ferramenta.
+    # 6. Situação de cada critério numérico igual à da ferramenta.
     texto_hist = historico[1]
     pela_ferramenta = {
         "cadastro": "atende",
@@ -155,8 +190,7 @@ def conferir(resposta: RunOutput | None, pedido: dict, complementacao: dict | No
     # O sinal decorre das verificações, como no gabarito: só quando a urgência foi aceita e nada
     # mais impede. A regra antiga só cobria a antecedência suficiente e deixou passar, na medição,
     # um 0107 com urgência negada e autorização exigida (resultados/etapa6_medicao_antes_da_correcao).
-    aceita_por_urgencia = curta and situacao.get("antecedencia") == "atende"
-    exige = aceita_por_urgencia and not impedido
+    exige = curta and situacao.get("antecedencia") == "atende" and not impedido
     if instrucao.exige_autorizacao_superior != exige:
         motivos.append(f"exige_autorizacao_superior {instrucao.exige_autorizacao_superior} não decorre das "
                        f"verificações ({exige})")

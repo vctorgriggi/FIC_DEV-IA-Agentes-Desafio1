@@ -111,3 +111,14 @@ def test_taxa_de_divergencia(tmp_path):
     conferencia.registrar("A", "apto_para_autorizacao", "apto_para_autorizacao", arquivo=arquivo)
     conferencia.registrar("B", "apto_para_autorizacao", "nao_recomendado", "falta documento", arquivo=arquivo)
     assert conferencia.taxa_de_divergencia(arquivo) == 0.5
+
+
+def test_falha_no_expurgo_avisa_e_nao_derruba_o_formulario(monkeypatch):
+    from diarias import guarda
+
+    def ocupado(*_args, **_kwargs):
+        raise memoria.EliminacaoIncompleta("banco em uso: o checkpoint não terminou")
+    monkeypatch.setattr(guarda, "expurgar", ocupado)
+    at = abrir()
+    assert not at.exception
+    assert any("prazo de guarda" in w.value.lower() for w in at.warning)
