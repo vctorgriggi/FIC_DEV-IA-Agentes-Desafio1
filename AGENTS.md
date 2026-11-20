@@ -82,12 +82,12 @@ diarias/     # regras e ferramentas; o que as ferramentas leem o agente vê, ent
 python3 -m venv .venv && .venv/bin/pip install -r requirements.lock
 .venv/bin/python scripts/estimar_desenho.py
 .venv/bin/python scripts/testar_ferramentas.py
+.venv/bin/python scripts/rodar_casos.py   # chama o modelo: precisa da chave no .env
 .venv/bin/ruff check . && .venv/bin/python -m pytest -q
 ```
 
 ## Em andamento
 
-- [ ] Etapa 3 — agente com saída Pydantic, limites, filtro de CPF e conta, barreira em código.
 - [ ] Etapa 4 — memória por pedido, custo por turno em três configurações, eliminação provada.
 - [ ] Etapa 5 — formulário Streamlit com despacho editável e decisão do conferente registrada.
 - [ ] Etapa 6 — medição e falhas provocadas; relatório e LEIA-ME com os números medidos.
