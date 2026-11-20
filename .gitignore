@@ -11,3 +11,9 @@ __pycache__/
 .DS_Store
 .~lock.*#
 ~$*
+
+# bancos do agente: guardam dados pessoais dos servidores
+bancos/
+*.db
+*.db-wal
+*.db-shm

@@ -84,12 +84,14 @@ def criar_agente(paralelas: bool = False, **memoria) -> Agent:
     )
 
 
-def mensagem_do_pedido(pedido: dict, complementacao: dict | None = None) -> str:
-    texto = "Instrua este pedido de diárias.\n" + json.dumps(pedido, ensure_ascii=False, indent=2)
-    if complementacao:
-        texto += ("\n\nComplementação recebida em diligência; refaça a instrução com ela:\n"
-                  + json.dumps(complementacao, ensure_ascii=False, indent=2))
-    return texto
+def mensagem_do_pedido(pedido: dict) -> str:
+    return "Instrua este pedido de diárias.\n" + json.dumps(pedido, ensure_ascii=False, indent=2)
+
+
+def mensagem_da_complementacao(complementacao: dict) -> str:
+    """Só a complementação: o pedido original o agente recupera pela memória da sessão."""
+    return ("Chegou a complementação de um pedido que estava em diligência. Refaça a instrução do "
+            "pedido com ela.\n" + json.dumps(complementacao, ensure_ascii=False, indent=2))
 
 
 @dataclass
@@ -103,8 +105,18 @@ class Resultado:
 
 
 def instruir(agente: Agent, pedido: dict, complementacao: dict | None = None) -> Resultado:
-    resposta = agente.run(mensagem_do_pedido(pedido, complementacao),
-                          session_id=pedido["numero"], user_id=pedido["matricula"])
+    """Primeiro turno com o pedido; na diligência, segundo turno só com a complementação.
+
+    A sessão é o número do pedido e o usuário é a matrícula digitada nele, nos dois turnos:
+    a complementação continua a mesma sessão. A barreira recebe o pedido que a aplicação
+    tem em mãos, porque ela não confia no que o modelo lembra.
+    """
+    mensagem = mensagem_da_complementacao(complementacao) if complementacao else mensagem_do_pedido(pedido)
+    try:
+        resposta = agente.run(mensagem, session_id=pedido["numero"], user_id=pedido["matricula"])
+    except Exception as erro:  # erro de rede ou da API vira recusa, nunca instrução
+        return Resultado(numero=pedido["numero"], aprovada=False, instrucao=None,
+                         motivos_da_recusa=[f"execução falhou: {type(erro).__name__}"])
     veredito = barreira.conferir(resposta, pedido, complementacao)
     return Resultado(numero=pedido["numero"], aprovada=veredito.aprovada,
                      instrucao=resposta.content if veredito.aprovada else None,
