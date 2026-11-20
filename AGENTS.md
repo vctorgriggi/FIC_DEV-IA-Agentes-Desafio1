@@ -71,6 +71,9 @@ app.py       # formulário; só exibe instrução aprovada pela barreira, nunca 
   a minuta nem dados do solicitante — basta para medir a discordância, e minimiza dado pessoal.
 - Chamadas paralelas desligadas — medido: 84/84 desligadas; todos os erros das duas medições
   aconteceram com elas ligadas, por cerca de 11% de custo a menos.
+- Prazo de guarda: 30 dias após a última conferência do pedido (decisão do usuário); expurgo e
+  conferência em diarias/guarda.py, chamado a cada interação do formulário. Usa a data real: é
+  regra de operação, não da norma.
 
 ## Gotchas
 
@@ -90,6 +93,8 @@ app.py       # formulário; só exibe instrução aprovada pela barreira, nunca 
   eliminação procurar por conteúdo, e para a memória do usuário ficar desligada.
 - O modelo marca exige_autorizacao_superior com a urgência negada (0107, com paralelas) → a barreira
   exige o valor que decorre das verificações; não afrouxe essa regra.
+- Expurgo que procura o número do pedido no conteúdo acusa resto falso → o 0102 cita o 0101 na
+  justificativa; confira por session_id e pelos run_id apagados.
 - Painel de pré-visualização do app não abre o servidor ("Operation not permitted") → o macOS
   não deixa o painel ler a pasta Desktop; suba o Streamlit pelo terminal e conecte pelo endereço.
 
@@ -114,5 +119,3 @@ python3 -m venv .venv && .venv/bin/pip install -r requirements.lock
 - [ ] **LEIA-ME: quatro perguntas ou três** — o enunciado anuncia quatro e lista três; confirmar
   com o professor se falta uma.
 - [ ] **resultados/ das "Etapas 4 e 5"** — a Etapa 5 é o formulário; provável "4 e 6". Confirmar.
-- [ ] **Prazo de guarda do banco do agente** — hoje até a eliminação, sem expurgo automático;
-  opções: prazo fixo depois da conferência (como os 30 dias da Aula 07) ou até o fim da instrução.
