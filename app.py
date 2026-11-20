@@ -7,6 +7,7 @@ sessão e usuário vão em cada chamada, então pedidos não se misturam.
 Uso: streamlit run app.py   (chama o modelo: precisa da chave no .env)
 """
 import json
+import sqlite3
 from pathlib import Path
 
 import streamlit as st
@@ -46,18 +47,28 @@ def recursos():
     return ag.criar_agente(db=db, **memoria.CONFIGURACOES["historico"]), db, arquivo
 
 
+def esquecer(numeros: list[str]) -> None:
+    """Tira da tela o que saiu do banco: uma instrução eliminada não pode continuar visível nem conferível."""
+    resultados = st.session_state.get("resultados", {})
+    for numero in numeros:
+        resultados.pop(numero, None)
+        for chave in [k for k in st.session_state if str(k).startswith(f"registrada_{numero}_")]:
+            del st.session_state[chave]
+
+
 def aplicar_prazo_de_guarda() -> None:
     """Apaga do banco os pedidos conferidos há 30 dias ou mais (decisão do órgão)."""
     _, db, arquivo = recursos()
     try:
         apagados = guarda.expurgar(db, arquivo)
         guarda.podar_recusas()
-    except memoria.EliminacaoIncompleta as erro:   # banco ocupado: tenta de novo na próxima interação
+    except (memoria.EliminacaoIncompleta, sqlite3.Error) as erro:   # banco ocupado: tenta de novo depois
         recursos.clear()
         st.warning(f"O prazo de guarda não pôde ser aplicado agora e será tentado de novo: {erro}")
         return
     if apagados:
         recursos.clear()   # o banco foi fechado para compactar; o próximo uso reabre
+        esquecer(apagados)
         st.toast(f"Prazo de guarda: {len(apagados)} pedido(s) conferido(s) há {guarda.PRAZO_DIAS} dias ou "
                  "mais saíram do banco do agente.")
 
@@ -122,6 +133,10 @@ def mostrar_instrucao(resultado: ag.Resultado, chave: str) -> None:
             st.caption(t.result)
 
     st.subheader("Conferência")
+    registrada = f"registrada_{chave}"
+    if registrada in st.session_state:   # já conferida: o formulário some, e um clique duplo não grava de novo
+        st.success(st.session_state[registrada])
+        return
     with st.form(f"conferencia_{chave}"):
         minuta = st.text_area("Minuta do despacho (editável)", value=i.minuta_despacho, height=180)
         opcoes = list(conferencia.ENCAMINHAMENTOS)
@@ -135,8 +150,10 @@ def mostrar_instrucao(resultado: ag.Resultado, chave: str) -> None:
             except ValueError as erro:
                 st.error(str(erro))
             else:
-                st.success(f"Conferência registrada: {conferencia.ENCAMINHAMENTOS[linha['decidido']]}"
-                           + (" (diverge da sugestão do agente)." if linha["divergiu"] else "."))
+                st.session_state[registrada] = (
+                    f"Conferência registrada: {conferencia.ENCAMINHAMENTOS[linha['decidido']]}"
+                    + (" (diverge da sugestão do agente)." if linha["divergiu"] else "."))
+                st.rerun()
 
 
 def aba_instrucao(pedido: dict) -> None:
@@ -177,16 +194,18 @@ def aba_eliminacao(pedido: dict) -> None:
     sugestao = barreira.MATRICULA.findall(corrigida) or [pedido["matricula"]]   # a corrigida, se houver
     matriculas = st.text_input("Matrículas do titular, separadas por vírgula", value=", ".join(sugestao))
     st.caption("Informe só matrículas do titular. No DIA-2026-0112 a digitada (207481) é de outro servidor.")
-    confirmar = st.checkbox("Confirmo que o titular pediu a eliminação dos seus dados")
+    confirmar = st.checkbox("Confirmo que o titular pediu a eliminação dos seus dados",
+                            key=f"confirma_eliminacao_{pedido['numero']}")   # não vale para outro pedido
     if st.button("Eliminar dados do titular", disabled=not confirmar):
         _, db, arquivo = recursos()
         lista = [m.strip() for m in matriculas.split(",") if m.strip()]
         try:
             rel = memoria.eliminar_titular(db, arquivo, nome.strip(), lista,
                                            registros=[conferencia.LOG_RECUSAS, conferencia.ARQUIVO])
-        except memoria.EliminacaoIncompleta as erro:
+        except (memoria.EliminacaoIncompleta, sqlite3.Error) as erro:
             st.error(f"A eliminação não se completou: {erro}")
         else:
+            esquecer(rel.sessoes_apagadas)
             st.success(f"Eliminação concluída: {len(rel.sessoes_apagadas)} sessão(ões), "
                        f"{rel.memorias_apagadas} memória(s) e {rel.linhas_de_registro_apagadas} linha(s) "
                        "de registro que citavam o titular apagadas.")

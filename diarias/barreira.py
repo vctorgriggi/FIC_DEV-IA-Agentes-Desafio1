@@ -21,6 +21,7 @@ from dataclasses import dataclass, field
 from agno.agent import RunOutput
 from agno.run.base import RunStatus
 
+from diarias.dados import carregar
 from diarias.esquema import Instrucao
 
 MENSAGEM_PADRAO = ("Não foi possível instruir este pedido automaticamente. "
@@ -48,13 +49,17 @@ def permitidos(pedido: dict, complementacao: dict | None) -> dict[str, set[str]]
     """Por argumento de ferramenta, os valores aceitos: o campo do pedido e a correção escrita."""
     texto = str((complementacao or {}).get("texto", ""))
     retorno = {str(pedido["data_retorno"])} if pedido.get("data_retorno") else set()
+    # Com mais de uma data (ou matrícula) no texto não há como saber qual é a correção: nenhuma vale.
+    datas, matriculas = set(DATA.findall(texto)), set(MATRICULA.findall(texto))
+    datas = datas if len(datas) == 1 else set()
+    matriculas = matriculas if len(matriculas) == 1 else set()
     return {
-        "matricula": {str(pedido["matricula"])} | set(MATRICULA.findall(texto)),
+        "matricula": {str(pedido["matricula"])} | matriculas,
         "nome_informado": {str(pedido["nome"]).strip()},
         "destino_uf": {str(pedido["destino_uf"]).strip().upper()},
         "data_pedido": {str(pedido["data_pedido"])},
         "data_partida": {str(pedido["data_partida"])},
-        "data_retorno": retorno | set(DATA.findall(texto)),
+        "data_retorno": retorno | datas,
     }
 
 
@@ -94,12 +99,26 @@ def _conferir(resposta: RunOutput | None, pedido: dict, complementacao: dict | N
     # 1. Cada argumento no seu campo: valor do pedido ou da correção escrita na complementação.
     if instrucao.numero_pedido != pedido["numero"]:
         motivos.append(f"número do pedido trocado: {instrucao.numero_pedido}")
+    usados: dict[str, set[str]] = {}
     for t in resposta.tools or []:
         if t.tool_name not in FERRAMENTAS_CONHECIDAS:
             motivos.append(f"ferramenta desconhecida: {t.tool_name}")
         for campo, valor in (t.tool_args or {}).items():
-            if campo in aceitos and valor not in (None, "") and _normal(campo, valor) not in aceitos[campo]:
+            if campo not in aceitos:
+                continue
+            if valor in (None, "") or not str(valor).strip():
+                # vazio só onde o pedido também não tem o dado: um vazio a mais devolve erro em vez de
+                # histórico, e esconderia uma prestação vencida ou o limite mensal
+                if aceitos[campo]:
+                    motivos.append(f"{t.tool_name} usou {campo} vazio, mas o pedido o informa")
+                continue
+            normal = _normal(campo, valor)
+            usados.setdefault(campo, set()).add(normal)
+            if normal not in aceitos[campo]:
                 motivos.append(f"{t.tool_name} usou {campo}={valor}, que não é o do pedido")
+    for campo, valores in usados.items():
+        if len(valores) > 1:
+            motivos.append(f"chamadas com {campo} diferentes: {sorted(valores)}")
 
     # 2. Uma pessoa só: a matrícula que o cadastro conferiu vale para todas as consultas e para a instrução.
     cadastro = _ultimo_resultado(resposta, "consultar_servidor")
@@ -114,6 +133,18 @@ def _conferir(resposta: RunOutput | None, pedido: dict, complementacao: dict | N
             usada = (t.tool_args or {}).get("matricula")
             if usada is not None and str(usada).strip() != efetiva:
                 motivos.append(f"{t.tool_name} consultou {usada}, cadastro conferiu {efetiva}")
+        nomes = [s["nome"] for s in carregar().servidores.values()]
+        if efetiva != str(pedido["matricula"]) and nomes.count(str(pedido["nome"]).strip()) > 1:
+            motivos.append("matrícula corrigida para um nome que outro servidor também tem: análise manual")
+
+    # Texto que o conferente lê: não pode citar outro servidor nem matrícula fora do pedido.
+    livre = " ".join([instrucao.minuta_despacho, *instrucao.alertas, *instrucao.pendencias,
+                      *(v.detalhe for v in instrucao.verificacoes)])
+    for numero in set(MATRICULA.findall(livre)) - aceitos["matricula"]:
+        motivos.append(f"texto da instrução cita a matrícula {numero}, que não é do pedido")
+    for nome in {s["nome"] for s in carregar().servidores.values()} - aceitos["nome_informado"]:
+        if nome in livre:
+            motivos.append(f"texto da instrução cita outro servidor: {nome}")
 
     # 3. Cada critério uma vez, e a recomendação e o sinal de autorização como consequência deles.
     situacao = {v.criterio: v.situacao for v in instrucao.verificacoes}
@@ -140,6 +171,14 @@ def _conferir(resposta: RunOutput | None, pedido: dict, complementacao: dict | N
             motivos.append("dados incompletos alegados com o pedido completo")
         if situacao.get("dados_completos") == "atende" and retorno_ausente:
             motivos.append("dados completos alegados sem data de retorno")
+        # na diligência a análise de mérito não acontece (art. 9º): nada além do cadastro e dos dados
+        for criterio in CRITERIOS[2:]:
+            if situacao.get(criterio) != "nao_verificado":
+                motivos.append(f"diligência com {criterio} '{situacao.get(criterio)}'; deveria ser 'nao_verificado'")
+        if cadastro is not None and not conferido:
+            outras = sorted({t.tool_name for t in resposta.tools or [] if t.tool_name != "consultar_servidor"})
+            if outras:
+                motivos.append(f"cadastro divergente, mas o agente ainda consultou {outras}")
         return Veredito(not motivos, motivos)
 
     # 5. Instrução de mérito: toda consulta feita, e os números iguais aos das ferramentas.
@@ -153,6 +192,8 @@ def _conferir(resposta: RunOutput | None, pedido: dict, complementacao: dict | N
     if retorno_ausente:
         return Veredito(False, [*motivos, "instrução de mérito sem data de retorno no pedido"])
     _, grupo, unidade = conferido.groups()
+    if "Diárias em" not in historico[1]:
+        return Veredito(False, [*motivos, "histórico sem resultado válido (a ferramenta devolveu erro)"])
 
     args_calc, texto_calc = calculo
     if str(args_calc.get("grupo", "")).strip().upper() != grupo:

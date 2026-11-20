@@ -289,3 +289,88 @@ def test_cadastro_dado_como_divergente_quando_a_ferramenta_confere_e_recusado():
 def test_diligencia_com_autorizacao_superior_e_recusada():
     resposta = alterar(execucao_honesta(PEDIDOS["DIA-2026-0111"]), exige_autorizacao_superior=True)
     assert not conferir(resposta, "DIA-2026-0111").aprovada
+
+
+# ------------------------------------------------------------- segunda revisão
+
+@pytest.mark.parametrize(("numero", "criterio"), [("DIA-2026-0108", "prestacao_contas"),
+                                                  ("DIA-2026-0109", "limite_mensal")])
+def test_historico_com_data_vazia_nao_esconde_o_impedimento(numero, criterio):
+    p = PEDIDOS[numero]
+    r = execucao_honesta(p)
+    r.tools[1] = chamada("consultar_historico_diarias", consultar_historico_diarias, matricula=p["matricula"],
+                         data_partida=p["data_partida"], data_retorno="")
+    r = alterar(situacao(r, criterio, "atende"), recomendacao="apto_para_autorizacao")
+    assert not conferir(r, numero).aprovada
+
+
+def test_historico_certo_seguido_de_um_com_data_vazia_e_recusado():
+    p = PEDIDOS["DIA-2026-0108"]
+    r = execucao_honesta(p)
+    r.tools.insert(2, chamada("consultar_historico_diarias", consultar_historico_diarias, matricula=p["matricula"],
+                              data_partida=p["data_partida"], data_retorno=""))
+    r = alterar(situacao(r, "prestacao_contas", "atende"), recomendacao="apto_para_autorizacao")
+    assert not conferir(r, "DIA-2026-0108").aprovada
+
+
+def test_complementacao_com_duas_datas_e_ambigua_e_nao_vale_como_retorno():
+    duas = {"numero": "DIA-2026-0111", "texto": "retorno 2026-11-20 (antes cogitei 2026-11-17)"}
+    for retorno in ("2026-11-17", "2026-11-20"):
+        assert not conferir(execucao_honesta(PEDIDOS["DIA-2026-0111"], data_retorno=retorno),
+                            "DIA-2026-0111", duas).aprovada
+
+
+def test_historico_e_calculo_com_retornos_diferentes_sao_recusados():
+    comp = {"numero": "DIA-2026-0101", "texto": "o retorno passou a ser 2026-11-13"}
+    p = PEDIDOS["DIA-2026-0101"]
+    r = execucao_honesta(p, data_retorno="2026-11-13")
+    r.tools[1] = chamada("consultar_historico_diarias", consultar_historico_diarias, matricula=p["matricula"],
+                         data_partida=p["data_partida"], data_retorno="2026-11-12")
+    assert not conferir(r, "DIA-2026-0101", comp).aprovada
+
+
+def test_diligencia_com_criterio_sem_ferramenta_e_recusada():
+    r = execucao_honesta(PEDIDOS["DIA-2026-0112"])
+    r.tools.append(chamada("consultar_historico_diarias", consultar_historico_diarias, matricula="207481",
+                           data_partida="2026-11-24", data_retorno="2026-11-27"))
+    r = situacao(situacao(r, "prestacao_contas", "nao_atende"), "limite_mensal", "nao_atende")
+    assert not conferir(r, "DIA-2026-0112").aprovada
+
+
+def test_diligencia_por_cadastro_com_outras_consultas_e_recusada():
+    r = execucao_honesta(PEDIDOS["DIA-2026-0112"])
+    r.tools.append(chamada("consultar_historico_diarias", consultar_historico_diarias, matricula="207481",
+                           data_partida="2026-11-24", data_retorno="2026-11-27"))
+    assert not conferir(r, "DIA-2026-0112").aprovada
+
+
+def test_cadastro_rechecado_com_outra_matricula_e_recusado():
+    r = execucao_honesta(PEDIDOS["DIA-2026-0112"], matricula="207418")
+    r.tools.append(chamada("consultar_servidor", consultar_servidor, matricula="207481",
+                           nome_informado="Carla Regina Souza"))
+    r = alterar(situacao(r, "cadastro", "nao_atende"), recomendacao="diligencia", quantidade_diarias=None,
+                valor_total=None, matricula="207481")
+    assert not conferir(r, "DIA-2026-0112", COMPLEMENTOS["DIA-2026-0112"]).aprovada
+
+
+@pytest.mark.parametrize("texto", ["Pedido de Rafael Lima Antunes, valor de R$ 980,00.",
+                                   "Pedido da servidora de matrícula 207481."])
+def test_minuta_com_outro_servidor_e_recusada(texto):
+    r = alterar(execucao_honesta(PEDIDOS["DIA-2026-0101"]), minuta_despacho=texto)
+    assert not conferir(r, "DIA-2026-0101").aprovada
+
+
+def test_alerta_citando_a_matricula_digitada_no_0112_continua_aceito():
+    r = execucao_honesta(PEDIDOS["DIA-2026-0112"], matricula="207418")
+    r = alterar(r, alertas=["A matrícula 207481 foi informada por engano e corrigida para 207418."])
+    veredito = conferir(r, "DIA-2026-0112", COMPLEMENTOS["DIA-2026-0112"])
+    assert veredito.aprovada, veredito.motivos
+
+
+def test_correcao_de_matricula_para_um_homonimo_e_recusada():
+    pedido = {**PEDIDOS["DIA-2026-0101"], "numero": "DIA-2026-0901", "matricula": "207077",
+              "nome": "Camila Holanda Guimarães"}
+    comp = {"numero": "DIA-2026-0901", "texto": "Minha matrícula correta é 209103."}
+    r = execucao_honesta(pedido, matricula="209103")
+    assert r.content.recomendacao == "apto_para_autorizacao"
+    assert not barreira.conferir(r, pedido, comp).aprovada

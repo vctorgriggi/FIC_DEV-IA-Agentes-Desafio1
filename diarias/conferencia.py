@@ -3,8 +3,9 @@
 É o lugar físico da conferência. Cada linha guarda só o necessário para medir com
 que frequência o servidor discorda do agente: número do pedido, sugestão, decisão,
 motivo e se a minuta foi editada. A minuta em si e os dados do solicitante não são
-gravados aqui. Recusas da barreira entram como "analise_manual", com os motivos
-num log à parte, que é para a medição e nunca para a tela.
+gravados aqui. Recusas da barreira não abrem conferência: vão para um log à parte,
+com os motivos, que serve à medição e conta para o prazo de guarda, e nunca vai
+para a tela.
 """
 import json
 from datetime import datetime
@@ -53,10 +54,16 @@ def ler(arquivo: Path | None = None) -> list[dict]:
     arquivo = arquivo or ARQUIVO
     if not arquivo.exists():
         return []
-    return [json.loads(linha) for linha in arquivo.read_text(encoding="utf-8").splitlines() if linha.strip()]
+    linhas = []
+    for linha in arquivo.read_text(encoding="utf-8").splitlines():
+        try:
+            linhas.append(json.loads(linha))
+        except json.JSONDecodeError:   # linha corrompida (gravação interrompida): pula, não derruba a tela
+            continue
+    return [x for x in linhas if isinstance(x, dict)]
 
 
 def taxa_de_divergencia(arquivo: Path | None = None) -> float | None:
     """Fração das conferências em que o servidor decidiu diferente do agente."""
     linhas = ler(arquivo)
-    return sum(linha["divergiu"] for linha in linhas) / len(linhas) if linhas else None
+    return sum(bool(linha.get("divergiu")) for linha in linhas) / len(linhas) if linhas else None

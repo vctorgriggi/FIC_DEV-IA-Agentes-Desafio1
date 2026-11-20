@@ -122,3 +122,74 @@ def test_falha_no_expurgo_avisa_e_nao_derruba_o_formulario(monkeypatch):
     at = abrir()
     assert not at.exception
     assert any("prazo de guarda" in w.value.lower() for w in at.warning)
+
+
+# ------------------------------------------------------------- segunda revisão
+
+def botao(at, rotulo):
+    return next(b for b in at.button if b.label == rotulo)
+
+
+def agente_que_grava(monkeypatch, aprovada=True):
+    """Troca o agente por um que grava a sessão no banco temporário, como o real faria."""
+    from tests.test_memoria import sessao
+
+    def falso(agente, pedido, complementacao=None, ao_consultar=None):
+        sessao(agente.db, pedido["numero"], pedido["matricula"], f"{pedido['nome']}, matrícula {pedido['matricula']}")
+        r = execucao_honesta(PEDIDOS[pedido["numero"]])
+        if not aprovada:
+            return ag.Resultado(numero=pedido["numero"], aprovada=False, instrucao=None,
+                                motivos_da_recusa=["recusa"], resposta=r)
+        return ag.Resultado(numero=pedido["numero"], aprovada=True, instrucao=r.content, resposta=r)
+    monkeypatch.setattr(ag, "instruir", falso)
+
+
+def test_eliminacao_tira_a_instrucao_da_tela(monkeypatch):
+    agente_que_grava(monkeypatch)
+    at = abrir()
+    botao(at, "Instruir pedido").click().run()
+    at.checkbox[0].check().run()
+    botao(at, "Eliminar dados do titular").click().run()
+    assert any("Eliminação concluída" in s.value for s in at.success)
+    at.run()
+    assert "Cadastro confere: matrícula 204317" not in texto_da_tela(at)
+    assert not any(b.label == "Registrar conferência" for b in at.button)
+
+
+def test_clique_duplo_na_conferencia_grava_uma_linha(monkeypatch):
+    agente_que_grava(monkeypatch)
+    at = abrir()
+    botao(at, "Instruir pedido").click().run()
+    botao(at, "Registrar conferência").click().run()
+    if any(b.label == "Registrar conferência" for b in at.button):
+        botao(at, "Registrar conferência").click().run()
+    assert len(conferencia.ler()) == 1
+
+
+def test_confirmacao_da_eliminacao_nao_atravessa_a_troca_de_pedido():
+    at = abrir()
+    at.checkbox[0].check().run()
+    at.sidebar.selectbox[0].set_value("DIA-2026-0103").run()
+    assert not at.checkbox[0].value
+    assert botao(at, "Eliminar dados do titular").disabled
+
+
+def test_banco_travado_no_expurgo_avisa_e_nao_derruba(monkeypatch):
+    import sqlite3
+
+    from diarias import guarda
+
+    def travado(*_a, **_k):
+        raise sqlite3.OperationalError("database is locked")
+    monkeypatch.setattr(guarda, "expurgar", travado)
+    at = abrir()
+    assert not at.exception
+    assert any("prazo de guarda" in w.value.lower() for w in at.warning)
+
+
+def test_linha_corrompida_no_registro_nao_derruba(pasta_temporaria):
+    (pasta_temporaria / "conferencias.jsonl").write_text('{"pedido": "A", "divergiu": false}\n{quebrado\n',
+                                                         encoding="utf-8")
+    assert [x["pedido"] for x in conferencia.ler()] == ["A"]
+    at = abrir()
+    assert not at.exception
