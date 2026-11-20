@@ -11,8 +11,8 @@ linha com o porquê. Até 150 linhas; seção sem conteúdo real sai, exceto "De
 
 **Nenhuma instrução chega ao conferente fundamentada em dado que não veio do pedido, da
 complementação ou de uma ferramenta.**
-A barreira é código, não prompt: a matrícula consultada e as datas usadas nas contas são
-conferidas contra o pedido antes de a instrução ir para a tela. Recusada, a tela mostra a
+A barreira é código, não prompt: cada matrícula e cada data são conferidas no seu campo do pedido,
+e para a pessoa que o cadastro conferiu, antes de a instrução ir para a tela. Recusada, a tela mostra a
 mensagem padrão e o pedido volta à análise manual. É o critério que mais pesa na avaliação
 (`enunciado/11-criterios-de-avaliacao.md`).
 
@@ -69,8 +69,8 @@ app.py       # formulário; só exibe instrução aprovada pela barreira, nunca 
   pessoa sob o user_id de outra (0112).
 - Registro da conferência guarda número, sugestão, decisão, motivo e se a minuta foi editada; nem
   a minuta nem dados do solicitante — basta para medir a discordância, e minimiza dado pessoal.
-- Chamadas paralelas desligadas — medido: 84/84 desligadas; todos os erros das duas medições
-  aconteceram com elas ligadas, por cerca de 11% de custo a menos.
+- Chamadas paralelas desligadas — medido: 126/126 desligadas; todos os erros das três medições
+  aconteceram com elas ligadas, por cerca de 9% de custo a menos.
 - Prazo de guarda: 30 dias após a última conferência do pedido (decisão do usuário); expurgo e
   conferência em diarias/guarda.py, chamado a cada interação do formulário. Usa a data real: é
   regra de operação, não da norma.
@@ -89,14 +89,22 @@ app.py       # formulário; só exibe instrução aprovada pela barreira, nunca 
   texto; autorização verbal não supre a escrita (art. 5º, § 2º).
 - Teste que monta banco não grava execuções com upsert_session → no Agno 3.0.9 elas vão para
   agno_runs por upsert_run; use-o, como o agente faz.
-- Memória do usuário do 0112 fica sob o user_id 207481 (de outro servidor) → mais um motivo para a
+- Memória do usuário do 0112 pode ficar sob o user_id 207481 (de outro servidor) → mais um motivo para a
   eliminação procurar por conteúdo, e para a memória do usuário ficar desligada.
 - O modelo marca exige_autorizacao_superior com a urgência negada (0107, com paralelas) → a barreira
   exige o valor que decorre das verificações; não afrouxe essa regra.
 - Expurgo que procura o número do pedido no conteúdo acusa resto falso → o 0102 cita o 0101 na
   justificativa; confira por session_id e pelos run_id apagados.
+- Barreira que confere dado só pela presença no pedido aprova dado no campo errado ou de outra
+  pessoa (0112, 0111, 0101) → confira campo a campo e pela matrícula do cadastro; a revisão achou isso.
 - Painel de pré-visualização do app não abre o servidor ("Operation not permitted") → o macOS
   não deixa o painel ler a pasta Desktop; suba o Streamlit pelo terminal e conecte pelo endereço.
+
+## Gaps conhecidos
+
+- G1 — a eliminação casa nome e matrícula como trecho de texto: um número de 6 algarismos dentro
+  do registro de outra pessoa apagaria a sessão dela — não ocorreu nas medições; paliativo: a
+  conferência por bytes acusa o que sobrou do titular, mas não o que foi apagado a mais.
 
 ## Como rodar
 
