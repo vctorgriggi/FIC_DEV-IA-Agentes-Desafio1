@@ -7,6 +7,10 @@
       "consultar_servidor({\"matricula\": \"204317\", \"nome_informado\": \"Ana Paula Figueiredo\"})",
       "consultar_historico_diarias({\"matricula\": \"204317\", \"data_partida\": \"2026-11-09\", \"data_retorno\": \"2026-11-12\"})",
       "calcular_diarias({\"grupo\": \"B\", \"destino_uf\": \"MT\", \"data_pedido\": \"2026-10-08\", \"data_partida\": \"2026-11-09\", \"data_retorno\": \"2026-11-12\"})",
+      "consultar_saldo_diarias({\"unidade\": \"CFF\", \"valor\": 980.0})",
+      "consultar_servidor({\"matricula\": \"204317\", \"nome_informado\": \"Ana Paula Figueiredo\"})",
+      "consultar_historico_diarias({\"matricula\": \"204317\", \"data_partida\": \"2026-11-09\", \"data_retorno\": \"2026-11-12\"})",
+      "calcular_diarias({\"grupo\": \"B\", \"destino_uf\": \"MT\", \"data_pedido\": \"2026-10-08\", \"data_partida\": \"2026-11-09\", \"data_retorno\": \"2026-11-12\"})",
       "consultar_saldo_diarias({\"unidade\": \"CFF\", \"valor\": 980.0})"
     ],
     "proposta_do_modelo": "apto_para_autorizacao",

@@ -48,11 +48,17 @@ guardam dados pessoais.
 - **Contas no código, julgamento no modelo.** Antecedência, quantidade, valor, prestação vencida,
   limite mensal e saldo saem prontos das ferramentas. O modelo só julga o que é texto: se a
   justificativa descreve urgência legítima, se há ordem embutida e a redação da minuta.
-- **A barreira é código.** Toda matrícula e toda data usadas precisam constar do pedido ou da
-  complementação. O grupo e a unidade usados vêm do cadastro, e quantidade e valor são os do
-  cálculo. A situação de cada critério numérico precisa bater com o texto da ferramenta, e a
-  recomendação e o sinal de autorização superior precisam decorrer das verificações. Recusa e
-  erro de execução viram a mesma mensagem padrão.
+- **A barreira é código.**
+  - Cada argumento é conferido no seu campo: a partida tem de ser a partida do pedido, e o retorno
+    o do pedido ou o da complementação.
+  - O nome é o do pedido, e a matrícula que o cadastro conferiu vale para todas as consultas e para
+    a instrução.
+  - O grupo e a unidade vêm do cadastro, e quantidade e valor são os do cálculo.
+  - A situação de cada critério numérico bate com o texto da ferramenta, e uma diligência precisa
+    de causa comprovada.
+  - A recomendação e o sinal de autorização superior decorrem das verificações.
+  - Recusa, erro de execução e qualquer imprevisto na própria conferência viram a mesma mensagem
+    padrão.
 - **Filtro de dados pessoais.** Os padrões norte-americanos do Agno ficam desligados, porque o de
   telefone casaria com números de pedido e datas. Entram dois padrões próprios: o CPF pela máscara,
   sem conferir dígito, e a conta ou agência pelo formato algarismos-hífen-dígito. Os testes mostram
@@ -70,32 +76,35 @@ precisa ser confirmada com o professor.
 **Que configuração de chamadas paralelas, teto de chamadas e memória você escolheu, e com base em
 que número?**
 
-- **Chamadas paralelas desligadas.** Desligadas, deram 84 acertos em 84 casos nas duas medições.
-  Ligadas, cortam cerca de 11% do custo (US$ 0,0037 contra 0,0042 por pedido), mas todos os erros
-  das duas medições aconteceram com elas: o sinal de autorização do 0107 nas duas e uma
-  complementação sem cadastro.
+- **Chamadas paralelas desligadas.** Desligadas, deram 126 acertos em 126 casos nas três
+  medições. Ligadas, cortam 9% do custo (US$ 0,00379 contra 0,00418 por pedido), mas todos os erros
+  das três medições aconteceram com elas: o 0107 nas três e uma complementação sem cadastro.
 - **Teto de 8 chamadas de ferramenta** (`tool_call_limit=8`). O máximo medido foi 4 consultas por
   turno e 5 chamadas ao modelo. O teto deixa folga para o modelo corrigir um argumento e impede um
   laço sem fim. Com teto 2 (falha provocada 4), a instrução fica incompleta e é recusada.
 - **Memória: histórico da sessão com teto de 3 execuções, sem memórias do usuário.** Só com o
   histórico a complementação foi aplicada ao pedido certo (2 de 2; sem memória, 0 de 2). As memórias
-  do usuário custaram de 11% a 77% a mais por turno sem acertar mais, e gravaram os dados de uma
-  servidora sob a matrícula de outro (0112). Um pedido tem no máximo dois turnos, então 3 é folga.
+  do usuário custaram de 8% a 22% a mais por turno sem acertar mais. Numa das medições, gravaram os
+  dados de uma servidora sob a matrícula de outro (0112). Um pedido tem no máximo dois turnos, então
+  3 é folga.
 
 **Como o sistema impede que uma instrução fundamentada em dado inventado chegue ao conferente?**
 
 Em quatro camadas:
 
 1. As contas não são do modelo: ele não tem número para inventar, porque o número vem pronto.
-2. A barreira em código confere cada argumento e cada número contra o pedido e contra o retorno
-   real das ferramentas, registrados pelo Agno. São 31 testes em `tests/test_barreira.py`, que montam execuções honestas
-   e execuções com um dado inventado.
+2. A barreira em código confere cada argumento no seu campo do pedido, uma só pessoa em todas as
+   consultas e cada número contra o retorno real das ferramentas, registrado pelo Agno. São 41 testes
+   em `tests/test_barreira.py`, que montam execuções honestas e execuções com um dado inventado ou
+   usado no lugar errado.
 3. `resposta.status` é conferido antes de usar o conteúdo, e um erro da API vira recusa.
 4. O que a barreira recusa não aparece na tela: o servidor vê a mensagem padrão e o pedido volta à
    análise manual.
 
-A medição achou um caso que passava (o sinal de autorização do 0107). A barreira foi corrigida e a
-medição refeita; depois dela, nenhum erro entregue em 84 casos (`relatorio.md`, seções 1 e 2).
+A medição achou um caso que passava (o sinal de autorização do 0107), e a revisão do código achou
+furos que nenhuma medição tinha mostrado: dados do pedido usados no campo errado ou para outra
+pessoa. A barreira foi corrigida nas duas vezes e a medição refeita. Na medição final, nenhum erro
+foi entregue em 84 casos (`relatorio.md`, seções 1 e 2).
 
 **Que dados do servidor o agente guarda, por quanto tempo, e como o titular os elimina?**
 
@@ -118,6 +127,7 @@ medição refeita; depois dela, nenhum erro entregue em 84 casos (`relatorio.md`
   memórias, procurando pelo nome e pela matrícula no conteúdo de todas as tabelas, e não só pelo
   `user_id`. É isso que encontra a sessão do 0112, gravada sob a matrícula de outro servidor.
   Depois compacta o arquivo (`VACUUM` e checkpoint do WAL) e confere tabela por tabela e nos bytes.
-  Se sobrar qualquer coisa, acusa erro em vez de declarar sucesso.
+  No formulário, a rotina também tira do log de recusas e do registro da conferência as linhas que
+  citam o titular. Se sobrar qualquer coisa, acusa erro em vez de declarar sucesso.
 - **O que a eliminação não alcança:** o processo de diárias em si. Ele é registro de despesa
   pública, sujeito à transparência e à guarda das normas de prestação de contas.

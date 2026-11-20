@@ -3,38 +3,41 @@
     "sem_memoria · DIA-2026-0111": {
       "configuracao": "sem_memoria",
       "pedido": "DIA-2026-0111",
-      "entrada_turno_1": 8031,
-      "entrada_complementacao": 2528,
+      "entrada_turno_1": 5270,
+      "entrada_complementacao": 5116,
       "turno_1": "diligencia",
       "complementacao": "recusada",
       "aplicada_ao_pedido_certo": false,
       "motivos_da_recusa": [
         "matrícula da instrução fora do pedido: ",
-        "diligência sem consulta ao cadastro"
+        "dados incompletos alegados com o pedido completo"
       ],
-      "consultas_na_complementacao": [],
-      "segundos": 13.9
+      "consultas_na_complementacao": [
+        "consultar_servidor"
+      ],
+      "segundos": 13.6
     },
     "sem_memoria · DIA-2026-0112": {
       "configuracao": "sem_memoria",
       "pedido": "DIA-2026-0112",
       "entrada_turno_1": 5263,
-      "entrada_complementacao": 5139,
+      "entrada_complementacao": 2531,
       "turno_1": "diligencia",
-      "complementacao": "diligencia",
+      "complementacao": "recusada",
       "aplicada_ao_pedido_certo": false,
-      "motivos_da_recusa": [],
-      "consultas_na_complementacao": [
-        "consultar_servidor"
+      "motivos_da_recusa": [
+        "diligência sem consulta ao cadastro",
+        "dados incompletos alegados com o pedido completo"
       ],
-      "segundos": 12.8
+      "consultas_na_complementacao": [],
+      "segundos": 9.7
     },
     "sem_memoria · memórias gravadas": 0,
     "historico · DIA-2026-0111": {
       "configuracao": "historico",
       "pedido": "DIA-2026-0111",
-      "entrada_turno_1": 5270,
-      "entrada_complementacao": 17728,
+      "entrada_turno_1": 8031,
+      "entrada_complementacao": 17681,
       "turno_1": "diligencia",
       "complementacao": "apto_para_autorizacao",
       "aplicada_ao_pedido_certo": true,
@@ -45,13 +48,13 @@
         "calcular_diarias",
         "consultar_saldo_diarias"
       ],
-      "segundos": 16.6
+      "segundos": 15.3
     },
     "historico · DIA-2026-0112": {
       "configuracao": "historico",
       "pedido": "DIA-2026-0112",
       "entrada_turno_1": 5263,
-      "entrada_complementacao": 17262,
+      "entrada_complementacao": 17197,
       "turno_1": "diligencia",
       "complementacao": "apto_para_autorizacao",
       "aplicada_ao_pedido_certo": true,
@@ -62,14 +65,14 @@
         "calcular_diarias",
         "consultar_saldo_diarias"
       ],
-      "segundos": 17.4
+      "segundos": 14.6
     },
     "historico · memórias gravadas": 0,
     "historico_e_memorias · DIA-2026-0111": {
       "configuracao": "historico_e_memorias",
       "pedido": "DIA-2026-0111",
-      "entrada_turno_1": 9339,
-      "entrada_complementacao": 19950,
+      "entrada_turno_1": 9335,
+      "entrada_complementacao": 20143,
       "turno_1": "diligencia",
       "complementacao": "apto_para_autorizacao",
       "aplicada_ao_pedido_certo": true,
@@ -80,13 +83,13 @@
         "calcular_diarias",
         "consultar_saldo_diarias"
       ],
-      "segundos": 17.1
+      "segundos": 16.0
     },
     "historico_e_memorias · DIA-2026-0112": {
       "configuracao": "historico_e_memorias",
       "pedido": "DIA-2026-0112",
-      "entrada_turno_1": 6534,
-      "entrada_complementacao": 19202,
+      "entrada_turno_1": 6426,
+      "entrada_complementacao": 18544,
       "turno_1": "diligencia",
       "complementacao": "apto_para_autorizacao",
       "aplicada_ao_pedido_certo": true,
@@ -97,9 +100,9 @@
         "calcular_diarias",
         "consultar_saldo_diarias"
       ],
-      "segundos": 16.5
+      "segundos": 13.9
     },
-    "historico_e_memorias · memórias gravadas": 2
+    "historico_e_memorias · memórias gravadas": 1
   },
   "dados_pessoais_no_banco": []
 }
