@@ -21,12 +21,13 @@ mensagem padrão e o pedido volta à análise manual. É o critério que mais pe
 ```
 enunciado/   # transcrição fiel do docx; não se edita para "corrigir" o enunciado
 exemplos/    # acervo gerado por gerar_dados.py; entrada do sistema, nunca editado à mão
+diarias/     # regras e ferramentas; o que as ferramentas leem o agente vê, então nunca o gabarito
 ```
 
 ## Nunca fazer
 
 - Nunca entregar `exemplos/gabarito.json` ao agente (prompt, ferramenta ou memória) — agente que
-  lê a resposta esperada não está sendo medido; só a medição o abre.
+  lê a resposta esperada não está sendo medido; só testes e medição o abrem.
 - Nunca deixar conta para o modelo — antecedência, quantidade, valor, saldo do mês e saldo da
   unidade saem prontos das ferramentas; é onde o modelo erra com segurança.
 - Nunca usar a data de hoje nas regras — a data da análise é `data_da_analise` de
@@ -80,12 +81,12 @@ exemplos/    # acervo gerado por gerar_dados.py; entrada do sistema, nunca edita
 ```bash
 python3 -m venv .venv && .venv/bin/pip install -r requirements.lock
 .venv/bin/python scripts/estimar_desenho.py
+.venv/bin/python scripts/testar_ferramentas.py
 .venv/bin/ruff check . && .venv/bin/python -m pytest -q
 ```
 
 ## Em andamento
 
-- [ ] Etapa 2 — ferramentas com docstring e teste sem modelo sobre 0103, 0108, 0110 e 0112.
 - [ ] Etapa 3 — agente com saída Pydantic, limites, filtro de CPF e conta, barreira em código.
 - [ ] Etapa 4 — memória por pedido, custo por turno em três configurações, eliminação provada.
 - [ ] Etapa 5 — formulário Streamlit com despacho editável e decisão do conferente registrada.
