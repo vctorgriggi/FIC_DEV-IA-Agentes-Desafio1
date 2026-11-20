@@ -1,0 +1,6 @@
+line-length = 120
+extend-exclude = [".venv", "exemplos"]  # exemplos/ é do professor e não se edita à mão
+
+[lint]
+select = ["E", "F", "W", "B", "I", "RUF"]
+allowed-confusables = ["×", "–", "·"]

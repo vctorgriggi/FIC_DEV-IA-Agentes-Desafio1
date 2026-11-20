@@ -1,0 +1,9 @@
+agno==3.0.9
+openai
+python-dotenv
+pydantic
+streamlit
+sqlalchemy[asyncio]
+tiktoken
+pytest
+ruff

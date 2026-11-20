@@ -1,0 +1,36 @@
+ETAPA 1 · ESTIMATIVA ANTES DO CÓDIGO (tokenizador o200k_base)
+
+Primeira chamada, por componente:
+  regras da norma (normas.md)                642
+  ordem das consultas e proibições           250  (premissa)
+  4 ferramentas (168 cada)                   672
+  esquema da saída (Instrucao)               495
+  pedido (média de 12; 123 a 179)            136
+  TOTAL estimado                            2195
+  referência do enunciado                   2060  (diferença +7%)
+Resposta final (Instrucao de um pedido apto): 446 tokens de saída
+
+Confiabilidade composta (p^n): probabilidade de os n passos darem certo
+  n   p=95%   p=99%
+  1    95.0%   99.0%
+  2    90.2%   98.0%
+  3    85.7%   97.0%
+  4    81.5%   96.1%
+  5    77.4%   95.1%
+  6    73.5%   94.1%
+  7    69.8%   93.2%
+  8    66.3%   92.3%
+
+Cenários (entrada da chamada k = base + (k-1)·Δ; Δ de 90 a 150 tokens):
+  sequencial (paralelas desligadas): 5 passos · cadastro → historico → calculo → saldo → resposta
+    confiabilidade 77.4% (95%) a 95.1% (99%) · entrada 11875–12475 · saída 606 · US$ 0.00310–0.00322 por pedido
+  paralelo (cadastro + historico juntos): 4 passos · cadastro+historico → calculo → saldo → resposta
+    confiabilidade 81.5% (95%) a 96.1% (99%) · entrada 9320–9680 · saída 566 · US$ 0.00254–0.00262 por pedido
+  diligencia (para no cadastro): 2 passos · cadastro → resposta
+    confiabilidade 90.2% (95%) a 98.0% (99%) · entrada 4480–4540 · saída 486 · US$ 0.00148–0.00149 por pedido
+
+Mês com 300 pedidos, sequencial, Δ=90: US$ 1.00
+Mês com 300 pedidos, sequencial, Δ=150: US$ 1.04
+Instruções completas com algum passo errado por mês (p=95%, 5 passos): 68 de 300
+Instruções completas com algum passo errado por mês (p=99%, 5 passos): 15 de 300
+Passos por pedido na composição do acervo: 5.33
