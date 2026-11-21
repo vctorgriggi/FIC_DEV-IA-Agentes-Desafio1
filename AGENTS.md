@@ -65,8 +65,8 @@ app.py       # formulário; só exibe instrução aprovada pela barreira, nunca 
   .env.example versionado traz só os nomes.
 - Código, nomes e documentos em português, como `exemplos/gerar_dados.py` e o enunciado.
 - Memória: histórico da sessão com teto de 3 execuções e memórias do usuário desligadas — sem
-  histórico a complementação não se aplica; as memórias acertam o mesmo, custam de 5% a 23% a mais
-  por turno e gravaram a memória da Carla sob o user_id do Rafael (0112, etapa4_eliminacao.txt).
+  histórico a complementação não se aplica; as memórias acertam o mesmo, custam de 8% a 74% a mais
+  por turno conforme a rodada e gravaram a memória da Carla sob o user_id do Rafael (0112).
 - Registro da conferência: número, sugestão, decisão, motivo mascarado e se a minuta foi editada,
   uma linha por instrução conferida (diligência e complementação são duas) — mede a discordância.
 - Chamadas paralelas desligadas — medido: 336/336 desligadas; todos os erros das oito medições
@@ -105,7 +105,7 @@ app.py       # formulário; só exibe instrução aprovada pela barreira, nunca 
 - Complementação com duas datas ou matrículas não corrige nada; a data só é retorno colada ao verbo,
   a matrícula só perto da palavra, e correção que a barreira não lê barra a instrução de mérito.
 - O formulário guarda a instrução em session_state → eliminação e expurgo tiram da tela com
-  `esquecer`, senão o eliminado continua visível e conferível.
+  `esquecer`, e a eliminação recomeça a rodada (`st.rerun`): a aba Instrução já foi desenhada.
 
 ## Gaps conhecidos
 
