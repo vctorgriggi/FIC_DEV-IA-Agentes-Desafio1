@@ -3,7 +3,7 @@
 Lê resultados/etapa1_estimativa.txt (feita antes do agente) e
 resultados/etapa6_medicao.json, e grava resultados/etapa6_confronto.txt.
 
-Uso: python scripts/confrontar.py   (sem chave)
+Uso: python scripts/confrontar.py   (sem chamar o modelo)
 """
 import json
 import pathlib
@@ -14,7 +14,15 @@ import sys
 RAIZ = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(RAIZ))
 
-from scripts.estimar_desenho import PRECO_ENTRADA, PRECO_SAIDA, VOLUME_MENSAL  # noqa: E402
+from diarias.agente import INSTRUCAO  # noqa: E402
+from diarias.dados import PASTA_DADOS  # noqa: E402
+from scripts.estimar_desenho import (  # noqa: E402
+    ENC,
+    ORDEM_E_PROIBICOES,
+    PRECO_ENTRADA,
+    PRECO_SAIDA,
+    VOLUME_MENSAL,
+)
 
 RES = RAIZ / "resultados"
 GABARITO = json.loads((RAIZ / "exemplos" / "gabarito.json").read_text(encoding="utf-8"))
@@ -82,6 +90,11 @@ def main() -> None:
     linhas.append(f"Mês com {VOLUME_MENSAL} pedidos, sequencial: estimado US$ 1,00–1,04 · medido "
                   f"US$ {custo_pedido * VOLUME_MENSAL:.2f} (preços US$ {PRECO_ENTRADA * 1e6:.2f} e "
                   f"{PRECO_SAIDA * 1e6:.2f} por milhão)")
+    # De onde vem a diferença da primeira chamada: a premissa da instrução contra o texto escrito.
+    norma = len(ENC.encode((PASTA_DADOS / "normas.md").read_text(encoding="utf-8")))
+    regras = len(ENC.encode(INSTRUCAO)) - norma
+    linhas += ["", f"Instrução de sistema além da norma: premissa {ORDEM_E_PROIBICOES} tokens · escrita {regras} "
+               f"(+{regras - ORDEM_E_PROIBICOES}), com o mesmo tokenizador da estimativa"]
     (RES / "etapa6_confronto.txt").write_text("\n".join(linhas) + "\n", encoding="utf-8")
     print("\n".join(linhas))
 

@@ -136,10 +136,7 @@
     "falha": "Teto de chamadas estourado: limite de 2 para um pedido que precisa de 4",
     "status": "COMPLETED",
     "aprovada": false,
-    "consultas": [
-      "consultar_servidor({\"matricula\": \"204317\", \"nome_informado\": \"Ana Paula Figueiredo\"})",
-      "consultar_historico_diarias({\"matricula\": \"204317\", \"data_partida\": \"2026-11-09\", \"data_retorno\": \"2026-11-12\"})"
-    ],
+    "consultas": [],
     "proposta_do_modelo": "nao_recomendado",
     "motivos_da_recusa": [
       "recomendação nao_recomendado não decorre das verificações (apto_para_autorizacao)",

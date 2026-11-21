@@ -18,9 +18,9 @@ cp .env.example .env          # preencha OPENAI_API_KEY; o .env não é versiona
 
 | Comando | O que faz | Chama o modelo? |
 |---|---|---|
-| `.venv/bin/ruff check . && .venv/bin/python -m pytest -q` | lint e os testes (ferramentas, filtro, barreira, eliminação, prazo de guarda, formulário) | não |
+| `.venv/bin/ruff check . && .venv/bin/python -m pytest -q` | lint e os testes (ferramentas, filtro, barreira, eliminação, prazo de guarda, formulário); saída em `resultados/etapa6_testes.txt` | não |
 | `.venv/bin/python scripts/estimar_desenho.py` | contas da Etapa 1 | não |
-| `.venv/bin/python scripts/testar_ferramentas.py` | as ferramentas nos casos do enunciado | não |
+| `.venv/bin/python scripts/testar_ferramentas.py` | as ferramentas nos casos do enunciado (`resultados/etapa2_ferramentas.txt`) | não |
 | `.venv/bin/streamlit run app.py` | o formulário de conferência; abre sem chave, e só chama o modelo ao instruir | sim |
 | `.venv/bin/python scripts/rodar_casos.py` | o agente nos 12 pedidos e nas 2 complementações, com alertas e minuta | sim |
 | `.venv/bin/python scripts/medir_memoria.py` | custo da memória nas três configurações | sim |
@@ -30,8 +30,11 @@ cp .env.example .env          # preencha OPENAI_API_KEY; o .env não é versiona
 | `.venv/bin/python scripts/rodar_variacoes.py` | 21 variações fora do acervo, contra a regra do gabarito | sim |
 | `.venv/bin/python scripts/confrontar.py` | Etapa 1 contra o medido | não |
 
-As saídas vão para `resultados/`; as telas do formulário em uso (progresso, instrução, minuta
-editável, conferência, mensagem padrão e eliminação) estão em `resultados/etapa5_telas/`.
+As saídas vão para `resultados/`; as telas do formulário em uso (progresso, instrução, alertas,
+pendências e consultas com os argumentos, minuta editável, conferência concordante e divergente com
+motivo, complementação, mensagem padrão e eliminação) estão em `resultados/etapa5_telas/`. A tela da
+mensagem padrão foi provocada rodando o formulário com uma chave da API inválida: a execução falha,
+e o pedido volta à análise manual.
 Os bancos do agente vão para `bancos/`, fora do git, porque guardam dados pessoais.
 
 O enunciado pede em `resultados/` "as saídas das medições das Etapas 4 e 5". Os arquivos seguem a
@@ -81,8 +84,8 @@ falhas provocadas, que a Figura 1 e a Etapa 1 do enunciado chamam de Etapa 6.
 - **Filtro de dados pessoais.** Os padrões norte-americanos do Agno ficam desligados, porque o de
   telefone casaria com números de pedido e datas. Entram dois padrões próprios: o CPF pela máscara,
   sem conferir dígito, e a conta ou agência pelo formato algarismos-hífen-dígito. Fica ligado o de
-  e-mail do Agno. Os testes mostram
-  que, nos 12 pedidos, só o 0104 muda.
+  e-mail do Agno. Os testes mostram que, nos 12 pedidos, só o 0104 muda, e o CPF dele não chegou ao
+  modelo (`resultados/etapa3_casos.txt`) nem ao banco (`resultados/etapa4_memoria.txt`, última linha).
 - **Data da análise fixa** (2026-10-09, de `tabela_diarias.json`), nunca a data de hoje, e dias
   úteis sem feriados, como o gabarito.
 - **Python 3.15.** É o da máquina, e as dependências instalaram e importaram nele. O enunciado
@@ -101,11 +104,11 @@ que número?**
 
 - **Chamadas paralelas desligadas.** A cadeia é dependente: o cálculo precisa do grupo que vem
   do cadastro, e o saldo precisa do valor que vem do cálculo; só o histórico poderia correr junto do
-  cadastro (`desenho.md`, seção 4). Desligadas, deram 294 acertos em 294 casos nas sete
-  medições (210 deles com a matrícula conferida; as duas primeiras medições não a conferiam).
-  Ligadas, cortam cerca de 11% do custo (US$ 0,00376 contra 0,00421 por pedido), mas todos os erros
-  das sete medições aconteceram com elas: o 0107 em três e a complementação do 0111 sem cadastro
-  em duas.
+  cadastro (`desenho.md`, seção 4). No código entregue, desligadas deram 42 acertos em 42 e
+  ligadas, 41 em 42. Nas oito medições, desligadas deram 336 em 336 (252 com a matrícula conferida;
+  as duas primeiras medições não a conferiam). Ligadas, cortam cerca de 11% do custo (US$ 0,00377
+  contra 0,00422 por pedido), mas todos os erros aconteceram com elas: o 0107 em três medições e a
+  complementação do 0111 sem cadastro em três.
 - **Teto de 8 chamadas de ferramenta** (`tool_call_limit=8`). Nas medições, o máximo foi 4
   consultas por turno e 5 chamadas ao modelo. Numa execução da falha provocada 1, o modelo repetiu
   as quatro consultas e chegou às 8, ainda com a instrução certa
@@ -113,11 +116,9 @@ que número?**
   fim. Com teto 2 (falha provocada 4), a instrução fica incompleta e é recusada.
 - **Memória: histórico da sessão com teto de 3 execuções, sem memórias do usuário.** Sem
   memória, a complementação não foi aplicada (0 de 2); com o histórico, foi (2 de 2), e somar as
-  memórias do usuário também acertou 2 de 2, mas custou de 7% a 9% a mais na complementação e de 21% a 74% no
-  primeiro turno. Na
-  primeira medição, o modelo gravou uma memória da Carla (0112), que a eliminação achou pelo
-  conteúdo (`resultados/etapa4_eliminacao_primeira_medicao.txt`); que ela estava sob a matrícula de
-  outro servidor foi observado durante o desenvolvimento, sem arquivo que o registre.
+  memórias do usuário também acertou 2 de 2, mas custou de 5% a 11% a mais na complementação e de
+  21% a 23% no primeiro turno. E o modelo gravou uma memória da Carla (0112) sob a matrícula de outro
+  servidor (`resultados/etapa4_eliminacao.txt`).
   Um pedido tem no máximo dois turnos, então 3 é folga.
 
 **Como o sistema impede que uma instrução fundamentada em dado inventado chegue ao conferente?**
@@ -156,17 +157,16 @@ variações não entregaram nenhuma instrução errada (`relatorio.md`, seções
     e-mail). Cada instrução conferida é uma linha: o pedido em diligência que recebe complementação
     tem duas, uma por instrução, e a taxa de divergência é por instrução conferida.
   - **No log de recusas**: o número do pedido e os motivos internos da recusa.
-- **Por quanto tempo:** 30 dias depois do último evento do pedido: a conferência, a recusa pela
-  barreira ou o último uso da sessão no banco, o que vier por último. Por isso o prazo recomeça
-  quando o pedido é conferido de novo ou recebe uma complementação. Vencido o prazo, o formulário
+- **Por quanto tempo:** 30 dias depois da conferência do pedido ou da recusa pela barreira. Um
+  pedido instruído e nunca conferido nem recusado não tem de onde contar o prazo: fica até ser
+  conferido ou até a eliminação pelo titular. Se o pedido for usado de novo depois (outra
+  conferência, uma complementação), o prazo recomeça desse uso. Vencido o prazo, o formulário
   apaga sozinho a sessão do pedido e as execuções, compacta o arquivo e confere que nada restou
   (`diarias/guarda.py`). Se a compactação falhar, ela é refeita na abertura seguinte. No log de
   recusas, cada linha sai 30 dias depois da própria recusa, mas só quando o pedido já saiu do banco,
   porque ela é o relógio dele. O registro da conferência fica, porque é o que mede a discordância
   com o agente: a linha guarda o número do pedido, não o nome nem a matrícula, e a eliminação só
-  tira dele as linhas cujo motivo cita o titular. Pedido instruído e
-  nunca conferido nem recusado não tem de onde contar o prazo: fica até ser conferido ou até a
-  eliminação pelo titular.
+  tira dele as linhas cujo motivo cita o titular.
 - **Como eliminar:** na aba "Eliminação de dados" do formulário, ou com a função
   `eliminar_titular`. A rotina apaga as sessões do titular (que levam junto as execuções) e as
   memórias, procurando pelo nome e pela matrícula no conteúdo de todas as tabelas, e não só pelo
@@ -190,12 +190,12 @@ Sim, desde que um servidor confira cada instrução.
 
 - **De ponta a ponta:** um agente só, com quatro ferramentas, instrui os 12 pedidos e as 2
   complementações sem intervenção. Foram 14 de 14 iguais ao gabarito na execução com alertas e
-  minuta (`resultados/etapa3_casos.txt`) e 294 de 294 nas rodadas sequenciais das sete medições.
+  minuta (`resultados/etapa3_casos.txt`) e 336 de 336 nas rodadas sequenciais das oito medições.
   Em 21 variações fora do acervo, nenhuma instrução errada chegou ao conferente; as que o agente
   não instruiu bem foram recusadas e voltaram à análise manual.
 - **A decisão fica com quem assina:** o agente não decide (art. 10). A barreira em código só deixa
   passar instrução com dado de origem conferida, o servidor confere cada pedido no formulário e
   registra o encaminhamento, e o ordenador de despesa defere ou indefere.
 - **O limite:** a urgência é julgada pelo modelo, sobre o texto da justificativa, e foi aí que
-  aconteceram três dos cinco erros das medições (todos com chamadas paralelas ligadas). É por isso
+  aconteceram três dos seis erros das medições (todos com chamadas paralelas ligadas). É por isso
   que a conferência humana é obrigatória em todo pedido (`relatorio.md`, seção 6).

@@ -33,8 +33,7 @@ status da execução: ERROR · barreira: RECUSADA · instrução que o modelo pr
 ## Falha 4: Teto de chamadas estourado: limite de 2 para um pedido que precisa de 4
 esperado: instrução de mérito sem as quatro consultas é recusada
 status da execução: COMPLETED · barreira: RECUSADA · instrução que o modelo propôs: nao_recomendado
-  consulta: consultar_servidor({"matricula": "204317", "nome_informado": "Ana Paula Figueiredo"})
-  consulta: consultar_historico_diarias({"matricula": "204317", "data_partida": "2026-11-09", "data_retorno": "2026-11-12"})
+  consulta: nenhuma
   recusa: recomendação nao_recomendado não decorre das verificações (apto_para_autorizacao)
   recusa: instrução de mérito sem as quatro consultas
   chegou ao conferente algo errado? não: mensagem padrão, pedido volta à análise manual

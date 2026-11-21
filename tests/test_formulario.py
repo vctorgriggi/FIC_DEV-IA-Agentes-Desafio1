@@ -370,3 +370,24 @@ def test_marca_ilegivel_nao_derruba(pasta_temporaria):
     at = abrir()
     assert not at.exception
     assert not memoria.marca_de_pendencia(pasta_temporaria / "agente.db").exists()
+
+
+# ------------------------------------------------------------- sexta revisão
+
+def test_formulario_mostra_a_matricula_e_o_pedido_da_instrucao(monkeypatch):
+    trocar_agente(monkeypatch, aprovado("DIA-2026-0101"))
+    at = abrir()
+    at.button[0].click().run()
+    assert "Instrução do pedido DIA-2026-0101 para a matrícula 204317." in texto_da_tela(at)
+
+
+def test_matricula_corrigida_e_destacada_na_complementacao_do_0112(monkeypatch):
+    from tests.test_barreira import COMPLEMENTOS
+    resposta = execucao_honesta(PEDIDOS["DIA-2026-0112"], matricula="207418")
+    assert barreira.conferir(resposta, PEDIDOS["DIA-2026-0112"], COMPLEMENTOS["DIA-2026-0112"]).aprovada
+    trocar_agente(monkeypatch, ag.Resultado(numero="DIA-2026-0112", aprovada=True, instrucao=resposta.content,
+                                            resposta=resposta))
+    at = abrir("DIA-2026-0112")
+    at.button[0].click().run()
+    tela = texto_da_tela(at)
+    assert "para a matrícula 207418" in tela and "a digitada no pedido (207481)" in tela

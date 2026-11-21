@@ -5,8 +5,8 @@ ETAPA 6 · ETAPA 1 CONFRONTADA COM O MEDIDO
   acréscimo por passo: estimado 90–150 · medido 72–209 (média 119)
   passos: estimados 5 · medidos 5.00
   entrada total: estimada 11875–12475 · medida 14839 (+19% sobre o teto da estimativa)
-  saída: estimada 606 · medida 767
-  custo por instrução: estimado US$ 0.00310–0.00322 · medido US$ 0.00389
+  saída: estimada 606 · medida 762
+  custo por instrução: estimado US$ 0.00310–0.00322 · medido US$ 0.00388
   diligência: entrada estimada 4480–4540 · medida 5520 · passos medidos 2.00 (estimados 2)
   acerto por caso: 42/42 (100.0%); erros entregues ao conferente: 0; recusas visíveis: 0
 
@@ -14,10 +14,12 @@ ETAPA 6 · ETAPA 1 CONFRONTADA COM O MEDIDO
   primeira chamada: estimada 2195 · medida 2731 (+24%)
   acréscimo por passo: estimado 90–150 · medido 72–338 (média 145)
   passos: estimados 4 · medidos 4.30
-  entrada total: estimada 9320–9680 · medida 12781 (+32% sobre o teto da estimativa)
-  saída: estimada 566 · medida 770
-  custo por instrução: estimado US$ 0.00254–0.00262 · medido US$ 0.00348
+  entrada total: estimada 9320–9680 · medida 12779 (+32% sobre o teto da estimativa)
+  saída: estimada 566 · medida 785
+  custo por instrução: estimado US$ 0.00254–0.00262 · medido US$ 0.00350
   diligência: entrada estimada 4480–4540 · medida 5520 · passos medidos 2.00 (estimados 2)
   acerto por caso: 41/42 (97.6%); erros entregues ao conferente: 0; recusas visíveis: 1
 
 Mês com 300 pedidos, sequencial: estimado US$ 1,00–1,04 · medido US$ 1.28 (preços US$ 0.20 e 1.20 por milhão)
+
+Instrução de sistema além da norma: premissa 250 tokens · escrita 792 (+542), com o mesmo tokenizador da estimativa

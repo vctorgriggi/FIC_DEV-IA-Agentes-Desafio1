@@ -122,6 +122,11 @@ def mostrar_instrucao(resultado: ag.Resultado, chave: str) -> None:
     c2.metric("Diárias", "—" if i.quantidade_diarias is None else f"{i.quantidade_diarias:g}".replace(".", ","))
     c3.metric("Valor total", "—" if i.valor_total is None else
               f"R$ {i.valor_total:,.2f}".replace(",", "X").replace(".", ",").replace("X", "."))
+    st.caption(f"Instrução do pedido {i.numero_pedido} para a matrícula {i.matricula}.")
+    digitada = PEDIDOS.get(i.numero_pedido, {}).get("matricula")
+    if digitada and i.matricula != digitada:   # 0112: a barra lateral mostra a digitada, que é de outro servidor
+        st.info(f"A matrícula da instrução ({i.matricula}) é a corrigida na complementação; a digitada no "
+                f"pedido ({digitada}) não é a do solicitante.")
     if i.exige_autorizacao_superior:
         st.warning("Exige autorização expressa e escrita do Secretário Adjunto (art. 5º, § 2º).")
 
