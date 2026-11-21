@@ -87,3 +87,32 @@ def test_eliminacao_alcanca_os_registros_que_citam_o_titular(banco, tmp_path):
     assert "206689" not in recusas.read_text(encoding="utf-8")
     assert "Beatriz" not in conferencias.read_text(encoding="utf-8")
     assert "DIA-2026-0101" in recusas.read_text(encoding="utf-8")   # o que não é do titular fica
+
+
+# ------------------------------------------------------------- terceira revisão
+
+@pytest.mark.parametrize("nome", ["", "   ", "Campos"])
+def test_nome_vazio_ou_parcial_e_recusado_antes_de_apagar(banco, nome):
+    db, arquivo = banco
+    with pytest.raises(ValueError):
+        memoria.eliminar_titular(db, arquivo, nome, [])
+    assert {s.session_id for s in SqliteDb(db_file=str(arquivo)).get_sessions()} == {
+        "DIA-2026-0111", "DIA-2026-0112", "DIA-2026-0101"}
+
+
+def test_compactacao_que_falha_na_eliminacao_deixa_marca_e_registros_limpos(banco, tmp_path, monkeypatch):
+    db, arquivo = banco
+    recusas = tmp_path / "recusas.jsonl"
+    recusas.write_text('{"pedido": "DIA-2026-0111", "motivos": ["consultou 206689"]}\n', encoding="utf-8")
+    real = memoria.compactar
+
+    def ocupado(_arquivo):
+        raise memoria.EliminacaoIncompleta("banco em uso")
+    monkeypatch.setattr(memoria, "compactar", ocupado)
+    with pytest.raises(memoria.EliminacaoIncompleta) as erro:
+        memoria.eliminar_titular(db, arquivo, *BEATRIZ, registros=[recusas])
+    assert erro.value.sessoes == ["DIA-2026-0111"]                 # quem chamou tira da tela
+    assert "206689" not in recusas.read_text(encoding="utf-8")      # os registros não esperam a compactação
+    monkeypatch.setattr(memoria, "compactar", real)
+    assert memoria.concluir_pendencia(arquivo) == ["DIA-2026-0111"]
+    assert not memoria.bytes_residuais(arquivo, ["Beatriz Moraes Cunha"])

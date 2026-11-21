@@ -8,8 +8,10 @@ e à medição; a tela mostra só a mensagem padrão.
 Cada dado é conferido no lugar em que foi usado, e não só pela presença no pedido:
 a data de partida tem de ser a partida do pedido, a matrícula das consultas tem de
 ser a que o cadastro conferiu, e uma diligência precisa de causa comprovada. Uma
-complementação pode corrigir a matrícula e a data de retorno, como as do acervo;
-outra correção não é reconhecida e o pedido cai na análise manual. Complementação
+complementação pode corrigir a matrícula e a data de retorno, como as do acervo,
+e a correção substitui o valor do pedido; a data só vale como retorno quando o
+texto fala em retorno. Outra correção não é reconhecida e o pedido cai na análise
+manual. Complementação
 com mais de uma data ou de uma matrícula não corrige nada, e a correção para um
 nome que tem homônimo no cadastro também vai para a análise manual. O texto livre
 (minuta, alertas, pendências, detalhes) não pode citar outra matrícula nem outro
@@ -17,7 +19,8 @@ servidor do cadastro.
 
 O único julgamento que o modelo faz sem ferramenta que o confirme é a urgência:
 ele pode considerar atendida a antecedência curta, desde que marque
-exige_autorizacao_superior, e só quando nada mais impede o pedido.
+exige_autorizacao_superior, e só quando nada mais impede o pedido. Deixar a
+antecedência curta sem julgamento ("nao_verificado") é recusado.
 """
 import re
 from dataclasses import dataclass, field
@@ -38,6 +41,8 @@ FERRAMENTAS_CONHECIDAS = {"consultar_servidor", "consultar_historico_diarias",
 
 MATRICULA = re.compile(r"\b\d{6}\b")
 DATA = re.compile(r"\b\d{4}-\d{2}-\d{2}\b")
+# a data só corrige o retorno quando a mesma oração fala em retorno ("o retorno está previsto para …")
+DATA_DE_RETORNO = re.compile(r"(?:retorn|volt|regress)\w*[^.;\n]*?(\d{4}-\d{2}-\d{2})", re.IGNORECASE)
 CADASTRO_OK = re.compile(r"Cadastro confere: matrícula (\d+),.*grupo da diária (\w), unidade (\w+) ")
 QUANTIDADE = re.compile(r"Quantidade: ([\d.]+) ")
 VALOR = re.compile(r"= R\$ ([\d.]+) \(Anexo I\)")
@@ -50,20 +55,23 @@ class Veredito:
 
 
 def permitidos(pedido: dict, complementacao: dict | None) -> dict[str, set[str]]:
-    """Por argumento de ferramenta, os valores aceitos: o campo do pedido e a correção escrita."""
+    """Por argumento de ferramenta, os valores aceitos: o do pedido ou, se houver, a correção escrita.
+
+    A correção substitui o valor do pedido: aceitar os dois deixaria passar a complementação ignorada.
+    """
     texto = str((complementacao or {}).get("texto", ""))
     retorno = {str(pedido["data_retorno"])} if pedido.get("data_retorno") else set()
     # Com mais de uma data (ou matrícula) no texto não há como saber qual é a correção: nenhuma vale.
     datas, matriculas = set(DATA.findall(texto)), set(MATRICULA.findall(texto))
-    datas = datas if len(datas) == 1 else set()
+    datas = set(DATA_DE_RETORNO.findall(texto)) if len(datas) == 1 else set()
     matriculas = matriculas if len(matriculas) == 1 else set()
     return {
-        "matricula": {str(pedido["matricula"])} | matriculas,
+        "matricula": matriculas or {str(pedido["matricula"])},
         "nome_informado": {str(pedido["nome"]).strip()},
         "destino_uf": {str(pedido["destino_uf"]).strip().upper()},
         "data_pedido": {str(pedido["data_pedido"])},
         "data_partida": {str(pedido["data_partida"])},
-        "data_retorno": retorno | datas,
+        "data_retorno": datas or retorno,
     }
 
 
@@ -234,6 +242,9 @@ def _conferir(resposta: RunOutput | None, pedido: dict, complementacao: dict | N
     curta = "NÃO atende" in texto_calc
     if not curta and situacao.get("antecedencia") != "atende":
         motivos.append("antecedência suficiente marcada como não atendida")
+    if curta and situacao.get("antecedencia") not in ("atende", "nao_atende"):
+        # sem julgar a urgência não há como derivar a recomendação nem o sinal de autorização
+        motivos.append("antecedência curta sem julgamento da urgência")
     # O sinal decorre das verificações, como no gabarito: só quando a urgência foi aceita e nada
     # mais impede. A regra antiga só cobria a antecedência suficiente e deixou passar, na medição,
     # um 0107 com urgência negada e autorização exigida (resultados/etapa6_medicao_antes_da_correcao).

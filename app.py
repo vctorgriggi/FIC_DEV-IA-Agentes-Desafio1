@@ -20,6 +20,7 @@ from diarias.filtro import CONTA_OU_AGENCIA, CPF
 DADOS = Path(__file__).resolve().parent / "exemplos" / "dados"
 PEDIDOS = {p["numero"]: p for p in json.loads((DADOS / "pedidos.json").read_text(encoding="utf-8"))}
 COMPLEMENTOS = {c["numero"]: c for c in json.loads((DADOS / "complementacoes.json").read_text(encoding="utf-8"))}
+NOMES_NO_CADASTRO = {s["nome"] for s in carregar().servidores.values()}
 
 ROTULO_CONSULTA = {
     "consultar_servidor": "Consultando o cadastro funcional",
@@ -52,25 +53,32 @@ def esquecer(numeros: list[str]) -> None:
     resultados = st.session_state.get("resultados", {})
     for numero in numeros:
         resultados.pop(numero, None)
-        for chave in [k for k in st.session_state if str(k).startswith(f"registrada_{numero}_")]:
-            del st.session_state[chave]
+        st.session_state.pop(f"complemento_{numero}", None)   # o texto da complementação também é do titular
+        limpar_conferencia(numero)
+
+
+def limpar_conferencia(numero: str, turno: str = "") -> None:
+    """Uma instrução nova precisa de conferência nova: some o aviso de conferida da anterior."""
+    for chave in [k for k in st.session_state if str(k).startswith(f"registrada_{numero}_{turno}")]:
+        del st.session_state[chave]
 
 
 def aplicar_prazo_de_guarda() -> None:
-    """Apaga do banco os pedidos conferidos há 30 dias ou mais (decisão do órgão)."""
+    """Apaga do banco os pedidos sem evento há 30 dias ou mais: conferência, recusa ou uso."""
     _, db, arquivo = recursos()
     try:
         apagados = guarda.expurgar(db, arquivo)
-        guarda.podar_recusas()
-    except (memoria.EliminacaoIncompleta, sqlite3.Error) as erro:   # banco ocupado: tenta de novo depois
+        guarda.podar_recusas(banco=arquivo)
+    except (memoria.EliminacaoIncompleta, sqlite3.Error, OSError) as erro:   # banco ocupado: tenta depois
         recursos.clear()
+        esquecer(getattr(erro, "sessoes", []))   # o que já saiu do banco sai da tela também
         st.warning(f"O prazo de guarda não pôde ser aplicado agora e será tentado de novo: {erro}")
         return
     if apagados:
         recursos.clear()   # o banco foi fechado para compactar; o próximo uso reabre
         esquecer(apagados)
-        st.toast(f"Prazo de guarda: {len(apagados)} pedido(s) conferido(s) há {guarda.PRAZO_DIAS} dias ou "
-                 "mais saíram do banco do agente.")
+        st.toast(f"Prazo de guarda: {len(apagados)} pedido(s) sem conferência, recusa ou uso há "
+                 f"{guarda.PRAZO_DIAS} dias ou mais saíram do banco do agente.")
 
 
 def mascarar(texto: str) -> str:
@@ -160,6 +168,7 @@ def aba_instrucao(pedido: dict) -> None:
     resultados = st.session_state.setdefault("resultados", {})
     numero = pedido["numero"]
     if st.button("Instruir pedido", type="primary"):
+        limpar_conferencia(numero)
         resultados[numero] = {"pedido": executar(pedido)}
     atual = resultados.get(numero, {})
     if "pedido" not in atual:
@@ -180,6 +189,7 @@ def aba_instrucao(pedido: dict) -> None:
     texto = st.text_area("Texto da complementação", key=campo)
     if st.button("Enviar complementação") and texto.strip():
         complemento = {"numero": numero, "data": str(carregar().data_da_analise), "texto": texto.strip()}
+        limpar_conferencia(numero, "complemento")
         atual["complementacao"] = executar(pedido, complemento)
     if "complementacao" in atual:
         mostrar_instrucao(atual["complementacao"], f"{numero}_complemento")
@@ -197,12 +207,19 @@ def aba_eliminacao(pedido: dict) -> None:
     confirmar = st.checkbox("Confirmo que o titular pediu a eliminação dos seus dados",
                             key=f"confirma_eliminacao_{pedido['numero']}")   # não vale para outro pedido
     if st.button("Eliminar dados do titular", disabled=not confirmar):
-        _, db, arquivo = recursos()
         lista = [m.strip() for m in matriculas.split(",") if m.strip()]
+        if " ".join(nome.split()) not in NOMES_NO_CADASTRO:
+            # a busca é por trecho de texto: nome vazio apagaria tudo, e nome parcial, outras pessoas
+            st.error("Informe o nome completo do titular, exatamente como está no cadastro.")
+            return
+        _, db, arquivo = recursos()
         try:
-            rel = memoria.eliminar_titular(db, arquivo, nome.strip(), lista,
+            rel = memoria.eliminar_titular(db, arquivo, nome, lista,
                                            registros=[conferencia.LOG_RECUSAS, conferencia.ARQUIVO])
+        except ValueError as erro:
+            st.error(str(erro))
         except (memoria.EliminacaoIncompleta, sqlite3.Error) as erro:
+            esquecer(getattr(erro, "sessoes", []))   # o que já saiu do banco não pode seguir conferível
             st.error(f"A eliminação não se completou: {erro}")
         else:
             esquecer(rel.sessoes_apagadas)
@@ -222,7 +239,7 @@ def aba_conferencias() -> None:
     linhas = conferencia.ler()
     taxa = conferencia.taxa_de_divergencia()
     st.caption(f"Prazo de guarda: o banco do agente mantém cada pedido por {guarda.PRAZO_DIAS} dias depois "
-               "da última conferência; depois disso ele é apagado automaticamente.")
+               "do último evento (conferência, recusa ou uso); depois disso ele é apagado automaticamente.")
     st.metric("Conferências registradas", len(linhas),
               help="Cada linha é uma decisão do servidor ao lado da sugestão do agente.")
     if taxa is not None:

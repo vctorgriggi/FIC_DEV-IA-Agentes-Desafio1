@@ -4,7 +4,8 @@ Decisão do usuário: 30 dias após a conferência. O relógio de cada pedido co
 partir do último destes: conferência registrada, recusa da barreira (que vai para
 análise manual sem conferência) ou uso do pedido no banco. Assim um pedido conferido
 de novo, ou reinstruído depois de uma conferência antiga, não some no meio do uso.
-Pedido sem conferência nem recusa fica até a eliminação pelo titular. O prazo usa a
+Pedido sem conferência nem recusa fica até a eliminação pelo titular. A recusa só sai do
+log depois que o pedido sai do banco: ela é o relógio dele. O prazo usa a
 data real, e não a data da análise do acervo, porque é regra de operação do sistema
 e não da norma de diárias.
 
@@ -25,15 +26,23 @@ from diarias import conferencia, memoria
 PRAZO_DIAS = 30
 
 
+def _quando(registro) -> datetime | None:
+    """Data do registro em hora local sem fuso; None se o registro não tiver data válida."""
+    try:
+        quando = datetime.fromisoformat(registro["registrado_em"])
+    except (KeyError, TypeError, ValueError):
+        return None
+    return quando.astimezone().replace(tzinfo=None) if quando.tzinfo else quando
+
+
 def vencidos(conferencias: list[dict], agora: datetime, prazo_dias: int = PRAZO_DIAS) -> list[str]:
-    """Pedidos cuja última conferência tem `prazo_dias` ou mais."""
+    """Pedidos cujo último evento tem `prazo_dias` ou mais."""
     ultima: dict[str, datetime] = {}
     for c in conferencias:
-        try:
-            quando = datetime.fromisoformat(c["registrado_em"])
-        except (KeyError, TypeError, ValueError):   # registro sem data válida não conta para o prazo
+        quando, numero = _quando(c), c.get("pedido") if isinstance(c, dict) else None
+        if quando is None or not numero:   # registro sem data ou sem pedido não conta para o prazo
             continue
-        ultima[c["pedido"]] = max(quando, ultima.get(c["pedido"], quando))
+        ultima[numero] = max(quando, ultima.get(numero, quando))
     limite = agora - timedelta(days=prazo_dias)
     return sorted(numero for numero, quando in ultima.items() if quando <= limite)
 
@@ -62,10 +71,6 @@ def _ultimo_uso_no_banco(arquivo: Path, numero: str) -> datetime | None:
     return datetime.fromtimestamp(linha[0]) if linha and linha[0] else None
 
 
-def _marca_de_pendencia(arquivo: Path) -> Path:
-    return arquivo.parent / f"{arquivo.name}.compactacao_pendente"
-
-
 def _run_ids(arquivo: Path, ids: list[str]) -> list[str]:
     if "agno_runs" not in memoria.tabelas(arquivo):
         return []
@@ -83,43 +88,56 @@ def expurgar(db: SqliteDb, arquivo: Path, agora: datetime | None = None, prazo_d
     reabrir o agente quando a lista volta preenchida.
     """
     agora = agora or datetime.now()
-    marca = _marca_de_pendencia(arquivo)
-    if marca.exists():                        # a compactação da vez anterior não terminou
+    pendentes = []
+    if memoria.marca_de_pendencia(arquivo).exists():   # a compactação da vez anterior não terminou
         db.close()
-        memoria.compactar(arquivo)
-        marca.unlink()
+        pendentes = memoria.concluir_pendencia(arquivo)
+        if pendentes and _com_session_id(arquivo, pendentes):   # número do pedido nos bytes daria falso resto
+            raise memoria.EliminacaoIncompleta(f"expurgo incompleto de {pendentes}", pendentes)
     eventos = [*(conferencias if conferencias is not None else conferencia.ler()),
                *(recusas if recusas is not None else conferencia.ler(conferencia.LOG_RECUSAS))]
     candidatos = vencidos(eventos, agora, prazo_dias)
     if not candidatos or not arquivo.exists():
-        return []
+        return pendentes
     uso = ultimo_uso or _ultimo_uso_no_banco
     limite = agora - timedelta(days=prazo_dias)
     ids = [i for i in candidatos if _com_session_id(arquivo, [i])   # ainda no banco
            and ((quando := uso(arquivo, i)) is None or quando <= limite)]   # e sem uso depois do prazo
     if not ids:
-        return []
+        return pendentes
     execucoes = _run_ids(arquivo, ids)
     db.delete_sessions(ids)                   # leva junto as execuções e os resultados guardados
     db.close()
-    marca.touch()                             # se compactar falhar, a próxima chamada termina o serviço
-    memoria.compactar(arquivo)
-    marca.unlink()
+    memoria.compactar_com_marca(arquivo, ids)   # se falhar, a próxima chamada termina e devolve os ids
     restou = _com_session_id(arquivo, ids)
     residuos = memoria.bytes_residuais(arquivo, execucoes)
     if restou or residuos:
-        raise memoria.EliminacaoIncompleta(f"expurgo incompleto de {ids}: {restou} {residuos}")
-    return ids
+        raise memoria.EliminacaoIncompleta(f"expurgo incompleto de {ids}: {restou} {residuos}", ids)
+    return [*pendentes, *ids]
 
 
 def podar_recusas(agora: datetime | None = None, prazo_dias: int = PRAZO_DIAS,
-                  arquivo: Path | None = None) -> int:
-    """O log de recusas pode citar matrículas: guarda só os registros dentro do prazo."""
+                  arquivo: Path | None = None, banco: Path | None = None) -> int:
+    """O log de recusas pode citar matrículas: guarda só os registros dentro do prazo.
+
+    A recusa de um pedido que ainda está no `banco` fica, mesmo vencida: é o único relógio dele, e
+    sem ela o pedido nunca venceria. Linha ilegível sai, porque não conta para prazo nenhum.
+    """
     arquivo = arquivo or conferencia.LOG_RECUSAS
     if not arquivo.exists():
         return 0
     limite = (agora or datetime.now()) - timedelta(days=prazo_dias)
-    linhas = [json.loads(x) for x in arquivo.read_text(encoding="utf-8").splitlines() if x.strip()]
-    ficam = [x for x in linhas if datetime.fromisoformat(x["registrado_em"]) > limite]
+    brutas = [x for x in arquivo.read_text(encoding="utf-8").splitlines() if x.strip()]
+    linhas = conferencia.ler(arquivo)
+    no_banco = _sessoes_no_banco(banco) if banco else set()
+    ficam = [x for x in linhas if isinstance(x, dict) and (quando := _quando(x)) is not None
+             and (quando > limite or x.get("pedido") in no_banco)]
     arquivo.write_text("".join(json.dumps(x, ensure_ascii=False) + "\n" for x in ficam), encoding="utf-8")
-    return len(linhas) - len(ficam)
+    return len(brutas) - len(ficam)
+
+
+def _sessoes_no_banco(arquivo: Path) -> set[str]:
+    if not arquivo.exists() or "agno_sessions" not in memoria.tabelas(arquivo):
+        return set()
+    with sqlite3.connect(arquivo) as con:
+        return {r[0] for r in con.execute("SELECT session_id FROM agno_sessions")}

@@ -1,0 +1,13 @@
+ETAPA 6 · MEDIÇÃO CONTRA O GABARITO (12 pedidos + 2 complementações por rodada)
+
+rodada          acertos recusas erros ent. entrada méd. 1ª chamada passos s/caso US$/pedido
+sequencial r1     14/14       0          0        13559       2604      5   10.4    0.00418
+sequencial r2     14/14       0          0        13573       2604      5   10.1    0.00419
+sequencial r3     14/14       0          0        13365       2604      5   10.2    0.00415
+paralelas r1      14/14       0          0        11455       2604    4.3    8.4    0.00370
+paralelas r2      14/14       0          0        12143       2604    4.3    8.7    0.00384
+paralelas r3      14/14       0          0        11247       2604    4.2    8.6    0.00365
+
+Casos que não acertaram em alguma rodada:
+
+Custo mensal medido, sequencial, 300 pedidos: US$ 1.25

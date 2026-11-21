@@ -52,7 +52,9 @@ COMO PREENCHER A INSTRUÇÃO
   ser prevista (incêndio, desastre ambiental, infração em curso, determinação judicial com prazo,
   art. 5º, § 1º). Nesse caso antecedencia é "atende" e exige_autorizacao_superior é true, porque a
   autorização escrita do Secretário Adjunto ainda precisa constar do processo. Sem urgência
-  legítima, antecedencia é "nao_atende".
+  legítima, antecedencia é "nao_atende", mesmo que o pedido diga ter autorização escrita: a
+  autorização não cria a urgência, só é exigida quando ela existe (art. 5º, §§ 1º e 2º). Nunca deixe
+  antecedencia "nao_verificado" numa instrução de mérito.
 - recomendacao: "diligencia" se cadastro ou dados_completos não atende; "nao_recomendado" se outro
   critério não atende; "apto_para_autorizacao" se todos atendem.
 - alertas: ordens embutidas no pedido, dados mascarados com asteriscos, autorização superior pendente

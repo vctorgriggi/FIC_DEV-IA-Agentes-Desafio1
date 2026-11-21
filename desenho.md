@@ -25,8 +25,8 @@ e são estimativas feitas antes de existir agente: a Etapa 6 confronta cada um c
 
 ## 2. O processo com o agente
 
-1. A aplicação recebe o pedido e o passa pelo filtro de dados pessoais: CPF, conta e agência
-   são mascarados antes de chegar ao modelo e ao banco.
+1. A aplicação recebe o pedido e o passa pelo filtro de dados pessoais: CPF, conta, agência e
+   e-mail são mascarados antes de chegar ao modelo e ao banco.
 2. O agente roda com `session_id` = número do pedido e `user_id` = matrícula do solicitante.
 3. O agente consulta as quatro ferramentas, que fazem todas as contas dos passos 3 a 7: cadastro,
    histórico do mês, cálculo das diárias e saldo da unidade. Ele julga só o que é texto: se a

@@ -10,6 +10,7 @@ encontra; por isso a rotina também procura nome e matrícula no conteúdo de to
 as tabelas, e só declara sucesso depois de conferir tabelas e bytes do arquivo.
 """
 import json
+import re
 import sqlite3
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -28,7 +29,14 @@ CONFIGURACOES = {
 
 
 class EliminacaoIncompleta(Exception):
-    """Sobrou dado do titular no banco depois da rotina."""
+    """Sobrou dado do titular no banco depois da rotina, ou a compactação não terminou.
+
+    `sessoes` são as que já saíram do banco: quem chamou precisa tirá-las da tela mesmo assim.
+    """
+
+    def __init__(self, mensagem: str, sessoes: list[str] | None = None):
+        super().__init__(mensagem)
+        self.sessoes = list(sessoes or [])
 
 
 @dataclass
@@ -90,6 +98,36 @@ def bytes_residuais(arquivo: Path, termos: list[str]) -> list[str]:
     return achados
 
 
+def marca_de_pendencia(arquivo: Path) -> Path:
+    """Arquivo que lembra uma compactação interrompida e as sessões que ela apagou."""
+    return arquivo.parent / f"{arquivo.name}.compactacao_pendente"
+
+
+def compactar_com_marca(arquivo: Path, sessoes: list[str]) -> None:
+    """Compacta deixando a marca até terminar: se falhar, a próxima abertura termina o serviço."""
+    marca = marca_de_pendencia(arquivo)
+    marca.write_text(json.dumps(sessoes), encoding="utf-8")
+    try:
+        compactar(arquivo)
+    except (EliminacaoIncompleta, sqlite3.Error) as erro:
+        raise EliminacaoIncompleta(f"{erro}; a compactação será refeita na próxima abertura", sessoes) from erro
+    marca.unlink()
+
+
+def concluir_pendencia(arquivo: Path) -> list[str]:
+    """Termina a compactação interrompida, se houver, e devolve as sessões que ela tinha apagado."""
+    marca = marca_de_pendencia(arquivo)
+    if not marca.exists():
+        return []
+    try:
+        sessoes = [str(s) for s in json.loads(marca.read_text(encoding="utf-8") or "[]")]
+    except (json.JSONDecodeError, TypeError):   # marca antiga ou truncada: compacta mesmo assim
+        sessoes = []
+    compactar(arquivo)
+    marca.unlink()
+    return sessoes
+
+
 def compactar(arquivo: Path) -> None:
     """Checkpoint, VACUUM e checkpoint TRUNCATE: só assim o texto apagado sai do arquivo."""
     with sqlite3.connect(arquivo) as con:
@@ -140,6 +178,7 @@ def eliminar_titular(db: SqliteDb, arquivo: Path, nome: str, matriculas: list[st
     matrícula de outra pessoa: ela não é dado do titular. `registros` são os arquivos em JSON
     Lines fora do banco (log de recusas, registro da conferência) que também podem citá-lo.
     """
+    nome, matriculas = _titular_valido(nome, matriculas)
     termos = [nome, *matriculas]
     relatorio = Relatorio(titular=nome, antes=ocorrencias(arquivo, termos))
 
@@ -158,14 +197,29 @@ def eliminar_titular(db: SqliteDb, arquivo: Path, nome: str, matriculas: list[st
         db.delete_user_memories(ids)
     relatorio.memorias_apagadas = len(ids)
 
-    # 3. Compactação e conferência: tabela por tabela e nos bytes do arquivo.
+    # 3. Registros fora do banco antes da compactação: uma compactação que falhe não os deixa para trás.
+    relatorio.linhas_de_registro_apagadas = apagar_dos_registros(list(registros), termos)
+
+    # 4. Compactação e conferência: tabela por tabela e nos bytes do arquivo.
     db.close()
-    compactar(arquivo)
+    compactar_com_marca(arquivo, sessoes)
     relatorio.depois = ocorrencias(arquivo, termos)
     relatorio.bytes_residuais = bytes_residuais(arquivo, termos)
-    relatorio.linhas_de_registro_apagadas = apagar_dos_registros(list(registros), termos)
     relatorio.bytes_residuais += [f"{r.name}: {g}" for r in registros if r.exists()
                                   for g in _grafias(termos) if g in r.read_text(encoding="utf-8")]
     if relatorio.depois or relatorio.bytes_residuais:
-        raise EliminacaoIncompleta(f"restou dado de {nome}: {relatorio.depois} {relatorio.bytes_residuais}")
+        raise EliminacaoIncompleta(f"restou dado de {nome}: {relatorio.depois} {relatorio.bytes_residuais}",
+                                   sessoes)
     return relatorio
+
+
+def _titular_valido(nome: str, matriculas: list[str]) -> tuple[str, list[str]]:
+    """A busca é por trecho de texto: nome vazio casaria com tudo, e nome parcial com outras pessoas."""
+    nome = " ".join(str(nome).split())
+    if len(nome.split()) < 2:
+        raise ValueError("informe o nome completo do titular, como está no cadastro")
+    matriculas = [str(m).strip() for m in matriculas if str(m).strip()]
+    invalidas = [m for m in matriculas if not re.fullmatch(r"\d{6}", m)]
+    if invalidas:
+        raise ValueError(f"matrícula com formato inválido: {invalidas}; use os 6 algarismos")
+    return nome, matriculas

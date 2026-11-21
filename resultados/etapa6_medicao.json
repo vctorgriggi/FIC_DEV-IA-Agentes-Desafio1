@@ -15,16 +15,16 @@
         ],
         "passos": 5,
         "entrada_por_chamada": [
-          2602,
-          2692,
-          2809,
-          2970,
-          3045
+          2690,
+          2780,
+          2897,
+          3058,
+          3133
         ],
-        "entrada": 14118,
-        "saida": 687,
-        "custo": 0.003648,
-        "segundos": 10.9
+        "entrada": 14558,
+        "saida": 708,
+        "custo": 0.003761,
+        "segundos": 11.3
       },
       "DIA-2026-0102": {
         "aprovada": true,
@@ -40,15 +40,15 @@
         ],
         "passos": 5,
         "entrada_por_chamada": [
-          2595,
-          2682,
-          2834,
-          2995,
-          3070
+          2683,
+          2770,
+          2922,
+          3083,
+          3156
         ],
-        "entrada": 14176,
-        "saida": 787,
-        "custo": 0.00378,
+        "entrada": 14614,
+        "saida": 743,
+        "custo": 0.003814,
         "segundos": 11.3
       },
       "DIA-2026-0103": {
@@ -65,16 +65,16 @@
         ],
         "passos": 5,
         "entrada_por_chamada": [
-          2597,
-          2689,
-          2806,
-          2967,
-          3042
+          2685,
+          2777,
+          2894,
+          3055,
+          3130
         ],
-        "entrada": 14101,
-        "saida": 713,
-        "custo": 0.003676,
-        "segundos": 11.1
+        "entrada": 14541,
+        "saida": 698,
+        "custo": 0.003746,
+        "segundos": 11.2
       },
       "DIA-2026-0104": {
         "aprovada": true,
@@ -90,16 +90,16 @@
         ],
         "passos": 5,
         "entrada_por_chamada": [
-          2610,
-          2704,
-          2821,
-          2982,
-          3059
+          2698,
+          2792,
+          2909,
+          3070,
+          3147
         ],
-        "entrada": 14176,
-        "saida": 767,
-        "custo": 0.003756,
-        "segundos": 11.2
+        "entrada": 14616,
+        "saida": 740,
+        "custo": 0.003811,
+        "segundos": 11.7
       },
       "DIA-2026-0105": {
         "aprovada": true,
@@ -115,16 +115,16 @@
         ],
         "passos": 5,
         "entrada_por_chamada": [
-          2600,
-          2689,
-          2806,
-          2989,
-          3063
+          2688,
+          2777,
+          2894,
+          3087,
+          3161
         ],
-        "entrada": 14147,
-        "saida": 769,
-        "custo": 0.003752,
-        "segundos": 11.3
+        "entrada": 14607,
+        "saida": 801,
+        "custo": 0.003883,
+        "segundos": 11.4
       },
       "DIA-2026-0106": {
         "aprovada": true,
@@ -140,16 +140,16 @@
         ],
         "passos": 5,
         "entrada_por_chamada": [
-          2612,
           2700,
-          2817,
-          3001,
-          3078
+          2788,
+          2905,
+          3099,
+          3176
         ],
-        "entrada": 14208,
-        "saida": 826,
-        "custo": 0.003833,
-        "segundos": 11.2
+        "entrada": 14668,
+        "saida": 870,
+        "custo": 0.003978,
+        "segundos": 12.7
       },
       "DIA-2026-0107": {
         "aprovada": true,
@@ -165,16 +165,16 @@
         ],
         "passos": 5,
         "entrada_por_chamada": [
-          2646,
-          2737,
-          2854,
-          3037,
-          3111
+          2734,
+          2825,
+          2942,
+          3135,
+          3207
         ],
-        "entrada": 14385,
-        "saida": 882,
-        "custo": 0.003935,
-        "segundos": 11.6
+        "entrada": 14843,
+        "saida": 779,
+        "custo": 0.003903,
+        "segundos": 12.3
       },
       "DIA-2026-0108": {
         "aprovada": true,
@@ -190,16 +190,16 @@
         ],
         "passos": 5,
         "entrada_por_chamada": [
-          2590,
-          2676,
-          2837,
-          2998,
-          3073
+          2678,
+          2764,
+          2925,
+          3086,
+          3159
         ],
-        "entrada": 14174,
-        "saida": 786,
-        "custo": 0.003778,
-        "segundos": 11.0
+        "entrada": 14612,
+        "saida": 816,
+        "custo": 0.003902,
+        "segundos": 11.7
       },
       "DIA-2026-0109": {
         "aprovada": true,
@@ -215,16 +215,16 @@
         ],
         "passos": 5,
         "entrada_por_chamada": [
-          2591,
-          2681,
-          2800,
-          2961,
-          3035
+          2679,
+          2769,
+          2888,
+          3049,
+          3121
         ],
-        "entrada": 14068,
-        "saida": 733,
-        "custo": 0.003693,
-        "segundos": 10.5
+        "entrada": 14506,
+        "saida": 744,
+        "custo": 0.003794,
+        "segundos": 10.8
       },
       "DIA-2026-0110": {
         "aprovada": true,
@@ -240,16 +240,16 @@
         ],
         "passos": 5,
         "entrada_por_chamada": [
-          2597,
-          2692,
-          2809,
-          2970,
-          3051
+          2685,
+          2780,
+          2897,
+          3058,
+          3139
         ],
-        "entrada": 14119,
-        "saida": 705,
-        "custo": 0.00367,
-        "segundos": 10.3
+        "entrada": 14559,
+        "saida": 722,
+        "custo": 0.003778,
+        "segundos": 10.9
       },
       "DIA-2026-0111": {
         "aprovada": true,
@@ -263,14 +263,14 @@
         ],
         "passos": 3,
         "entrada_por_chamada": [
-          2590,
-          2680,
-          2761
+          2678,
+          2768,
+          2849
         ],
-        "entrada": 8031,
-        "saida": 560,
-        "custo": 0.002278,
-        "segundos": 7.7
+        "entrada": 8295,
+        "saida": 596,
+        "custo": 0.002374,
+        "segundos": 7.9
       },
       "DIA-2026-0111 complementado": {
         "aprovada": true,
@@ -286,16 +286,16 @@
         ],
         "passos": 5,
         "entrada_por_chamada": [
-          3332,
-          3422,
-          3539,
-          3700,
-          3775
+          3456,
+          3546,
+          3663,
+          3824,
+          3897
         ],
-        "entrada": 17768,
-        "saida": 713,
-        "custo": 0.004409,
-        "segundos": 10.4
+        "entrada": 18386,
+        "saida": 781,
+        "custo": 0.004614,
+        "segundos": 10.5
       },
       "DIA-2026-0112": {
         "aprovada": true,
@@ -308,13 +308,13 @@
         ],
         "passos": 2,
         "entrada_por_chamada": [
-          2590,
-          2673
+          2678,
+          2761
         ],
-        "entrada": 5263,
-        "saida": 468,
-        "custo": 0.001614,
-        "segundos": 5.7
+        "entrada": 5439,
+        "saida": 499,
+        "custo": 0.001687,
+        "segundos": 6.0
       },
       "DIA-2026-0112 complementado": {
         "aprovada": true,
@@ -330,16 +330,16 @@
         ],
         "passos": 5,
         "entrada_por_chamada": [
-          3199,
-          3285,
-          3402,
-          3563,
-          3638
+          3318,
+          3404,
+          3521,
+          3682,
+          3757
         ],
-        "entrada": 17087,
-        "saida": 749,
-        "custo": 0.004316,
-        "segundos": 11.3
+        "entrada": 17682,
+        "saida": 707,
+        "custo": 0.004385,
+        "segundos": 10.8
       }
     },
     "resumo": {
@@ -347,14 +347,14 @@
       "acertos": 14,
       "recusadas": 0,
       "erros_entregues": 0,
-      "entrada_media": 13559,
-      "primeira_chamada_media": 2604,
+      "entrada_media": 13995,
+      "primeira_chamada_media": 2692,
       "passos_medios_instrucao_completa": 5,
-      "segundos_medios": 10.4,
-      "custo_total": 0.0501,
-      "custo_por_pedido": 0.00418
+      "segundos_medios": 10.8,
+      "custo_total": 0.0514,
+      "custo_por_pedido": 0.00429
     },
-    "duracao_da_rodada": 40.4
+    "duracao_da_rodada": 42.1
   },
   "sequencial r2": {
     "casos": {
@@ -372,16 +372,16 @@
         ],
         "passos": 5,
         "entrada_por_chamada": [
-          2602,
-          2692,
-          2809,
-          2970,
-          3045
+          2690,
+          2780,
+          2897,
+          3058,
+          3133
         ],
-        "entrada": 14118,
-        "saida": 693,
-        "custo": 0.003655,
-        "segundos": 10.4
+        "entrada": 14558,
+        "saida": 699,
+        "custo": 0.00375,
+        "segundos": 10.3
       },
       "DIA-2026-0102": {
         "aprovada": true,
@@ -397,16 +397,16 @@
         ],
         "passos": 5,
         "entrada_por_chamada": [
-          2595,
-          2682,
-          2834,
-          2995,
-          3070
+          2683,
+          2770,
+          2922,
+          3083,
+          3158
         ],
-        "entrada": 14176,
-        "saida": 758,
-        "custo": 0.003745,
-        "segundos": 10.7
+        "entrada": 14616,
+        "saida": 739,
+        "custo": 0.00381,
+        "segundos": 11.1
       },
       "DIA-2026-0103": {
         "aprovada": true,
@@ -422,16 +422,16 @@
         ],
         "passos": 5,
         "entrada_por_chamada": [
-          2597,
-          2689,
-          2806,
-          2967,
-          3042
+          2685,
+          2777,
+          2894,
+          3055,
+          3130
         ],
-        "entrada": 14101,
-        "saida": 703,
-        "custo": 0.003664,
-        "segundos": 10.0
+        "entrada": 14541,
+        "saida": 702,
+        "custo": 0.003751,
+        "segundos": 10.5
       },
       "DIA-2026-0104": {
         "aprovada": true,
@@ -447,16 +447,16 @@
         ],
         "passos": 5,
         "entrada_por_chamada": [
-          2610,
-          2704,
-          2821,
-          2982,
-          3059
+          2698,
+          2792,
+          2909,
+          3070,
+          3147
         ],
-        "entrada": 14176,
-        "saida": 779,
-        "custo": 0.00377,
-        "segundos": 10.6
+        "entrada": 14616,
+        "saida": 784,
+        "custo": 0.003864,
+        "segundos": 11.1
       },
       "DIA-2026-0105": {
         "aprovada": true,
@@ -472,16 +472,16 @@
         ],
         "passos": 5,
         "entrada_por_chamada": [
-          2600,
-          2689,
-          2806,
-          2989,
-          3063
+          2688,
+          2777,
+          2894,
+          3087,
+          3161
         ],
-        "entrada": 14147,
-        "saida": 817,
-        "custo": 0.00381,
-        "segundos": 11.2
+        "entrada": 14607,
+        "saida": 797,
+        "custo": 0.003878,
+        "segundos": 10.8
       },
       "DIA-2026-0106": {
         "aprovada": true,
@@ -497,16 +497,16 @@
         ],
         "passos": 5,
         "entrada_por_chamada": [
-          2612,
           2700,
-          2817,
-          3001,
-          3078
+          2788,
+          2905,
+          3099,
+          3174
         ],
-        "entrada": 14208,
-        "saida": 869,
-        "custo": 0.003884,
-        "segundos": 11.3
+        "entrada": 14666,
+        "saida": 855,
+        "custo": 0.003959,
+        "segundos": 11.0
       },
       "DIA-2026-0107": {
         "aprovada": true,
@@ -522,16 +522,16 @@
         ],
         "passos": 5,
         "entrada_por_chamada": [
-          2646,
-          2737,
-          2854,
-          3037,
-          3109
+          2734,
+          2825,
+          2942,
+          3135,
+          3207
         ],
-        "entrada": 14383,
-        "saida": 851,
-        "custo": 0.003898,
-        "segundos": 11.6
+        "entrada": 14843,
+        "saida": 794,
+        "custo": 0.003921,
+        "segundos": 11.3
       },
       "DIA-2026-0108": {
         "aprovada": true,
@@ -547,16 +547,16 @@
         ],
         "passos": 5,
         "entrada_por_chamada": [
-          2590,
-          2676,
-          2837,
-          2998,
-          3073
+          2678,
+          2764,
+          2925,
+          3086,
+          3159
         ],
-        "entrada": 14174,
-        "saida": 779,
-        "custo": 0.00377,
-        "segundos": 9.8
+        "entrada": 14612,
+        "saida": 781,
+        "custo": 0.00386,
+        "segundos": 11.1
       },
       "DIA-2026-0109": {
         "aprovada": true,
@@ -572,15 +572,15 @@
         ],
         "passos": 5,
         "entrada_por_chamada": [
-          2591,
-          2681,
-          2800,
-          2961,
-          3035
+          2679,
+          2769,
+          2888,
+          3049,
+          3123
         ],
-        "entrada": 14068,
-        "saida": 750,
-        "custo": 0.003714,
+        "entrada": 14508,
+        "saida": 736,
+        "custo": 0.003785,
         "segundos": 10.8
       },
       "DIA-2026-0110": {
@@ -597,16 +597,16 @@
         ],
         "passos": 5,
         "entrada_por_chamada": [
-          2597,
-          2692,
-          2809,
-          2970,
-          3051
+          2685,
+          2780,
+          2897,
+          3058,
+          3139
         ],
-        "entrada": 14119,
-        "saida": 723,
-        "custo": 0.003691,
-        "segundos": 10.4
+        "entrada": 14559,
+        "saida": 699,
+        "custo": 0.003751,
+        "segundos": 10.2
       },
       "DIA-2026-0111": {
         "aprovada": true,
@@ -620,14 +620,14 @@
         ],
         "passos": 3,
         "entrada_por_chamada": [
-          2590,
-          2680,
-          2761
+          2678,
+          2768,
+          2849
         ],
-        "entrada": 8031,
-        "saida": 571,
-        "custo": 0.002291,
-        "segundos": 7.4
+        "entrada": 8295,
+        "saida": 541,
+        "custo": 0.002308,
+        "segundos": 7.5
       },
       "DIA-2026-0111 complementado": {
         "aprovada": true,
@@ -643,16 +643,16 @@
         ],
         "passos": 5,
         "entrada_por_chamada": [
-          3343,
-          3433,
-          3550,
-          3711,
-          3786
+          3401,
+          3491,
+          3608,
+          3769,
+          3842
         ],
-        "entrada": 17823,
-        "saida": 717,
-        "custo": 0.004425,
-        "segundos": 9.8
+        "entrada": 18111,
+        "saida": 726,
+        "custo": 0.004493,
+        "segundos": 10.4
       },
       "DIA-2026-0112": {
         "aprovada": true,
@@ -665,13 +665,13 @@
         ],
         "passos": 2,
         "entrada_por_chamada": [
-          2590,
-          2673
+          2678,
+          2761
         ],
-        "entrada": 5263,
-        "saida": 498,
-        "custo": 0.00165,
-        "segundos": 6.5
+        "entrada": 5439,
+        "saida": 452,
+        "custo": 0.00163,
+        "segundos": 5.3
       },
       "DIA-2026-0112 complementado": {
         "aprovada": true,
@@ -687,16 +687,16 @@
         ],
         "passos": 5,
         "entrada_por_chamada": [
-          3229,
-          3315,
-          3432,
-          3593,
-          3666
+          3271,
+          3357,
+          3474,
+          3635,
+          3710
         ],
-        "entrada": 17235,
-        "saida": 730,
-        "custo": 0.004323,
-        "segundos": 11.3
+        "entrada": 17447,
+        "saida": 724,
+        "custo": 0.004358,
+        "segundos": 9.5
       }
     },
     "resumo": {
@@ -704,14 +704,14 @@
       "acertos": 14,
       "recusadas": 0,
       "erros_entregues": 0,
-      "entrada_media": 13573,
-      "primeira_chamada_media": 2604,
+      "entrada_media": 13958,
+      "primeira_chamada_media": 2692,
       "passos_medios_instrucao_completa": 5,
       "segundos_medios": 10.1,
-      "custo_total": 0.0503,
-      "custo_por_pedido": 0.00419
+      "custo_total": 0.0511,
+      "custo_por_pedido": 0.00426
     },
-    "duracao_da_rodada": 40.0
+    "duracao_da_rodada": 40.1
   },
   "sequencial r3": {
     "casos": {
@@ -729,16 +729,16 @@
         ],
         "passos": 5,
         "entrada_por_chamada": [
-          2602,
-          2692,
-          2809,
-          2970,
-          3045
+          2690,
+          2780,
+          2897,
+          3058,
+          3133
         ],
-        "entrada": 14118,
-        "saida": 716,
-        "custo": 0.003683,
-        "segundos": 10.3
+        "entrada": 14558,
+        "saida": 712,
+        "custo": 0.003766,
+        "segundos": 10.0
       },
       "DIA-2026-0102": {
         "aprovada": true,
@@ -754,16 +754,16 @@
         ],
         "passos": 5,
         "entrada_por_chamada": [
-          2595,
-          2682,
-          2834,
-          2995,
-          3070
+          2683,
+          2770,
+          2922,
+          3083,
+          3156
         ],
-        "entrada": 14176,
-        "saida": 809,
-        "custo": 0.003806,
-        "segundos": 11.0
+        "entrada": 14614,
+        "saida": 735,
+        "custo": 0.003805,
+        "segundos": 10.5
       },
       "DIA-2026-0103": {
         "aprovada": true,
@@ -779,16 +779,16 @@
         ],
         "passos": 5,
         "entrada_por_chamada": [
-          2597,
-          2689,
-          2806,
-          2967,
-          3042
+          2685,
+          2777,
+          2894,
+          3055,
+          3130
         ],
-        "entrada": 14101,
-        "saida": 711,
-        "custo": 0.003673,
-        "segundos": 10.6
+        "entrada": 14541,
+        "saida": 696,
+        "custo": 0.003743,
+        "segundos": 10.0
       },
       "DIA-2026-0104": {
         "aprovada": true,
@@ -804,16 +804,16 @@
         ],
         "passos": 5,
         "entrada_por_chamada": [
-          2610,
-          2704,
-          2821,
-          2982,
-          3059
+          2698,
+          2792,
+          2909,
+          3070,
+          3147
         ],
-        "entrada": 14176,
-        "saida": 724,
-        "custo": 0.003704,
-        "segundos": 10.2
+        "entrada": 14616,
+        "saida": 774,
+        "custo": 0.003852,
+        "segundos": 10.7
       },
       "DIA-2026-0105": {
         "aprovada": true,
@@ -829,16 +829,16 @@
         ],
         "passos": 5,
         "entrada_por_chamada": [
-          2600,
-          2689,
-          2806,
-          2989,
-          3063
+          2688,
+          2777,
+          2894,
+          3087,
+          3161
         ],
-        "entrada": 14147,
-        "saida": 744,
-        "custo": 0.003722,
-        "segundos": 10.4
+        "entrada": 14607,
+        "saida": 782,
+        "custo": 0.00386,
+        "segundos": 11.5
       },
       "DIA-2026-0106": {
         "aprovada": true,
@@ -854,16 +854,16 @@
         ],
         "passos": 5,
         "entrada_por_chamada": [
-          2612,
           2700,
-          2817,
-          3001,
-          3078
+          2788,
+          2905,
+          3099,
+          3174
         ],
-        "entrada": 14208,
-        "saida": 856,
-        "custo": 0.003869,
-        "segundos": 11.8
+        "entrada": 14666,
+        "saida": 859,
+        "custo": 0.003964,
+        "segundos": 11.6
       },
       "DIA-2026-0107": {
         "aprovada": true,
@@ -879,16 +879,16 @@
         ],
         "passos": 5,
         "entrada_por_chamada": [
-          2646,
-          2737,
-          2854,
-          3037,
-          3111
+          2734,
+          2825,
+          2942,
+          3135,
+          3207
         ],
-        "entrada": 14385,
-        "saida": 890,
-        "custo": 0.003945,
-        "segundos": 12.0
+        "entrada": 14843,
+        "saida": 801,
+        "custo": 0.00393,
+        "segundos": 10.6
       },
       "DIA-2026-0108": {
         "aprovada": true,
@@ -904,16 +904,16 @@
         ],
         "passos": 5,
         "entrada_por_chamada": [
-          2590,
-          2676,
-          2837,
-          2998,
-          3073
+          2678,
+          2764,
+          2925,
+          3086,
+          3161
         ],
-        "entrada": 14174,
-        "saida": 801,
-        "custo": 0.003796,
-        "segundos": 11.4
+        "entrada": 14614,
+        "saida": 769,
+        "custo": 0.003846,
+        "segundos": 11.0
       },
       "DIA-2026-0109": {
         "aprovada": true,
@@ -929,16 +929,16 @@
         ],
         "passos": 5,
         "entrada_por_chamada": [
-          2591,
-          2681,
-          2800,
-          2961,
-          3035
+          2679,
+          2769,
+          2888,
+          3049,
+          3123
         ],
-        "entrada": 14068,
-        "saida": 739,
-        "custo": 0.0037,
-        "segundos": 10.2
+        "entrada": 14508,
+        "saida": 721,
+        "custo": 0.003767,
+        "segundos": 10.5
       },
       "DIA-2026-0110": {
         "aprovada": true,
@@ -954,15 +954,15 @@
         ],
         "passos": 5,
         "entrada_por_chamada": [
-          2597,
-          2692,
-          2809,
-          2970,
-          3051
+          2685,
+          2780,
+          2897,
+          3058,
+          3139
         ],
-        "entrada": 14119,
-        "saida": 719,
-        "custo": 0.003687,
+        "entrada": 14559,
+        "saida": 725,
+        "custo": 0.003782,
         "segundos": 10.0
       },
       "DIA-2026-0111": {
@@ -972,17 +972,19 @@
         "recomendacao": "diligencia",
         "motivos_da_recusa": [],
         "consultas": [
-          "consultar_servidor"
+          "consultar_servidor",
+          "consultar_historico_diarias"
         ],
-        "passos": 2,
+        "passos": 3,
         "entrada_por_chamada": [
-          2590,
-          2680
+          2678,
+          2768,
+          2849
         ],
-        "entrada": 5270,
-        "saida": 573,
-        "custo": 0.001742,
-        "segundos": 6.7
+        "entrada": 8295,
+        "saida": 600,
+        "custo": 0.002379,
+        "segundos": 7.3
       },
       "DIA-2026-0111 complementado": {
         "aprovada": true,
@@ -998,16 +1000,16 @@
         ],
         "passos": 5,
         "entrada_por_chamada": [
-          3306,
-          3396,
-          3513,
-          3674,
-          3749
+          3460,
+          3550,
+          3667,
+          3828,
+          3901
         ],
-        "entrada": 17638,
-        "saida": 770,
-        "custo": 0.004452,
-        "segundos": 10.5
+        "entrada": 18406,
+        "saida": 699,
+        "custo": 0.00452,
+        "segundos": 9.7
       },
       "DIA-2026-0112": {
         "aprovada": true,
@@ -1020,13 +1022,13 @@
         ],
         "passos": 2,
         "entrada_por_chamada": [
-          2590,
-          2673
+          2678,
+          2761
         ],
-        "entrada": 5263,
-        "saida": 504,
-        "custo": 0.001657,
-        "segundos": 6.2
+        "entrada": 5439,
+        "saida": 490,
+        "custo": 0.001676,
+        "segundos": 5.7
       },
       "DIA-2026-0112 complementado": {
         "aprovada": true,
@@ -1042,16 +1044,16 @@
         ],
         "passos": 5,
         "entrada_por_chamada": [
-          3235,
-          3321,
-          3438,
-          3599,
-          3674
+          3309,
+          3395,
+          3512,
+          3673,
+          3748
         ],
-        "entrada": 17267,
-        "saida": 793,
-        "custo": 0.004405,
-        "segundos": 10.9
+        "entrada": 17637,
+        "saida": 737,
+        "custo": 0.004412,
+        "segundos": 10.2
       }
     },
     "resumo": {
@@ -1059,14 +1061,14 @@
       "acertos": 14,
       "recusadas": 0,
       "erros_entregues": 0,
-      "entrada_media": 13365,
-      "primeira_chamada_media": 2604,
+      "entrada_media": 13993,
+      "primeira_chamada_media": 2692,
       "passos_medios_instrucao_completa": 5,
-      "segundos_medios": 10.2,
-      "custo_total": 0.0498,
-      "custo_por_pedido": 0.00415
+      "segundos_medios": 9.9,
+      "custo_total": 0.0513,
+      "custo_por_pedido": 0.00428
     },
-    "duracao_da_rodada": 39.6
+    "duracao_da_rodada": 38.6
   },
   "paralelas r1": {
     "casos": {
@@ -1084,15 +1086,15 @@
         ],
         "passos": 4,
         "entrada_por_chamada": [
-          2602,
-          2692,
-          2971,
-          3044
+          2690,
+          2780,
+          3059,
+          3132
         ],
-        "entrada": 11309,
-        "saida": 709,
-        "custo": 0.003113,
-        "segundos": 8.7
+        "entrada": 11661,
+        "saida": 707,
+        "custo": 0.003181,
+        "segundos": 11.2
       },
       "DIA-2026-0102": {
         "aprovada": true,
@@ -1108,16 +1110,16 @@
         ],
         "passos": 5,
         "entrada_por_chamada": [
-          2595,
-          2682,
-          2834,
-          2995,
-          3068
+          2683,
+          2770,
+          2922,
+          3083,
+          3158
         ],
-        "entrada": 14174,
-        "saida": 733,
-        "custo": 0.003714,
-        "segundos": 9.4
+        "entrada": 14616,
+        "saida": 756,
+        "custo": 0.00383,
+        "segundos": 10.5
       },
       "DIA-2026-0103": {
         "aprovada": true,
@@ -1133,15 +1135,15 @@
         ],
         "passos": 4,
         "entrada_por_chamada": [
-          2597,
-          2689,
-          2968,
-          3041
+          2685,
+          2777,
+          3056,
+          3129
         ],
-        "entrada": 11295,
-        "saida": 718,
-        "custo": 0.003121,
-        "segundos": 8.1
+        "entrada": 11647,
+        "saida": 741,
+        "custo": 0.003219,
+        "segundos": 9.7
       },
       "DIA-2026-0104": {
         "aprovada": true,
@@ -1155,17 +1157,18 @@
           "calcular_diarias",
           "consultar_saldo_diarias"
         ],
-        "passos": 4,
+        "passos": 5,
         "entrada_por_chamada": [
-          2610,
-          2704,
-          2983,
-          3058
+          2698,
+          2792,
+          2909,
+          3070,
+          3145
         ],
-        "entrada": 11355,
-        "saida": 763,
-        "custo": 0.003187,
-        "segundos": 9.0
+        "entrada": 14614,
+        "saida": 769,
+        "custo": 0.003846,
+        "segundos": 11.0
       },
       "DIA-2026-0105": {
         "aprovada": true,
@@ -1179,18 +1182,17 @@
           "calcular_diarias",
           "consultar_saldo_diarias"
         ],
-        "passos": 5,
+        "passos": 4,
         "entrada_por_chamada": [
-          2600,
-          2689,
-          2806,
-          2989,
-          3061
+          2688,
+          2777,
+          3088,
+          3160
         ],
-        "entrada": 14145,
-        "saida": 820,
-        "custo": 0.003813,
-        "segundos": 10.1
+        "entrada": 11713,
+        "saida": 790,
+        "custo": 0.003291,
+        "segundos": 10.8
       },
       "DIA-2026-0106": {
         "aprovada": true,
@@ -1206,15 +1208,15 @@
         ],
         "passos": 4,
         "entrada_por_chamada": [
-          2612,
           2700,
-          3002,
-          3077
+          2788,
+          3100,
+          3175
         ],
-        "entrada": 11391,
-        "saida": 862,
-        "custo": 0.003313,
-        "segundos": 9.2
+        "entrada": 11763,
+        "saida": 890,
+        "custo": 0.003421,
+        "segundos": 10.9
       },
       "DIA-2026-0107": {
         "aprovada": true,
@@ -1228,17 +1230,18 @@
           "calcular_diarias",
           "consultar_saldo_diarias"
         ],
-        "passos": 4,
+        "passos": 5,
         "entrada_por_chamada": [
-          2646,
-          2737,
-          3038,
-          3110
+          2734,
+          2825,
+          2942,
+          3135,
+          3207
         ],
-        "entrada": 11531,
-        "saida": 842,
-        "custo": 0.003317,
-        "segundos": 9.2
+        "entrada": 14843,
+        "saida": 817,
+        "custo": 0.003949,
+        "segundos": 11.5
       },
       "DIA-2026-0108": {
         "aprovada": true,
@@ -1252,17 +1255,18 @@
           "calcular_diarias",
           "consultar_saldo_diarias"
         ],
-        "passos": 4,
+        "passos": 5,
         "entrada_por_chamada": [
-          2590,
-          2676,
-          2999,
-          3074
+          2678,
+          2764,
+          2925,
+          3086,
+          3159
         ],
-        "entrada": 11339,
-        "saida": 769,
-        "custo": 0.003191,
-        "segundos": 8.8
+        "entrada": 14612,
+        "saida": 754,
+        "custo": 0.003827,
+        "segundos": 10.4
       },
       "DIA-2026-0109": {
         "aprovada": true,
@@ -1278,15 +1282,15 @@
         ],
         "passos": 4,
         "entrada_por_chamada": [
-          2591,
-          2681,
-          2962,
-          3036
+          2679,
+          2769,
+          3050,
+          3122
         ],
-        "entrada": 11270,
-        "saida": 734,
-        "custo": 0.003135,
-        "segundos": 8.2
+        "entrada": 11620,
+        "saida": 705,
+        "custo": 0.00317,
+        "segundos": 9.5
       },
       "DIA-2026-0110": {
         "aprovada": true,
@@ -1300,18 +1304,17 @@
           "calcular_diarias",
           "consultar_saldo_diarias"
         ],
-        "passos": 5,
+        "passos": 4,
         "entrada_por_chamada": [
-          2597,
-          2692,
-          2809,
-          2970,
-          3049
+          2685,
+          2780,
+          3059,
+          3138
         ],
-        "entrada": 14117,
-        "saida": 747,
-        "custo": 0.00372,
-        "segundos": 9.4
+        "entrada": 11662,
+        "saida": 734,
+        "custo": 0.003213,
+        "segundos": 9.7
       },
       "DIA-2026-0111": {
         "aprovada": true,
@@ -1324,13 +1327,13 @@
         ],
         "passos": 2,
         "entrada_por_chamada": [
-          2590,
-          2680
+          2678,
+          2768
         ],
-        "entrada": 5270,
-        "saida": 583,
-        "custo": 0.001754,
-        "segundos": 5.5
+        "entrada": 5446,
+        "saida": 515,
+        "custo": 0.001707,
+        "segundos": 6.3
       },
       "DIA-2026-0111 complementado": {
         "aprovada": true,
@@ -1346,15 +1349,15 @@
         ],
         "passos": 4,
         "entrada_por_chamada": [
-          3316,
-          3406,
-          3685,
-          3758
+          3336,
+          3426,
+          3705,
+          3780
         ],
-        "entrada": 14165,
-        "saida": 785,
-        "custo": 0.003775,
-        "segundos": 8.5
+        "entrada": 14247,
+        "saida": 765,
+        "custo": 0.003767,
+        "segundos": 9.5
       },
       "DIA-2026-0112": {
         "aprovada": true,
@@ -1367,13 +1370,13 @@
         ],
         "passos": 2,
         "entrada_por_chamada": [
-          2590,
-          2673
+          2678,
+          2761
         ],
-        "entrada": 5263,
-        "saida": 483,
-        "custo": 0.001632,
-        "segundos": 5.1
+        "entrada": 5439,
+        "saida": 501,
+        "custo": 0.001689,
+        "segundos": 6.5
       },
       "DIA-2026-0112 complementado": {
         "aprovada": true,
@@ -1389,15 +1392,15 @@
         ],
         "passos": 4,
         "entrada_por_chamada": [
-          3214,
-          3300,
-          3579,
-          3652
+          3320,
+          3406,
+          3685,
+          3758
         ],
-        "entrada": 13745,
-        "saida": 711,
-        "custo": 0.003602,
-        "segundos": 8.5
+        "entrada": 14169,
+        "saida": 725,
+        "custo": 0.003704,
+        "segundos": 9.0
       }
     },
     "resumo": {
@@ -1405,14 +1408,14 @@
       "acertos": 14,
       "recusadas": 0,
       "erros_entregues": 0,
-      "entrada_media": 11455,
-      "primeira_chamada_media": 2604,
-      "passos_medios_instrucao_completa": 4.3,
-      "segundos_medios": 8.4,
-      "custo_total": 0.0444,
-      "custo_por_pedido": 0.0037
+      "entrada_media": 12004,
+      "primeira_chamada_media": 2692,
+      "passos_medios_instrucao_completa": 4.4,
+      "segundos_medios": 9.8,
+      "custo_total": 0.0458,
+      "custo_por_pedido": 0.00382
     },
-    "duracao_da_rodada": 32.2
+    "duracao_da_rodada": 37.9
   },
   "paralelas r2": {
     "casos": {
@@ -1430,15 +1433,15 @@
         ],
         "passos": 4,
         "entrada_por_chamada": [
-          2602,
-          2692,
-          2971,
-          3044
+          2690,
+          2780,
+          3059,
+          3132
         ],
-        "entrada": 11309,
-        "saida": 708,
-        "custo": 0.003111,
-        "segundos": 7.8
+        "entrada": 11661,
+        "saida": 707,
+        "custo": 0.003181,
+        "segundos": 8.5
       },
       "DIA-2026-0102": {
         "aprovada": true,
@@ -1454,15 +1457,15 @@
         ],
         "passos": 4,
         "entrada_por_chamada": [
-          2595,
-          2682,
-          2996,
-          3069
+          2683,
+          2770,
+          3084,
+          3157
         ],
-        "entrada": 11342,
-        "saida": 811,
-        "custo": 0.003242,
-        "segundos": 10.2
+        "entrada": 11694,
+        "saida": 809,
+        "custo": 0.00331,
+        "segundos": 9.6
       },
       "DIA-2026-0103": {
         "aprovada": true,
@@ -1476,18 +1479,17 @@
           "calcular_diarias",
           "consultar_saldo_diarias"
         ],
-        "passos": 5,
+        "passos": 4,
         "entrada_por_chamada": [
-          2597,
-          2689,
-          2806,
-          2967,
-          3040
+          2685,
+          2777,
+          3056,
+          3129
         ],
-        "entrada": 14099,
-        "saida": 675,
-        "custo": 0.00363,
-        "segundos": 9.3
+        "entrada": 11647,
+        "saida": 703,
+        "custo": 0.003173,
+        "segundos": 8.6
       },
       "DIA-2026-0104": {
         "aprovada": true,
@@ -1503,15 +1505,15 @@
         ],
         "passos": 4,
         "entrada_por_chamada": [
-          2610,
-          2704,
-          2983,
-          3058
+          2698,
+          2792,
+          3071,
+          3146
         ],
-        "entrada": 11355,
-        "saida": 769,
-        "custo": 0.003194,
-        "segundos": 8.9
+        "entrada": 11707,
+        "saida": 784,
+        "custo": 0.003282,
+        "segundos": 9.8
       },
       "DIA-2026-0105": {
         "aprovada": true,
@@ -1525,18 +1527,17 @@
           "calcular_diarias",
           "consultar_saldo_diarias"
         ],
-        "passos": 5,
+        "passos": 4,
         "entrada_por_chamada": [
-          2600,
-          2689,
-          2806,
-          2989,
-          3061
+          2688,
+          2777,
+          3088,
+          3160
         ],
-        "entrada": 14145,
-        "saida": 763,
-        "custo": 0.003745,
-        "segundos": 9.8
+        "entrada": 11713,
+        "saida": 799,
+        "custo": 0.003301,
+        "segundos": 10.3
       },
       "DIA-2026-0106": {
         "aprovada": true,
@@ -1552,15 +1553,15 @@
         ],
         "passos": 4,
         "entrada_por_chamada": [
-          2612,
           2700,
-          3002,
-          3077
+          2788,
+          3100,
+          3175
         ],
-        "entrada": 11391,
-        "saida": 852,
-        "custo": 0.003301,
-        "segundos": 9.1
+        "entrada": 11763,
+        "saida": 843,
+        "custo": 0.003364,
+        "segundos": 10.4
       },
       "DIA-2026-0107": {
         "aprovada": true,
@@ -1576,16 +1577,16 @@
         ],
         "passos": 5,
         "entrada_por_chamada": [
-          2646,
-          2737,
-          2854,
-          3037,
-          3109
+          2734,
+          2825,
+          2942,
+          3135,
+          3207
         ],
-        "entrada": 14383,
-        "saida": 802,
-        "custo": 0.003839,
-        "segundos": 10.0
+        "entrada": 14843,
+        "saida": 810,
+        "custo": 0.003941,
+        "segundos": 11.1
       },
       "DIA-2026-0108": {
         "aprovada": true,
@@ -1601,15 +1602,15 @@
         ],
         "passos": 4,
         "entrada_por_chamada": [
-          2590,
-          2676,
-          2999,
-          3074
+          2678,
+          2764,
+          3087,
+          3160
         ],
-        "entrada": 11339,
-        "saida": 745,
-        "custo": 0.003162,
-        "segundos": 8.8
+        "entrada": 11689,
+        "saida": 747,
+        "custo": 0.003234,
+        "segundos": 9.3
       },
       "DIA-2026-0109": {
         "aprovada": true,
@@ -1625,15 +1626,15 @@
         ],
         "passos": 4,
         "entrada_por_chamada": [
-          2591,
-          2681,
-          2962,
-          3034
+          2679,
+          2769,
+          3050,
+          3122
         ],
-        "entrada": 11268,
-        "saida": 734,
-        "custo": 0.003134,
-        "segundos": 8.5
+        "entrada": 11620,
+        "saida": 735,
+        "custo": 0.003206,
+        "segundos": 10.1
       },
       "DIA-2026-0110": {
         "aprovada": true,
@@ -1649,15 +1650,15 @@
         ],
         "passos": 4,
         "entrada_por_chamada": [
-          2597,
-          2692,
-          2971,
-          3050
+          2685,
+          2780,
+          3059,
+          3138
         ],
-        "entrada": 11310,
-        "saida": 723,
-        "custo": 0.00313,
-        "segundos": 8.4
+        "entrada": 11662,
+        "saida": 714,
+        "custo": 0.003189,
+        "segundos": 9.1
       },
       "DIA-2026-0111": {
         "aprovada": true,
@@ -1671,13 +1672,13 @@
         ],
         "passos": 3,
         "entrada_por_chamada": [
-          2590,
-          2680,
-          2761
+          2678,
+          2768,
+          2849
         ],
-        "entrada": 8031,
-        "saida": 563,
-        "custo": 0.002282,
+        "entrada": 8295,
+        "saida": 584,
+        "custo": 0.00236,
         "segundos": 7.1
       },
       "DIA-2026-0111 complementado": {
@@ -1692,18 +1693,17 @@
           "calcular_diarias",
           "consultar_saldo_diarias"
         ],
-        "passos": 5,
+        "passos": 4,
         "entrada_por_chamada": [
-          3335,
-          3425,
-          3542,
-          3703,
-          3776
+          3444,
+          3534,
+          3813,
+          3886
         ],
-        "entrada": 17781,
-        "saida": 740,
-        "custo": 0.004444,
-        "segundos": 9.6
+        "entrada": 14677,
+        "saida": 759,
+        "custo": 0.003846,
+        "segundos": 8.8
       },
       "DIA-2026-0112": {
         "aprovada": true,
@@ -1716,13 +1716,13 @@
         ],
         "passos": 2,
         "entrada_por_chamada": [
-          2590,
-          2673
+          2678,
+          2761
         ],
-        "entrada": 5263,
-        "saida": 447,
-        "custo": 0.001589,
-        "segundos": 4.9
+        "entrada": 5439,
+        "saida": 481,
+        "custo": 0.001665,
+        "segundos": 5.9
       },
       "DIA-2026-0112 complementado": {
         "aprovada": true,
@@ -1736,18 +1736,17 @@
           "calcular_diarias",
           "consultar_saldo_diarias"
         ],
-        "passos": 5,
+        "passos": 4,
         "entrada_por_chamada": [
-          3178,
-          3264,
-          3381,
-          3542,
-          3617
+          3300,
+          3386,
+          3665,
+          3738
         ],
-        "entrada": 16982,
-        "saida": 748,
-        "custo": 0.004294,
-        "segundos": 9.6
+        "entrada": 14089,
+        "saida": 720,
+        "custo": 0.003682,
+        "segundos": 8.5
       }
     },
     "resumo": {
@@ -1755,14 +1754,14 @@
       "acertos": 14,
       "recusadas": 0,
       "erros_entregues": 0,
-      "entrada_media": 12143,
-      "primeira_chamada_media": 2604,
-      "passos_medios_instrucao_completa": 4.3,
-      "segundos_medios": 8.7,
-      "custo_total": 0.0461,
-      "custo_por_pedido": 0.00384
+      "entrada_media": 11607,
+      "primeira_chamada_media": 2692,
+      "passos_medios_instrucao_completa": 4.1,
+      "segundos_medios": 9.1,
+      "custo_total": 0.0447,
+      "custo_por_pedido": 0.00373
     },
-    "duracao_da_rodada": 35.7
+    "duracao_da_rodada": 35.1
   },
   "paralelas r3": {
     "casos": {
@@ -1780,15 +1779,15 @@
         ],
         "passos": 4,
         "entrada_por_chamada": [
-          2602,
-          2692,
-          2971,
-          3044
+          2690,
+          2780,
+          3059,
+          3132
         ],
-        "entrada": 11309,
-        "saida": 673,
-        "custo": 0.003069,
-        "segundos": 8.2
+        "entrada": 11661,
+        "saida": 709,
+        "custo": 0.003183,
+        "segundos": 9.2
       },
       "DIA-2026-0102": {
         "aprovada": true,
@@ -1804,15 +1803,15 @@
         ],
         "passos": 4,
         "entrada_por_chamada": [
-          2595,
-          2682,
-          2996,
-          3069
+          2683,
+          2770,
+          3084,
+          3157
         ],
-        "entrada": 11342,
-        "saida": 798,
-        "custo": 0.003226,
-        "segundos": 8.6
+        "entrada": 11694,
+        "saida": 813,
+        "custo": 0.003314,
+        "segundos": 9.9
       },
       "DIA-2026-0103": {
         "aprovada": true,
@@ -1828,15 +1827,15 @@
         ],
         "passos": 4,
         "entrada_por_chamada": [
-          2597,
-          2689,
-          2968,
-          3041
+          2685,
+          2777,
+          3056,
+          3129
         ],
-        "entrada": 11295,
-        "saida": 710,
-        "custo": 0.003111,
-        "segundos": 8.5
+        "entrada": 11647,
+        "saida": 702,
+        "custo": 0.003172,
+        "segundos": 9.1
       },
       "DIA-2026-0104": {
         "aprovada": true,
@@ -1852,15 +1851,15 @@
         ],
         "passos": 4,
         "entrada_por_chamada": [
-          2610,
-          2704,
-          2983,
-          3058
+          2698,
+          2792,
+          3071,
+          3146
         ],
-        "entrada": 11355,
-        "saida": 736,
-        "custo": 0.003154,
-        "segundos": 9.3
+        "entrada": 11707,
+        "saida": 759,
+        "custo": 0.003252,
+        "segundos": 10.4
       },
       "DIA-2026-0105": {
         "aprovada": true,
@@ -1876,16 +1875,16 @@
         ],
         "passos": 5,
         "entrada_por_chamada": [
-          2600,
-          2689,
-          2806,
-          2989,
-          3061
+          2688,
+          2777,
+          2894,
+          3087,
+          3159
         ],
-        "entrada": 14145,
-        "saida": 803,
-        "custo": 0.003793,
-        "segundos": 10.3
+        "entrada": 14605,
+        "saida": 872,
+        "custo": 0.003967,
+        "segundos": 11.6
       },
       "DIA-2026-0106": {
         "aprovada": true,
@@ -1901,15 +1900,15 @@
         ],
         "passos": 4,
         "entrada_por_chamada": [
-          2612,
           2700,
-          3002,
-          3077
+          2788,
+          3100,
+          3177
         ],
-        "entrada": 11391,
+        "entrada": 11765,
         "saida": 849,
-        "custo": 0.003297,
-        "segundos": 9.9
+        "custo": 0.003372,
+        "segundos": 12.8
       },
       "DIA-2026-0107": {
         "aprovada": true,
@@ -1925,16 +1924,16 @@
         ],
         "passos": 5,
         "entrada_por_chamada": [
-          2646,
-          2737,
-          2854,
-          3037,
-          3109
+          2734,
+          2825,
+          2942,
+          3135,
+          3207
         ],
-        "entrada": 14383,
-        "saida": 861,
-        "custo": 0.00391,
-        "segundos": 10.6
+        "entrada": 14843,
+        "saida": 823,
+        "custo": 0.003956,
+        "segundos": 11.6
       },
       "DIA-2026-0108": {
         "aprovada": true,
@@ -1950,15 +1949,15 @@
         ],
         "passos": 4,
         "entrada_por_chamada": [
-          2590,
-          2676,
-          2999,
-          3072
+          2678,
+          2764,
+          3087,
+          3160
         ],
-        "entrada": 11337,
-        "saida": 781,
-        "custo": 0.003205,
-        "segundos": 9.1
+        "entrada": 11689,
+        "saida": 736,
+        "custo": 0.003221,
+        "segundos": 10.9
       },
       "DIA-2026-0109": {
         "aprovada": true,
@@ -1974,15 +1973,15 @@
         ],
         "passos": 4,
         "entrada_por_chamada": [
-          2591,
-          2681,
-          2962,
-          3036
+          2679,
+          2769,
+          3050,
+          3122
         ],
-        "entrada": 11270,
-        "saida": 788,
-        "custo": 0.0032,
-        "segundos": 9.1
+        "entrada": 11620,
+        "saida": 780,
+        "custo": 0.00326,
+        "segundos": 9.4
       },
       "DIA-2026-0110": {
         "aprovada": true,
@@ -1998,15 +1997,15 @@
         ],
         "passos": 4,
         "entrada_por_chamada": [
-          2597,
-          2692,
-          2971,
-          3052
+          2685,
+          2780,
+          3059,
+          3138
         ],
-        "entrada": 11312,
-        "saida": 714,
-        "custo": 0.003119,
-        "segundos": 8.3
+        "entrada": 11662,
+        "saida": 740,
+        "custo": 0.00322,
+        "segundos": 9.1
       },
       "DIA-2026-0111": {
         "aprovada": true,
@@ -2019,13 +2018,13 @@
         ],
         "passos": 2,
         "entrada_por_chamada": [
-          2590,
-          2680
+          2678,
+          2768
         ],
-        "entrada": 5270,
-        "saida": 576,
-        "custo": 0.001745,
-        "segundos": 5.9
+        "entrada": 5446,
+        "saida": 543,
+        "custo": 0.001741,
+        "segundos": 7.3
       },
       "DIA-2026-0111 complementado": {
         "aprovada": true,
@@ -2041,15 +2040,15 @@
         ],
         "passos": 4,
         "entrada_por_chamada": [
-          3309,
-          3399,
-          3678,
-          3751
+          3364,
+          3454,
+          3733,
+          3806
         ],
-        "entrada": 14137,
-        "saida": 795,
-        "custo": 0.003781,
-        "segundos": 8.6
+        "entrada": 14357,
+        "saida": 761,
+        "custo": 0.003785,
+        "segundos": 9.4
       },
       "DIA-2026-0112": {
         "aprovada": true,
@@ -2062,13 +2061,13 @@
         ],
         "passos": 2,
         "entrada_por_chamada": [
-          2590,
-          2673
+          2678,
+          2761
         ],
-        "entrada": 5263,
-        "saida": 460,
-        "custo": 0.001605,
-        "segundos": 5.1
+        "entrada": 5439,
+        "saida": 519,
+        "custo": 0.001711,
+        "segundos": 6.2
       },
       "DIA-2026-0112 complementado": {
         "aprovada": true,
@@ -2084,15 +2083,15 @@
         ],
         "passos": 4,
         "entrada_por_chamada": [
-          3191,
-          3277,
-          3556,
-          3629
+          3338,
+          3424,
+          3703,
+          3778
         ],
-        "entrada": 13653,
-        "saida": 757,
-        "custo": 0.003639,
-        "segundos": 8.5
+        "entrada": 14243,
+        "saida": 751,
+        "custo": 0.00375,
+        "segundos": 9.5
       }
     },
     "resumo": {
@@ -2100,13 +2099,13 @@
       "acertos": 14,
       "recusadas": 0,
       "erros_entregues": 0,
-      "entrada_media": 11247,
-      "primeira_chamada_media": 2604,
+      "entrada_media": 11598,
+      "primeira_chamada_media": 2692,
       "passos_medios_instrucao_completa": 4.2,
-      "segundos_medios": 8.6,
-      "custo_total": 0.0439,
-      "custo_por_pedido": 0.00365
+      "segundos_medios": 9.7,
+      "custo_total": 0.0449,
+      "custo_por_pedido": 0.00374
     },
-    "duracao_da_rodada": 32.9
+    "duracao_da_rodada": 38.1
   }
 }

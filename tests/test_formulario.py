@@ -193,3 +193,56 @@ def test_linha_corrompida_no_registro_nao_derruba(pasta_temporaria):
     assert [x["pedido"] for x in conferencia.ler()] == ["A"]
     at = abrir()
     assert not at.exception
+
+
+# ------------------------------------------------------------- terceira revisão
+
+def test_nome_vazio_na_eliminacao_nao_apaga_nada(monkeypatch, pasta_temporaria):
+    from agno.db.sqlite import SqliteDb
+    agente_que_grava(monkeypatch)
+    at = abrir("DIA-2026-0103")
+    botao(at, "Instruir pedido").click().run()
+    next(t for t in at.text_input if t.label == "Nome do titular").set_value("   ").run()
+    at.checkbox[0].check().run()
+    botao(at, "Eliminar dados do titular").click().run()
+    assert any("nome completo" in e.value for e in at.error)
+    assert {s.session_id for s in SqliteDb(db_file=str(pasta_temporaria / "agente.db")).get_sessions()} == {
+        "DIA-2026-0103"}
+
+
+def test_eliminacao_que_falha_depois_de_apagar_tira_a_instrucao_da_tela(monkeypatch):
+    agente_que_grava(monkeypatch)
+    at = abrir()
+    botao(at, "Instruir pedido").click().run()
+
+    def ocupado(_arquivo):
+        raise memoria.EliminacaoIncompleta("banco em uso")
+    monkeypatch.setattr(memoria, "compactar", ocupado)
+    at.checkbox[0].check().run()
+    botao(at, "Eliminar dados do titular").click().run()
+    assert any("não se completou" in e.value for e in at.error)
+    at.run()
+    assert "Cadastro confere: matrícula 204317" not in texto_da_tela(at)
+    assert not any(b.label == "Registrar conferência" for b in at.button)
+
+
+def test_reinstruir_depois_de_conferir_pede_conferencia_nova(monkeypatch):
+    agente_que_grava(monkeypatch)
+    at = abrir("DIA-2026-0105")
+    botao(at, "Instruir pedido").click().run()
+    botao(at, "Registrar conferência").click().run()
+    assert len(conferencia.ler()) == 1
+    botao(at, "Instruir pedido").click().run()
+    assert any(b.label == "Registrar conferência" for b in at.button)
+
+
+def test_eliminacao_tira_o_texto_da_complementacao(monkeypatch):
+    agente_que_grava(monkeypatch)
+    at = abrir("DIA-2026-0112")
+    at.session_state["complemento_DIA-2026-0112"] = "minha matrícula correta é 207418"
+    botao(at, "Instruir pedido").click().run()
+    next(t for t in at.text_input if t.label.startswith("Matrículas")).set_value("207418").run()
+    at.checkbox[0].check().run()
+    botao(at, "Eliminar dados do titular").click().run()
+    assert any("Eliminação concluída" in s.value for s in at.success), [e.value for e in at.error]
+    assert "complemento_DIA-2026-0112" not in at.session_state

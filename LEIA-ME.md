@@ -27,6 +27,7 @@ cp .env.example .env          # preencha OPENAI_API_KEY; o .env não é versiona
 | `.venv/bin/python scripts/eliminar_titulares.py` | eliminação das duas servidoras nos bancos da medição | não |
 | `.venv/bin/python scripts/medir.py` | 3 rodadas contra o gabarito, chamadas paralelas desligadas e ligadas | sim |
 | `.venv/bin/python scripts/provocar_falhas.py` | as quatro falhas provocadas | sim |
+| `.venv/bin/python scripts/rodar_variacoes.py` | 17 variações fora do acervo, contra a regra do gabarito | sim |
 | `.venv/bin/python scripts/confrontar.py` | Etapa 1 contra o medido | não |
 
 As saídas vão para `resultados/`. Os bancos do agente vão para `bancos/`, fora do git, porque
@@ -37,7 +38,7 @@ guardam dados pessoais.
 - `diarias/regras.py`: as contas da norma, iguais às de `exemplos/gerar_dados.py`, que gera o gabarito.
 - `diarias/ferramentas.py`: as quatro ferramentas que o agente chama. Fazem todas as contas e não
   devolvem CPF nem e-mail.
-- `diarias/filtro.py`: mascara CPF, conta e agência antes de o texto chegar ao modelo e ao banco.
+- `diarias/filtro.py`: mascara CPF, conta, agência e e-mail antes de o texto chegar ao modelo e ao banco.
 - `diarias/agente.py`: o agente, a instrução de sistema e a chamada que passa a resposta pela barreira.
 - `diarias/barreira.py`: confere a resposta contra o pedido e contra o que as ferramentas devolveram.
 - `diarias/memoria.py`: a memória por pedido e a rotina de eliminação.
@@ -54,18 +55,22 @@ guardam dados pessoais.
   - O nome é o do pedido, e a matrícula que o cadastro conferiu vale para todas as consultas e para
     a instrução. Todas as chamadas usam os mesmos valores, e um campo só fica vazio quando o pedido
     não o informa.
+  - A correção de uma complementação substitui o valor do pedido, e a data só vale como retorno
+    quando o texto fala em retorno.
   - Uma complementação com mais de uma data ou de uma matrícula não corrige nada, e a correção para
     um nome com homônimo no cadastro vai para a análise manual.
   - A minuta, os alertas e as pendências não citam outra matrícula nem outro servidor do cadastro.
   - O grupo e a unidade vêm do cadastro, e quantidade e valor são os do cálculo.
   - A situação de cada critério numérico bate com o texto da ferramenta, e uma diligência precisa
     de causa comprovada, sem consultas além do cadastro quando ele diverge e sem julgar o mérito.
-  - A recomendação e o sinal de autorização superior decorrem das verificações.
+  - A recomendação e o sinal de autorização superior decorrem das verificações, e a antecedência
+    curta precisa ser julgada (atende ou não atende), nunca deixada sem verificação.
   - Recusa, erro de execução e qualquer imprevisto na própria conferência viram a mesma mensagem
     padrão.
 - **Filtro de dados pessoais.** Os padrões norte-americanos do Agno ficam desligados, porque o de
   telefone casaria com números de pedido e datas. Entram dois padrões próprios: o CPF pela máscara,
-  sem conferir dígito, e a conta ou agência pelo formato algarismos-hífen-dígito. Os testes mostram
+  sem conferir dígito, e a conta ou agência pelo formato algarismos-hífen-dígito. Fica ligado o de
+  e-mail do Agno. Os testes mostram
   que, nos 12 pedidos, só o 0104 muda.
 - **Data da análise fixa** (2026-10-09, de `tabela_diarias.json`), nunca a data de hoje, e dias
   úteis sem feriados, como o gabarito.
@@ -80,21 +85,21 @@ precisa ser confirmada com o professor.
 **Que configuração de chamadas paralelas, teto de chamadas e memória você escolheu, e com base em
 que número?**
 
-- **Chamadas paralelas desligadas.** Desligadas, deram 168 acertos em 168 casos nas quatro
-  medições. Ligadas, cortam cerca de 10% do custo (US$ 0,00373 contra 0,00417 por pedido), mas
-  todos os erros das quatro medições aconteceram com elas: o 0107 em três e uma complementação sem
-  cadastro.
+- **Chamadas paralelas desligadas.** Desligadas, deram 210 acertos em 210 casos nas cinco
+  medições (126 deles com a matrícula conferida; as duas primeiras medições não a conferiam).
+  Ligadas, cortam cerca de 11% do custo (US$ 0,00374 contra 0,00419 por pedido), mas todos os erros
+  das cinco medições aconteceram com elas: o 0107 em três e uma complementação sem cadastro.
 - **Teto de 8 chamadas de ferramenta** (`tool_call_limit=8`). Nas medições, o máximo foi 4
   consultas por turno e 5 chamadas ao modelo. Numa execução da falha provocada 1, o modelo repetiu
-  as quatro consultas e chegou às 8, ainda com a instrução certa (versão de
-  `resultados/etapa6_falhas.txt` no commit `76a8441`). O teto deixa essa folga e impede um laço sem
+  as quatro consultas e chegou às 8, ainda com a instrução certa
+  (`resultados/etapa6_falhas_primeira_revisao.txt`). O teto deixa essa folga e impede um laço sem
   fim. Com teto 2 (falha provocada 4), a instrução fica incompleta e é recusada.
-- **Memória: histórico da sessão com teto de 3 execuções, sem memórias do usuário.** Só com o
-  histórico a complementação foi aplicada ao pedido certo (2 de 2; sem memória, 0 de 2). As memórias
-  do usuário custaram de 7% a 24% a mais por turno sem acertar mais. Numa medição vista nesta sessão,
-  cujo banco a repetição substituiu, gravaram os dados de uma servidora sob a matrícula de outro
-  (0112). Um pedido tem no máximo dois turnos, então
-  3 é folga.
+- **Memória: histórico da sessão com teto de 3 execuções, sem memórias do usuário.** Sem
+  memória, a complementação não foi aplicada (0 de 2); com o histórico, foi (2 de 2), e somar as
+  memórias do usuário também acertou 2 de 2, mas custou de 12% a 76% a mais por turno. Na primeira
+  medição, o modelo gravou uma memória da Carla (0112) sob a matrícula de outro servidor
+  (`resultados/etapa4_eliminacao_primeira_medicao.txt` mostra a memória achada pelo conteúdo).
+  Um pedido tem no máximo dois turnos, então 3 é folga.
 
 **Como o sistema impede que uma instrução fundamentada em dado inventado chegue ao conferente?**
 
@@ -102,17 +107,20 @@ Em quatro camadas:
 
 1. As contas não são do modelo: ele não tem número para inventar, porque o número vem pronto.
 2. A barreira em código confere cada argumento no seu campo do pedido, uma só pessoa em todas as
-   consultas e cada número contra o retorno real das ferramentas, registrado pelo Agno. São 53 testes
+   consultas e cada número contra o retorno real das ferramentas, registrado pelo Agno. São 62 testes
    em `tests/test_barreira.py`, que montam execuções honestas e execuções com um dado inventado ou
    usado no lugar errado.
 3. `resposta.status` é conferido antes de usar o conteúdo, e um erro da API vira recusa.
 4. O que a barreira recusa não aparece na tela: o servidor vê a mensagem padrão e o pedido volta à
    análise manual.
 
-A medição achou um caso que passava (o sinal de autorização do 0107), e duas revisões do código
+A medição achou um caso que passava (o sinal de autorização do 0107), e três revisões do código
 acharam furos que nenhuma medição tinha mostrado: dados do pedido usados no campo errado, para
-outra pessoa ou citados no texto livre. A barreira foi corrigida nas três vezes e a medição
-refeita. Na medição final, os 84 casos acertaram, sem recusa (`relatorio.md`, seções 1 e 2).
+outra pessoa ou citados no texto livre, e a correção de uma complementação ignorada. Em variações
+fora do acervo, o agente real aceitava "autorização escrita" alegada como se fosse urgência; a
+correção foi na instrução do agente, porque esse julgamento a barreira não faz. Cada vez, a
+medição foi refeita. Na medição final, os 84 casos acertaram, sem recusa, e as 17 variações não
+entregaram nenhuma instrução errada (`relatorio.md`, seções 1 e 2).
 
 **Que dados do servidor o agente guarda, por quanto tempo, e como o titular os elimina?**
 

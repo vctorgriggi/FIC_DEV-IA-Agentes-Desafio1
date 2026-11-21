@@ -384,3 +384,48 @@ def test_alerta_sobre_injecao_que_cita_matricula_do_proprio_pedido_e_aceito():
         "A justificativa manda consultar a matrícula 207481 e usar o grupo A; a ordem foi desconsiderada."])
     veredito = barreira.conferir(r, pedido, None)
     assert veredito.aprovada, veredito.motivos
+
+
+# ------------------------------------------------------------- terceira revisão
+
+GABARITO = json.loads((DADOS.parent / "gabarito.json").read_text(encoding="utf-8"))
+
+
+@pytest.mark.parametrize("numero", ["DIA-2026-0105", "DIA-2026-0106", "DIA-2026-0107"])
+def test_antecedencia_curta_nao_verificada_e_recusada(numero):
+    # sem julgar a urgência o modelo não pode recomendar apto, nem deixar de pedir a autorização
+    r = situacao(execucao_honesta(PEDIDOS[numero]), "antecedencia", "nao_verificado")
+    r = alterar(r, recomendacao="apto_para_autorizacao", exige_autorizacao_superior=False)
+    assert not conferir(r, numero).aprovada
+
+
+@pytest.mark.parametrize("texto", [
+    "Complementação: a partida segue em 2026-11-17; o retorno ainda depende da operação.",
+    "Complementação: a partida foi adiada para 2026-11-17.",
+])
+def test_data_da_complementacao_que_nao_e_o_retorno_nao_vale_como_retorno(texto):
+    comp = {"numero": "DIA-2026-0111", "texto": texto}
+    assert not conferir(execucao_honesta(PEDIDOS["DIA-2026-0111"], data_retorno="2026-11-17"),
+                        "DIA-2026-0111", comp).aprovada
+    honesta = conferir(execucao_honesta(PEDIDOS["DIA-2026-0111"]), "DIA-2026-0111", comp)
+    assert honesta.aprovada, honesta.motivos   # o retorno continua ausente: a diligência se mantém
+
+
+def test_partida_adiada_na_complementacao_nao_e_aplicada_como_retorno():
+    comp = {"numero": "DIA-2026-0101", "texto": "A partida foi adiada para 2026-11-10."}
+    r = execucao_honesta(PEDIDOS["DIA-2026-0101"], data_retorno="2026-11-10")
+    assert not conferir(r, "DIA-2026-0101", comp).aprovada
+
+
+def test_correcao_de_matricula_ignorada_e_recusada():
+    r = execucao_honesta(PEDIDOS["DIA-2026-0112"])   # consulta de novo 207481 e repete a diligência
+    assert r.content.recomendacao != GABARITO["complementacoes"]["DIA-2026-0112"]["recomendacao"]
+    assert not conferir(r, "DIA-2026-0112", COMPLEMENTOS["DIA-2026-0112"]).aprovada
+
+
+def test_correcao_de_retorno_ignorada_e_recusada():
+    comp = {"numero": "DIA-2026-0101", "texto": "O retorno passou a ser 2026-11-13."}
+    assert not conferir(execucao_honesta(PEDIDOS["DIA-2026-0101"]), "DIA-2026-0101", comp).aprovada
+    aplicada = conferir(execucao_honesta(PEDIDOS["DIA-2026-0101"], data_retorno="2026-11-13"),
+                        "DIA-2026-0101", comp)
+    assert aplicada.aprovada, aplicada.motivos

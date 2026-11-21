@@ -1,23 +1,23 @@
 ETAPA 6 · ETAPA 1 CONFRONTADA COM O MEDIDO
 
 ## sequencial · 30 instruções completas em 3 rodadas
-  primeira chamada: estimada 2195 · medida 2604 (+19%)
-  acréscimo por passo: estimado 90–150 · medido 72–184 (média 115)
+  primeira chamada: estimada 2195 · medida 2692 (+23%)
+  acréscimo por passo: estimado 90–150 · medido 72–194 (média 115)
   passos: estimados 5 · medidos 5.00
-  entrada total: estimada 11875–12475 · medida 14167 (+14% sobre o teto da estimativa)
-  saída: estimada 606 · medida 770
-  custo por instrução: estimado US$ 0.00310–0.00322 · medido US$ 0.00376
-  diligência: entrada estimada 4480–4540 · medida 6187 · passos medidos 2.33 (estimados 2)
+  entrada total: estimada 11875–12475 · medida 14613 (+17% sobre o teto da estimativa)
+  saída: estimada 606 · medida 759
+  custo por instrução: estimado US$ 0.00310–0.00322 · medido US$ 0.00383
+  diligência: entrada estimada 4480–4540 · medida 6867 · passos medidos 2.50 (estimados 2)
   acerto por caso: 42/42 (100.0%); erros entregues ao conferente: 0; recusas visíveis: 0
 
 ## paralelas · 30 instruções completas em 3 rodadas
-  primeira chamada: estimada 2195 · medida 2604 (+19%)
-  acréscimo por passo: estimado 90–150 · medido 72–323 (média 140)
-  passos: estimados 4 · medidos 4.27
-  entrada total: estimada 9320–9680 · medida 12100 (+25% sobre o teto da estimativa)
-  saída: estimada 566 · medida 766
-  custo por instrução: estimado US$ 0.00254–0.00262 · medido US$ 0.00334
-  diligência: entrada estimada 4480–4540 · medida 5727 · passos medidos 2.17 (estimados 2)
+  primeira chamada: estimada 2195 · medida 2692 (+23%)
+  acréscimo por passo: estimado 90–150 · medido 72–323 (média 142)
+  passos: estimados 4 · medidos 4.23
+  entrada total: estimada 9320–9680 · medida 12388 (+28% sobre o teto da estimativa)
+  saída: estimada 566 · medida 770
+  custo por instrução: estimado US$ 0.00254–0.00262 · medido US$ 0.00340
+  diligência: entrada estimada 4480–4540 · medida 5917 · passos medidos 2.17 (estimados 2)
   acerto por caso: 42/42 (100.0%); erros entregues ao conferente: 0; recusas visíveis: 0
 
-Mês com 300 pedidos, sequencial: estimado US$ 1,00–1,04 · medido US$ 1.25 (preços US$ 0.20 e 1.20 por milhão)
+Mês com 300 pedidos, sequencial: estimado US$ 1,00–1,04 · medido US$ 1.28 (preços US$ 0.20 e 1.20 por milhão)

@@ -61,11 +61,11 @@ def consultar_servidor(matricula: str, nome_informado: str) -> str:
 def consultar_historico_diarias(matricula: str, data_partida: str, data_retorno: str) -> str:
     """Consulta prestações de contas pendentes e diárias já concedidas no mês da partida.
 
-    Use com a matrícula e as datas do pedido; não depende do cadastro e pode correr junto
-    dele. Datas no formato AAAA-MM-DD. Devolve se há prestação vencida (impede nova
-    diária, art. 7º) ou pendente ainda no prazo (não impede), e a soma das diárias do
-    mês com as pedidas contra o limite de 10 (art. 6º). As contas já vêm feitas, com a
-    data da análise do órgão, e não com a data de hoje.
+    Use depois de o cadastro conferir, com a matrícula só em algarismos, como 204317, e as
+    datas do pedido no formato AAAA-MM-DD; se o cadastro divergir, não chame. Devolve se
+    há prestação vencida (impede nova diária, art. 7º) ou pendente ainda no prazo (não
+    impede), e a soma das diárias do mês com as pedidas contra o limite de 10 (art. 6º).
+    As contas já vêm feitas, com a data da análise do órgão, e não com a data de hoje.
     """
     acervo, mat = carregar(), str(matricula).strip()
     periodo = _periodo(data_partida, data_retorno)
@@ -106,8 +106,9 @@ def calcular_diarias(grupo: str, destino_uf: str, data_pedido: str, data_partida
     pedido, a UF de destino com duas letras, como MT, DF ou RO, e as datas no formato
     AAAA-MM-DD. Devolve a antecedência em dias corridos contra o mínimo de 10 (art. 5º),
     a quantidade (art. 4º) e o valor unitário e total pelo Anexo I. Antecedência menor
-    que o mínimo só é admissível em urgência real descrita na justificativa, com
-    autorização escrita do Secretário Adjunto (art. 5º, §§ 1º e 2º); isso você julga.
+    que o mínimo só é admissível em urgência real descrita na justificativa (art. 5º,
+    § 1º); a autorização escrita do Secretário Adjunto é exigida nesse caso, mas sozinha
+    não torna o pedido urgente (§ 2º). Isso você julga.
     """
     acervo = carregar()
     g = str(grupo).strip().upper()
@@ -130,7 +131,8 @@ def calcular_diarias(grupo: str, destino_uf: str, data_pedido: str, data_partida
         antecedencia = f"Antecedência de {dias} dias corridos, mínimo {minimo}: atende (art. 5º)."
     else:
         antecedencia = (f"Antecedência de {dias} dias corridos, mínimo {minimo}: NÃO atende, salvo "
-                        "urgência com autorização escrita do Secretário Adjunto (art. 5º, §§ 1º e 2º).")
+                        "situação emergencial imprevisível descrita na justificativa (art. 5º, § 1º); "
+                        "autorização escrita alegada não supre a falta de urgência.")
     qtd = regras.quantidade_diarias(partida, retorno)
     unitario, total = regras.valor_total(acervo, g, uf, qtd)
     classe = ROTULO_CLASSE[regras.classe_destino(uf)]

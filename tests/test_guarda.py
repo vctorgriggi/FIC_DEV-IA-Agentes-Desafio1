@@ -94,3 +94,49 @@ def test_recusa_conta_para_o_prazo(tmp_path):
     recusas = [{"pedido": "DIA-2026-0101", "registrado_em": (AGORA - timedelta(days=31)).isoformat()}]
     apagados = guarda.expurgar(db, arquivo, AGORA, conferencias=[], recusas=recusas, ultimo_uso=lambda *_: None)
     assert apagados == ["DIA-2026-0101"]
+
+
+# ------------------------------------------------------------- terceira revisão
+
+def test_recusa_de_pedido_ainda_no_banco_nao_e_podada(tmp_path):
+    db, arquivo = banco(tmp_path)
+    log = tmp_path / "recusas.jsonl"
+    log.write_text(json.dumps({"pedido": "DIA-2026-0101", "motivos": [],
+                               "registrado_em": (AGORA - timedelta(days=31)).isoformat()}) + "\n", encoding="utf-8")
+    # o uso recente segura o pedido; a recusa é o relógio dele e não pode sumir
+    assert guarda.expurgar(db, arquivo, AGORA, conferencias=[], recusas=guarda.conferencia.ler(log),
+                           ultimo_uso=lambda *_: AGORA - timedelta(days=10)) == []
+    assert guarda.podar_recusas(AGORA, arquivo=log, banco=arquivo) == 0
+    apagados = guarda.expurgar(SqliteDb(db_file=str(arquivo)), arquivo, AGORA + timedelta(days=21), conferencias=[],
+                               recusas=guarda.conferencia.ler(log), ultimo_uso=lambda *_: AGORA - timedelta(days=10))
+    assert apagados == ["DIA-2026-0101"]
+    assert guarda.podar_recusas(AGORA + timedelta(days=21), arquivo=log, banco=arquivo) == 1
+
+
+@pytest.mark.parametrize("linha", [
+    '{quebrado',
+    '{"pedido": "A", "registrado_em": "2026-10-01T10:00:00+00:00"}',
+    '{"registrado_em": "2026-10-01T10:00:00"}',
+])
+def test_registro_estranho_nao_derruba_o_prazo(tmp_path, linha):
+    log = tmp_path / "recusas.jsonl"
+    log.write_text(linha + "\n", encoding="utf-8")
+    eventos = guarda.conferencia.ler(log)
+    guarda.vencidos(eventos, AGORA)
+    guarda.podar_recusas(AGORA, arquivo=log)
+
+
+def test_compactacao_do_expurgo_que_falhou_devolve_os_pedidos_na_vez_seguinte(tmp_path, monkeypatch):
+    db, arquivo = banco(tmp_path)
+    conf = [conferido("DIA-2026-0101", 40)]
+    real = memoria.compactar
+
+    def ocupado(_arquivo):
+        raise memoria.EliminacaoIncompleta("banco em uso")
+    monkeypatch.setattr(memoria, "compactar", ocupado)
+    with pytest.raises(memoria.EliminacaoIncompleta) as erro:
+        guarda.expurgar(db, arquivo, AGORA, conferencias=conf, ultimo_uso=lambda *_: None)
+    assert erro.value.sessoes == ["DIA-2026-0101"]
+    monkeypatch.setattr(memoria, "compactar", real)
+    assert guarda.expurgar(SqliteDb(db_file=str(arquivo)), arquivo, AGORA, conferencias=conf,
+                           ultimo_uso=lambda *_: None) == ["DIA-2026-0101"]
