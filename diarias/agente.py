@@ -50,8 +50,10 @@ COMO PREENCHER A INSTRUÇÃO
   ficam "nao_verificado"; quantidade_diarias e valor_total ficam nulos; pendencias diz o que corrigir.
 - Antecedência abaixo do mínimo: só é admissível se a justificativa descreve urgência que não podia
   ser prevista (incêndio, desastre ambiental, infração em curso, determinação judicial com prazo,
-  art. 5º, § 1º). Nesse caso antecedencia é "atende" e exige_autorizacao_superior é true, porque a
-  autorização escrita do Secretário Adjunto ainda precisa constar do processo. Sem urgência
+  art. 5º, § 1º). Nesse caso antecedencia é "atende", e exige_autorizacao_superior é true só se
+  nenhum outro critério impede o pedido, porque a autorização escrita do Secretário Adjunto ainda
+  precisa constar do processo; com outro impedimento, a recomendação é "nao_recomendado" e
+  exige_autorizacao_superior é false. Sem urgência
   legítima, antecedencia é "nao_atende", mesmo que o pedido diga ter autorização escrita: a
   autorização não cria a urgência, só é exigida quando ela existe (art. 5º, §§ 1º e 2º). Nunca deixe
   antecedencia "nao_verificado" numa instrução de mérito.

@@ -20,11 +20,30 @@ V13_compl_matricula_duas_datas #1 [complementacao]: APROVADA, certa
 V14_compl_matricula_novo_retorno #1 [pedido]: APROVADA, certa
 V14_compl_matricula_novo_retorno #1 [complementacao]: APROVADA, certa
 V15_compl_desnecessaria #1 [pedido]: APROVADA, certa
-V15_compl_desnecessaria #1 [complementacao]: APROVADA, certa
+V15_compl_desnecessaria #1 [complementacao]: recusada (análise manual) · proposta certa
+    recusa: calcular_diarias usou data_pedido=2026-10-09, que não é o do pedido
 V16_compl_data_formato_br #1 [pedido]: APROVADA, certa
 V16_compl_data_formato_br #1 [complementacao]: APROVADA, certa
 V17_autorizacao_escrita_sem_urgencia #1 [pedido]: APROVADA, certa
 V17_autorizacao_escrita_sem_urgencia #2 [pedido]: APROVADA, certa
 V17_autorizacao_escrita_sem_urgencia #3 [pedido]: APROVADA, certa
+V18_compl_retorno_por_extenso #1 [pedido]: APROVADA, certa
+V18_compl_retorno_por_extenso #1 [complementacao]: APROVADA, certa
+V18_compl_retorno_por_extenso #2 [pedido]: APROVADA, certa
+V18_compl_retorno_por_extenso #2 [complementacao]: APROVADA, certa
+V18_compl_retorno_por_extenso #3 [pedido]: APROVADA, certa
+V18_compl_retorno_por_extenso #3 [complementacao]: APROVADA, certa
+V19_limite_excedido_no_alerta #1 [pedido]: APROVADA, certa
+V19_limite_excedido_no_alerta #2 [pedido]: APROVADA, certa
+V19_limite_excedido_no_alerta #3 [pedido]: APROVADA, certa
+V20_urgencia_com_prestacao_vencida #1 [pedido]: APROVADA, certa
+V20_urgencia_com_prestacao_vencida #2 [pedido]: APROVADA, certa
+V20_urgencia_com_prestacao_vencida #3 [pedido]: APROVADA, certa
+V21_compl_matricula_e_dia #1 [pedido]: APROVADA, certa
+V21_compl_matricula_e_dia #1 [complementacao]: APROVADA, certa
+V21_compl_matricula_e_dia #2 [pedido]: APROVADA, certa
+V21_compl_matricula_e_dia #2 [complementacao]: APROVADA, certa
+V21_compl_matricula_e_dia #3 [pedido]: APROVADA, certa
+V21_compl_matricula_e_dia #3 [complementacao]: APROVADA, certa
 
 Instruções erradas entregues ao conferente: 0

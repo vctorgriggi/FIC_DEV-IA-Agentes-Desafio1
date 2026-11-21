@@ -24,6 +24,7 @@ antecedência curta sem julgamento ("nao_verificado") é recusado.
 """
 import re
 from dataclasses import dataclass, field
+from datetime import date
 
 from agno.agent import RunOutput
 from agno.run.base import RunStatus
@@ -41,15 +42,29 @@ FERRAMENTAS_CONHECIDAS = {"consultar_servidor", "consultar_historico_diarias",
 
 MATRICULA = re.compile(r"\b\d{6}\b")
 DATA = re.compile(r"\b\d{4}-\d{2}-\d{2}\b")
-# a data só corrige o retorno quando a mesma oração fala em retorno ("o retorno está previsto para …")
-DATA_DE_RETORNO = re.compile(r"(?:retorn|volt|regress)\w*[^.;\n]*?(\d{4}-\d{2}-\d{2})", re.IGNORECASE)
+# a data só corrige o retorno colada ao verbo ("o retorno está previsto para …", "volto no dia 21"):
+# até cinco palavras entre eles, sem pontuação e sem palavra que abra outra oração ou outro evento
+DATA_DE_RETORNO = re.compile(
+    r"(?:retorn|volt|regress)\w*"
+    r"(?:\s+(?!(?:quando|que|ap[óo]s|depois|inici\w*|come[çc]\w*|parti\w*|sa[íi]d\w*)\b)[^\s,.;:]+){0,5}?"
+    r"\s+(\d{4}-\d{2}-\d{2})", re.IGNORECASE)
+MATRICULA_CORRIGIDA = re.compile(r"matr[íi]cula\D{0,40}?\b(\d{6})\b", re.IGNORECASE)
+FALA_DE_RETORNO = re.compile(r"\b(?:retorn|volt|regress)\w*", re.IGNORECASE)
+FALA_DE_OUTRO_CAMPO = re.compile(r"\b(?:partida|sa[íi]da|embarque|destino|munic[íi]pio|matr[íi]cula)\b", re.IGNORECASE)
+MESES = {m: i for i, m in enumerate(("janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto",
+                                      "setembro", "outubro", "novembro", "dezembro"), 1)}
+_MES = "(" + "|".join(MESES) + ")"
 CADASTRO_OK = re.compile(r"Cadastro confere: matrícula (\d+),.*grupo da diária (\w), unidade (\w+) ")
 QUANTIDADE = re.compile(r"Quantidade: ([\d.]+) ")
 VALOR = re.compile(r"= R\$ ([\d.]+) \(Anexo I\)")
-DATA_BR = re.compile(r"\b(\d{2})/(\d{2})/(\d{4})\b")
-PERIODO_BR = re.compile(r"\b(\d{1,2}) a (\d{1,2})/(\d{2})/(\d{4})\b")   # "12 a 14/10/2026"
+DATA_BR = re.compile(r"\b(\d{1,2})/(\d{1,2})/(\d{4})\b")
+PERIODO_BR = re.compile(r"\b(\d{1,2})(?:/(\d{1,2}))? a (\d{1,2})/(\d{1,2})/(\d{4})\b")   # "12 a 14/10/2026"
+PERIODO_EXTENSO = re.compile(rf"\b(\d{{1,2}}) a (\d{{1,2}}) de {_MES} de (\d{{4}})\b", re.IGNORECASE)
+DATA_EXTENSO = re.compile(rf"\b(\d{{1,2}}) de {_MES}(?: de (\d{{4}}))?\b", re.IGNORECASE)
+DIA_E_MES = re.compile(r"\b(\d{1,2})/(\d{1,2})\b(?!/)")
+SO_O_DIA = re.compile(r"\bdia (\d{1,2})\b(?![/\d]| de )", re.IGNORECASE)
 DINHEIRO = re.compile(r"R\$\s*(\d[\d.]*(?:,\d{1,2})?)")
-QTD_DE_DIARIAS = re.compile(r"(\d+(?:[.,]\d+)?)\s+diárias?\b")
+QTD_DE_DIARIAS = re.compile(r"(\d+(?:[.,]\d+)?)\s+diárias?(\s+e\s+meia)?\b")
 NUMERO = re.compile(r"\d[\d.]*(?:,\d+)?")
 
 
@@ -59,17 +74,43 @@ class Veredito:
     motivos: list[str] = field(default_factory=list)
 
 
+@dataclass
+class Leitura:
+    """O que a barreira leu da complementação: as correções e o que ela cita sem conseguir ler."""
+    retorno: set[str]
+    matricula: set[str]
+    nao_lido: list[str]
+
+
+def ler_complementacao(pedido: dict, complementacao: dict | None) -> Leitura:
+    texto = str((complementacao or {}).get("texto", ""))
+    try:
+        referencia = date.fromisoformat(str(pedido.get("data_partida")))
+    except ValueError:
+        referencia = None
+    normal = _datas_iso(texto, referencia)
+    # Com mais de uma data (ou matrícula) no texto não há como saber qual é a correção: nenhuma vale.
+    datas = set(DATA.findall(normal))
+    retorno = set(DATA_DE_RETORNO.findall(normal)) if len(datas) == 1 else set()
+    matriculas = set(MATRICULA_CORRIGIDA.findall(texto))
+    matriculas = matriculas if len(matriculas) == 1 else set()
+    nao_lido = []
+    if FALA_DE_RETORNO.search(texto) and not retorno:
+        nao_lido.append("retorno")
+    for campo in {m.lower() for m in FALA_DE_OUTRO_CAMPO.findall(texto)}:
+        if not (campo.startswith("matr") and matriculas):
+            nao_lido.append(campo)
+    return Leitura(retorno, matriculas, sorted(nao_lido))
+
+
 def permitidos(pedido: dict, complementacao: dict | None) -> dict[str, set[str]]:
     """Por argumento de ferramenta, os valores aceitos: o do pedido ou, se houver, a correção escrita.
 
     A correção substitui o valor do pedido: aceitar os dois deixaria passar a complementação ignorada.
     """
-    texto = _datas_iso(str((complementacao or {}).get("texto", "")))   # "20/11/2026" vale como 2026-11-20
+    leitura = ler_complementacao(pedido, complementacao)
     retorno = {str(pedido["data_retorno"])} if pedido.get("data_retorno") else set()
-    # Com mais de uma data (ou matrícula) no texto não há como saber qual é a correção: nenhuma vale.
-    datas, matriculas = set(DATA.findall(texto)), set(MATRICULA.findall(texto))
-    datas = set(DATA_DE_RETORNO.findall(texto)) if len(datas) == 1 else set()
-    matriculas = matriculas if len(matriculas) == 1 else set()
+    datas, matriculas = leitura.retorno, leitura.matricula
     return {
         "matricula": matriculas or {str(pedido["matricula"])},
         "nome_informado": {str(pedido["nome"]).strip()},
@@ -80,9 +121,40 @@ def permitidos(pedido: dict, complementacao: dict | None) -> dict[str, set[str]]
     }
 
 
-def _datas_iso(texto: str) -> str:
-    """Reescreve as datas DD/MM/AAAA como AAAA-MM-DD, o formato das ferramentas e do pedido."""
-    return DATA_BR.sub(lambda m: f"{m[3]}-{m[2]}-{m[1]}", texto)
+def _iso(ano, mes, dia) -> str:
+    try:
+        return date(int(ano), int(mes), int(dia)).isoformat()
+    except ValueError:   # 31/02 e afins: fica como está, e não casa com data nenhuma
+        return f"{ano}-{int(mes):02d}-{int(dia):02d}?"
+
+
+def _datas_iso(texto: str, referencia: date | None = None) -> str:
+    """Reescreve as datas em português como AAAA-MM-DD, o formato das ferramentas e do pedido.
+
+    Lê "12/11/2026", "12 de novembro de 2026" e os períodos "9 a 12/11/2026", "09/11 a 12/11/2026"
+    e "9 a 12 de novembro de 2026". Com `referencia` (a partida, na complementação) lê também a data
+    sem ano ("12/11", "12 de novembro") e o "dia 12", no mês da partida ou no seguinte.
+    """
+    def periodo(m):
+        dia1, mes1, dia2, mes2, ano = m.groups()
+        ano1 = int(ano) - 1 if mes1 and int(mes1) > int(mes2) else int(ano)
+        return f"{_iso(ano1, mes1 or mes2, dia1)} a {_iso(ano, mes2, dia2)}"
+    texto = PERIODO_BR.sub(periodo, texto)
+    texto = PERIODO_EXTENSO.sub(lambda m: f"{_iso(m[4], MESES[m[3].lower()], m[1])} a "
+                                          f"{_iso(m[4], MESES[m[3].lower()], m[2])}", texto)
+    texto = DATA_BR.sub(lambda m: _iso(m[3], m[2], m[1]), texto)
+    texto = DATA_EXTENSO.sub(lambda m: _iso(m[3] or (referencia.year if referencia else 0),
+                                            MESES[m[2].lower()], m[1]) if m[3] or referencia else m[0], texto)
+    if referencia:
+        texto = DIA_E_MES.sub(lambda m: _iso(referencia.year, m[2], m[1]), texto)
+
+        def so_o_dia(m):
+            dia = int(m[1])
+            mes, ano = (referencia.month, referencia.year) if dia >= referencia.day else (
+                (referencia.month % 12) + 1, referencia.year + (referencia.month == 12))
+            return _iso(ano, mes, dia)
+        texto = SO_O_DIA.sub(so_o_dia, texto)
+    return texto
 
 
 def _numero(bruto: str) -> float | None:
@@ -99,10 +171,7 @@ def _numero(bruto: str) -> float | None:
 
 
 def _datas_citadas(texto: str) -> set[str]:
-    datas = set(DATA.findall(_datas_iso(texto)))
-    for dia1, dia2, mes, ano in PERIODO_BR.findall(texto):
-        datas |= {f"{ano}-{mes}-{int(dia1):02d}", f"{ano}-{mes}-{int(dia2):02d}"}
-    return datas
+    return set(DATA.findall(_datas_iso(texto)))
 
 
 def _ultimo_resultado(resposta: RunOutput, nome: str) -> tuple[dict, str] | None:
@@ -136,6 +205,7 @@ def _conferir(resposta: RunOutput | None, pedido: dict, complementacao: dict | N
         return Veredito(False, ["saída não é um objeto Instrucao validado"])
 
     aceitos = permitidos(pedido, complementacao)
+    leitura = ler_complementacao(pedido, complementacao)
     retorno_ausente = not aceitos["data_retorno"]
 
     # 1. Cada argumento no seu campo: valor do pedido ou da correção escrita na complementação.
@@ -191,10 +261,18 @@ def _conferir(resposta: RunOutput | None, pedido: dict, complementacao: dict | N
             motivos.append(f"texto da instrução cita outro servidor: {nome}")
     # Valores em reais, quantidades de diárias e datas do texto também precisam ter origem: o
     # detalhe é o fundamento que o conferente lê, "como veio da ferramenta".
-    fontes = " ".join([origem, _datas_iso(origem), *((t.result or "") for t in resposta.tools or [])])
+    # Só a última chamada válida de cada ferramenta conta: uma consulta extra com valor inventado não
+    # pode tornar esse valor "conhecido".
+    ultimas = [r[1] for nome in sorted(FERRAMENTAS_CONHECIDAS) if (r := _ultimo_resultado(resposta, nome))]
+    fontes = " ".join([origem, _datas_iso(origem), *ultimas])
     conhecidos = {n for bruto in NUMERO.findall(fontes) if (n := _numero(bruto)) is not None}
-    for bruto in DINHEIRO.findall(livre) + QTD_DE_DIARIAS.findall(livre):
-        if _numero(bruto) not in conhecidos:
+    citados = [bruto for bruto in DINHEIRO.findall(livre)]
+    citados += [f"{bruto} e meia" if meia else bruto for bruto, meia in QTD_DE_DIARIAS.findall(livre)]
+    for bruto in citados:
+        valor = _numero(bruto.removesuffix(" e meia"))
+        if valor is not None and bruto.endswith(" e meia"):
+            valor += 0.5
+        if valor not in conhecidos:
             motivos.append(f"texto da instrução cita {bruto}, que nenhuma ferramenta nem o pedido trazem")
     datas_conhecidas = _datas_citadas(fontes) | {str(carregar().data_da_analise)}
     for data in sorted(_datas_citadas(livre) - datas_conhecidas):
@@ -236,6 +314,10 @@ def _conferir(resposta: RunOutput | None, pedido: dict, complementacao: dict | N
         return Veredito(not motivos, motivos)
 
     # 5. Instrução de mérito: toda consulta feita, e os números iguais aos das ferramentas.
+    if leitura.nao_lido:
+        # a complementação corrige algo que a barreira não sabe ler: se o modelo aplicou ou ignorou a
+        # correção, ela não tem como conferir, e o pedido vai para a análise manual
+        motivos.append(f"complementação cita {', '.join(leitura.nao_lido)} sem correção que a barreira leia")
     historico = _ultimo_resultado(resposta, "consultar_historico_diarias")
     calculo = _ultimo_resultado(resposta, "calcular_diarias")
     saldo = _ultimo_resultado(resposta, "consultar_saldo_diarias")

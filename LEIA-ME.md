@@ -27,11 +27,11 @@ cp .env.example .env          # preencha OPENAI_API_KEY; o .env não é versiona
 | `.venv/bin/python scripts/eliminar_titulares.py` | eliminação das duas servidoras nos bancos da medição | não |
 | `.venv/bin/python scripts/medir.py` | 3 rodadas contra o gabarito, chamadas paralelas desligadas e ligadas | sim |
 | `.venv/bin/python scripts/provocar_falhas.py` | as quatro falhas provocadas | sim |
-| `.venv/bin/python scripts/rodar_variacoes.py` | 17 variações fora do acervo, contra a regra do gabarito | sim |
+| `.venv/bin/python scripts/rodar_variacoes.py` | 21 variações fora do acervo, contra a regra do gabarito | sim |
 | `.venv/bin/python scripts/confrontar.py` | Etapa 1 contra o medido | não |
 
-As saídas vão para `resultados/`. Os bancos do agente vão para `bancos/`, fora do git, porque
-guardam dados pessoais.
+As saídas vão para `resultados/`; as telas do formulário em uso estão em `resultados/etapa5_telas/`.
+Os bancos do agente vão para `bancos/`, fora do git, porque guardam dados pessoais.
 
 ## Como o sistema está dividido
 
@@ -55,8 +55,10 @@ guardam dados pessoais.
   - O nome é o do pedido, e a matrícula que o cadastro conferiu vale para todas as consultas e para
     a instrução. Todas as chamadas usam os mesmos valores, e um campo só fica vazio quando o pedido
     não o informa.
-  - A correção de uma complementação substitui o valor do pedido, e a data (AAAA-MM-DD ou
-    DD/MM/AAAA) só vale como retorno quando o texto fala em retorno.
+  - A correção de uma complementação substitui o valor do pedido. A data só vale como retorno colada
+    ao verbo ("o retorno está previsto para 20/11/2026", "volto no dia 21"), em AAAA-MM-DD, DD/MM/AAAA,
+    DD/MM, "21 de novembro" ou "dia 21"; a matrícula, perto da palavra "matrícula". Complementação
+    que fala de um campo sem correção legível barra a instrução de mérito.
   - Uma complementação com mais de uma data ou de uma matrícula não corrige nada, e a correção para
     um nome com homônimo no cadastro vai para a análise manual.
   - A minuta, os alertas, as pendências e os fundamentos não citam outra matrícula nem outro
@@ -87,10 +89,11 @@ precisa ser confirmada com o professor.
 **Que configuração de chamadas paralelas, teto de chamadas e memória você escolheu, e com base em
 que número?**
 
-- **Chamadas paralelas desligadas.** Desligadas, deram 252 acertos em 252 casos nas seis
-  medições (168 deles com a matrícula conferida; as duas primeiras medições não a conferiam).
-  Ligadas, cortam cerca de 11% do custo (US$ 0,00374 contra 0,00420 por pedido), mas todos os erros
-  das seis medições aconteceram com elas: o 0107 em três e uma complementação sem cadastro.
+- **Chamadas paralelas desligadas.** Desligadas, deram 294 acertos em 294 casos nas sete
+  medições (210 deles com a matrícula conferida; as duas primeiras medições não a conferiam).
+  Ligadas, cortam cerca de 11% do custo (US$ 0,00376 contra 0,00421 por pedido), mas todos os erros
+  das sete medições aconteceram com elas: o 0107 em três e a complementação do 0111 sem cadastro
+  em duas.
 - **Teto de 8 chamadas de ferramenta** (`tool_call_limit=8`). Nas medições, o máximo foi 4
   consultas por turno e 5 chamadas ao modelo. Numa execução da falha provocada 1, o modelo repetiu
   as quatro consultas e chegou às 8, ainda com a instrução certa
@@ -98,9 +101,11 @@ que número?**
   fim. Com teto 2 (falha provocada 4), a instrução fica incompleta e é recusada.
 - **Memória: histórico da sessão com teto de 3 execuções, sem memórias do usuário.** Sem
   memória, a complementação não foi aplicada (0 de 2); com o histórico, foi (2 de 2), e somar as
-  memórias do usuário também acertou 2 de 2, mas custou de 7% a 9% a mais na complementação. Na primeira
-  medição, o modelo gravou uma memória da Carla (0112) sob a matrícula de outro servidor
-  (`resultados/etapa4_eliminacao_primeira_medicao.txt` mostra a memória achada pelo conteúdo).
+  memórias do usuário também acertou 2 de 2, mas custou 11% a mais na complementação e 23% no
+  primeiro turno. Na
+  primeira medição, o modelo gravou uma memória da Carla (0112), que a eliminação achou pelo
+  conteúdo (`resultados/etapa4_eliminacao_primeira_medicao.txt`); que ela estava sob a matrícula de
+  outro servidor foi observado durante o desenvolvimento, sem arquivo que o registre.
   Um pedido tem no máximo dois turnos, então 3 é folga.
 
 **Como o sistema impede que uma instrução fundamentada em dado inventado chegue ao conferente?**
@@ -111,20 +116,20 @@ Em quatro camadas:
    inclusive quanto falta de saldo.
 2. A barreira em código confere cada argumento no seu campo do pedido, uma só pessoa em todas as
    consultas, e cada número e data, nos campos e no texto, contra o pedido e o retorno real das
-   ferramentas, registrado pelo Agno. São 70 testes
+   ferramentas, registrado pelo Agno. São 84 testes
    em `tests/test_barreira.py`, que montam execuções honestas e execuções com um dado inventado ou
    usado no lugar errado.
 3. `resposta.status` é conferido antes de usar o conteúdo, e um erro da API vira recusa.
 4. O que a barreira recusa não aparece na tela: o servidor vê a mensagem padrão e o pedido volta à
    análise manual.
 
-A medição achou um caso que passava (o sinal de autorização do 0107), e três revisões do código
+A medição achou um caso que passava (o sinal de autorização do 0107), e quatro revisões do código
 acharam furos que nenhuma medição tinha mostrado: dados do pedido usados no campo errado, para
 outra pessoa ou citados no texto livre, e a correção de uma complementação ignorada. Em variações
 fora do acervo, o agente real aceitava "autorização escrita" alegada como se fosse urgência; a
 correção foi na instrução do agente, porque esse julgamento a barreira não faz. Cada vez, a
-medição foi refeita. Na medição final, os 84 casos acertaram, sem recusa, e as 17 variações não
-entregaram nenhuma instrução errada (`relatorio.md`, seções 1 e 2).
+medição foi refeita. Na medição final, os 42 casos sequenciais acertaram, sem recusa, e as 21
+variações não entregaram nenhuma instrução errada (`relatorio.md`, seções 1 e 2).
 
 **Que dados do servidor o agente guarda, por quanto tempo, e como o titular os elimina?**
 
@@ -144,7 +149,8 @@ entregaram nenhuma instrução errada (`relatorio.md`, seções 1 e 2).
   (`diarias/guarda.py`). Se a compactação falhar, ela é refeita na abertura seguinte. No log de
   recusas, cada linha sai 30 dias depois da própria recusa, mas só quando o pedido já saiu do banco,
   porque ela é o relógio dele. O registro da conferência fica, porque é o que mede a discordância
-  com o agente; a eliminação tira dele as linhas que citam o titular. Pedido instruído e
+  com o agente: a linha guarda o número do pedido, não o nome nem a matrícula, e a eliminação só
+  tira dele as linhas cujo motivo cita o titular. Pedido instruído e
   nunca conferido nem recusado não tem de onde contar o prazo: fica até ser conferido ou até a
   eliminação pelo titular.
 - **Como eliminar:** na aba "Eliminação de dados" do formulário, ou com a função
@@ -153,6 +159,9 @@ entregaram nenhuma instrução errada (`relatorio.md`, seções 1 e 2).
   `user_id`. É isso que encontra a sessão do 0112, gravada sob a matrícula de outro servidor.
   Depois compacta o arquivo (`VACUUM` e checkpoint do WAL) e confere tabela por tabela e nos bytes.
   No formulário, a rotina também tira do log de recusas e do registro da conferência as linhas que
-  citam o titular. Se sobrar qualquer coisa, acusa erro em vez de declarar sucesso.
+  citam o titular pelo nome ou pela matrícula; a linha da conferência de um pedido dele, que só
+  guarda o número, fica. O formulário exige o nome completo como está no cadastro e recusa
+  matrícula que o cadastro atribui a outra pessoa. Se sobrar qualquer coisa, acusa erro em vez de
+  declarar sucesso.
 - **O que a eliminação não alcança:** o processo de diárias em si. Ele é registro de despesa
   pública, sujeito à transparência e à guarda das normas de prestação de contas.

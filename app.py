@@ -68,7 +68,6 @@ def aplicar_prazo_de_guarda() -> None:
     _, db, arquivo = recursos()
     try:
         apagados = guarda.expurgar(db, arquivo)
-        guarda.podar_recusas(banco=arquivo)
     except (memoria.EliminacaoIncompleta, sqlite3.Error, OSError) as erro:   # banco ocupado: tenta depois
         recursos.clear()
         esquecer(getattr(erro, "sessoes", []))   # o que já saiu do banco sai da tela também
@@ -77,8 +76,12 @@ def aplicar_prazo_de_guarda() -> None:
     if apagados:
         recursos.clear()   # o banco foi fechado para compactar; o próximo uso reabre
         esquecer(apagados)
-        st.toast(f"Prazo de guarda: {len(apagados)} pedido(s) sem conferência, recusa ou uso há "
-                 f"{guarda.PRAZO_DIAS} dias ou mais saíram do banco do agente.")
+        st.toast(f"{len(apagados)} pedido(s) saíram do banco do agente (prazo de guarda vencido ou "
+                 "eliminação que terminou agora).")
+    try:   # a poda vem depois de tirar da tela o que saiu do banco: se ela falhar, nada fica conferível
+        guarda.podar_recusas(banco=arquivo)
+    except (sqlite3.Error, OSError) as erro:
+        st.warning(f"O log de recusas não pôde ser podado agora e será tentado de novo: {erro}")
 
 
 def executar(pedido: dict, complementacao: dict | None = None) -> ag.Resultado:
@@ -208,13 +211,18 @@ def aba_eliminacao(pedido: dict) -> None:
             # a busca é por trecho de texto: nome vazio apagaria tudo, e nome parcial, outras pessoas
             st.error("Informe o nome completo do titular, exatamente como está no cadastro.")
             return
+        servidores = carregar().servidores
+        de_outro = [m for m in lista if m in servidores and servidores[m]["nome"] != " ".join(nome.split())]
+        if de_outro:   # no 0112 a digitada é de outro servidor: apagá-la apagaria os dados dele
+            st.error(f"A matrícula {', '.join(de_outro)} é de outro servidor no cadastro e não entra na eliminação.")
+            return
         _, db, arquivo = recursos()
         try:
             rel = memoria.eliminar_titular(db, arquivo, nome, lista,
                                            registros=[conferencia.LOG_RECUSAS, conferencia.ARQUIVO])
         except ValueError as erro:
             st.error(str(erro))
-        except (memoria.EliminacaoIncompleta, sqlite3.Error) as erro:
+        except (memoria.EliminacaoIncompleta, sqlite3.Error, OSError) as erro:
             esquecer(getattr(erro, "sessoes", []))   # o que já saiu do banco não pode seguir conferível
             st.error(f"A eliminação não se completou: {erro}")
         else:

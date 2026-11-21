@@ -114,5 +114,6 @@ def test_compactacao_que_falha_na_eliminacao_deixa_marca_e_registros_limpos(banc
     assert erro.value.sessoes == ["DIA-2026-0111"]                 # quem chamou tira da tela
     assert "206689" not in recusas.read_text(encoding="utf-8")      # os registros não esperam a compactação
     monkeypatch.setattr(memoria, "compactar", real)
-    assert memoria.concluir_pendencia(arquivo) == ["DIA-2026-0111"]
+    sessoes, execucoes = memoria.concluir_pendencia(arquivo)
+    assert sessoes == ["DIA-2026-0111"] and execucoes == ["run-DIA-2026-0111"]
     assert not memoria.bytes_residuais(arquivo, ["Beatriz Moraes Cunha"])

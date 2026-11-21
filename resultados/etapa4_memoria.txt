@@ -1,25 +1,25 @@
 ETAPA 4 · CUSTO DA MEMÓRIA POR TURNO (tokens de entrada)
 
 configuração            pedido            turno 1  complem.  turno 1 → complementação
-sem_memoria             DIA-2026-0111        5446      2616  diligencia → recusada · NÃO aplicada
+sem_memoria             DIA-2026-0111        5524      2655  diligencia → recusada · NÃO aplicada
                                         recusa: matrícula da instrução fora do pedido: 
                                         recusa: diligência sem consulta ao cadastro
                                         recusa: dados incompletos alegados com o pedido completo
                                         consultas na complementação: nenhuma
-sem_memoria             DIA-2026-0112        5439      2619  diligencia → recusada · NÃO aplicada
-                                        recusa: diligência sem consulta ao cadastro
+sem_memoria             DIA-2026-0112        5517      5393  diligencia → recusada · NÃO aplicada
+                                        recusa: consultar_servidor usou nome_informado vazio, mas o pedido o informa
                                         recusa: dados incompletos alegados com o pedido completo
-                                        consultas na complementação: nenhuma
+                                        consultas na complementação: consultar_servidor
 sem_memoria · memórias gravadas: 0
-historico               DIA-2026-0111        8295     18321  diligencia → apto_para_autorizacao · aplicada ao pedido certo
+historico               DIA-2026-0111        5524     18338  diligencia → apto_para_autorizacao · aplicada ao pedido certo
                                         consultas na complementação: consultar_servidor, consultar_historico_diarias, calcular_diarias, consultar_saldo_diarias
-historico               DIA-2026-0112        5439     17580  diligencia → apto_para_autorizacao · aplicada ao pedido certo
+historico               DIA-2026-0112        5517     17850  diligencia → apto_para_autorizacao · aplicada ao pedido certo
                                         consultas na complementação: consultar_servidor, consultar_historico_diarias, calcular_diarias, consultar_saldo_diarias
 historico · memórias gravadas: 0
-historico_e_memorias    DIA-2026-0111        6722     20033  diligencia → apto_para_autorizacao · aplicada ao pedido certo
+historico_e_memorias    DIA-2026-0111        6802     20381  diligencia → apto_para_autorizacao · aplicada ao pedido certo
                                         consultas na complementação: consultar_servidor, consultar_historico_diarias, calcular_diarias, consultar_saldo_diarias
-historico_e_memorias    DIA-2026-0112        6602     18897  diligencia → apto_para_autorizacao · aplicada ao pedido certo
+historico_e_memorias    DIA-2026-0112        6792     19797  diligencia → apto_para_autorizacao · aplicada ao pedido certo
                                         consultas na complementação: consultar_servidor, consultar_historico_diarias, calcular_diarias, consultar_saldo_diarias
-historico_e_memorias · memórias gravadas: 1
+historico_e_memorias · memórias gravadas: 2
 
 DIA-2026-0104 · CPF, conta ou agência nos bytes do banco: nenhum

@@ -57,7 +57,7 @@ def ler(arquivo: Path | None = None) -> list[dict]:
     if not arquivo.exists():
         return []
     linhas = []
-    for linha in arquivo.read_text(encoding="utf-8").splitlines():
+    for linha in arquivo.read_text(encoding="utf-8", errors="replace").splitlines():   # byte cortado não derruba
         try:
             linhas.append(json.loads(linha))
         except json.JSONDecodeError:   # linha corrompida (gravação interrompida): pula, não derruba a tela

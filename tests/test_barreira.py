@@ -471,3 +471,77 @@ def test_duas_datas_em_formatos_diferentes_continuam_ambiguas():
     comp = {"numero": "DIA-2026-0111", "texto": "O retorno será 20/11/2026 (antes cogitei 2026-11-17)."}
     assert not conferir(execucao_honesta(PEDIDOS["DIA-2026-0111"], data_retorno="2026-11-20"),
                         "DIA-2026-0111", comp).aprovada
+
+
+# ------------------------------------------------------------- quarta revisão
+
+def _comp(numero, texto):
+    return {"numero": numero, "texto": texto}
+
+
+@pytest.mark.parametrize("texto", [
+    "O retorno foi adiado para 14 de novembro de 2026.",
+    "Volto no dia 14.",
+    "O retorno passa a ser 14/11.",
+])
+def test_correcao_de_retorno_por_extenso_ignorada_e_recusada_e_aplicada_passa(texto):
+    comp = _comp("DIA-2026-0101", texto)
+    assert not conferir(execucao_honesta(PEDIDOS["DIA-2026-0101"]), "DIA-2026-0101", comp).aprovada
+    aplicada = conferir(execucao_honesta(PEDIDOS["DIA-2026-0101"], data_retorno="2026-11-14"), "DIA-2026-0101", comp)
+    assert aplicada.aprovada, aplicada.motivos
+
+
+def test_correcao_de_campo_que_a_barreira_nao_le_vai_para_analise_manual():
+    comp = _comp("DIA-2026-0101", "O destino passa a ser Cáceres/MT.")
+    assert not conferir(execucao_honesta(PEDIDOS["DIA-2026-0101"]), "DIA-2026-0101", comp).aprovada
+
+
+@pytest.mark.parametrize("texto", [
+    "O retorno depende do fim da operação, que começa em 2026-11-17.",
+    "Só retornarei quando a operação iniciada em 17/11/2026 terminar.",
+])
+def test_data_de_outra_oracao_nao_e_o_retorno(texto):
+    comp = _comp("DIA-2026-0111", texto)
+    assert not conferir(execucao_honesta(PEDIDOS["DIA-2026-0111"], data_retorno="2026-11-17"),
+                        "DIA-2026-0111", comp).aprovada
+    honesta = conferir(execucao_honesta(PEDIDOS["DIA-2026-0111"]), "DIA-2026-0111", comp)
+    assert honesta.aprovada, honesta.motivos   # o retorno segue indefinido: a diligência se mantém
+
+
+def test_numero_de_seis_algarismos_que_nao_e_matricula_nao_corrige_a_matricula():
+    comp = _comp("DIA-2026-0111", "O retorno está previsto para 2026-11-20; ofício nº 104523.")
+    veredito = conferir(execucao_honesta(PEDIDOS["DIA-2026-0111"], data_retorno="2026-11-20"), "DIA-2026-0111", comp)
+    assert veredito.aprovada, veredito.motivos
+
+
+@pytest.mark.parametrize("minuta", [
+    "No pedido DIA-2026-0101, de 09/11 a 12/11/2026, 3,5 diárias, R$ 980,00.",
+    "No pedido DIA-2026-0101, de 9 a 12 de novembro de 2026, três pernoites: 3 diárias e meia, R$ 980,00.",
+    "Pedido DIA-2026-0101: 3 pernoites + 0,5 diária no retorno = 3,5 diárias (art. 4º).",
+])
+def test_periodo_e_quantidade_em_redacao_natural_passam(minuta):
+    veredito = conferir(alterar(execucao_honesta(PEDIDOS["DIA-2026-0101"]), minuta_despacho=minuta), "DIA-2026-0101")
+    assert veredito.aprovada, veredito.motivos
+
+
+@pytest.mark.parametrize("minuta", [
+    "No pedido DIA-2026-0101, de 10 a 13 de novembro de 2026.",
+    "No pedido DIA-2026-0101, 4 diárias e meia.",
+])
+def test_periodo_e_quantidade_errados_em_redacao_natural_sao_recusados(minuta):
+    assert not conferir(alterar(execucao_honesta(PEDIDOS["DIA-2026-0101"]), minuta_despacho=minuta),
+                        "DIA-2026-0101").aprovada
+
+
+def test_chamada_extra_nao_torna_conhecido_um_valor_qualquer():
+    r = execucao_honesta(PEDIDOS["DIA-2026-0101"])
+    r.tools.insert(3, chamada("consultar_saldo_diarias", consultar_saldo_diarias, unidade="CFF", valor=5000.0))
+    r = alterar(r, minuta_despacho="No pedido DIA-2026-0101, valor total de R$ 5.000,00.")
+    assert not conferir(r, "DIA-2026-0101").aprovada
+
+
+def test_excesso_do_limite_mensal_no_alerta_passa():
+    r = alterar(execucao_honesta(PEDIDOS["DIA-2026-0109"]),
+                alertas=["O limite mensal de 10 diárias foi excedido em 1,5 diárias (art. 6º)."])
+    veredito = conferir(r, "DIA-2026-0109")
+    assert veredito.aprovada, veredito.motivos

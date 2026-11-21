@@ -92,7 +92,7 @@ def consultar_historico_diarias(matricula: str, data_partida: str, data_retorno:
     pedidas = regras.quantidade_diarias(partida, retorno)
     limite = float(acervo.tabela["limite_mensal_diarias"])
     total = usadas + pedidas
-    situacao = "dentro do limite" if total <= limite else "LIMITE EXCEDIDO"
+    situacao = "dentro do limite" if total <= limite else f"LIMITE EXCEDIDO em {total - limite:g}"
     linhas.append(f"Diárias em {mes}: {usadas:g} já concedidas + {pedidas:g} pedidas = {total:g}, "
                   f"limite {limite:g}: {situacao} (art. 6º).")
     return " ".join(linhas)
@@ -136,7 +136,9 @@ def calcular_diarias(grupo: str, destino_uf: str, data_pedido: str, data_partida
     qtd = regras.quantidade_diarias(partida, retorno)
     unitario, total = regras.valor_total(acervo, g, uf, qtd)
     classe = ROTULO_CLASSE[regras.classe_destino(uf)]
-    return (f"{antecedencia} Quantidade: {qtd:g} diária(s) de {partida} a {retorno} (art. 4º). "
+    pernoites = (retorno - partida).days
+    return (f"{antecedencia} Quantidade: {qtd:g} diária(s) de {partida} a {retorno}, {pernoites} pernoite(s) "
+            f"+ 0.5 no retorno (art. 4º). "
             f"Valor: {qtd:g} × R$ {unitario:.2f} (grupo {g}, {classe}) = R$ {total:.2f} (Anexo I).")
 
 

@@ -103,29 +103,56 @@ def marca_de_pendencia(arquivo: Path) -> Path:
     return arquivo.parent / f"{arquivo.name}.compactacao_pendente"
 
 
-def compactar_com_marca(arquivo: Path, sessoes: list[str]) -> None:
-    """Compacta deixando a marca até terminar: se falhar, a próxima abertura termina o serviço."""
+def _ler_marca(marca: Path) -> tuple[list[str], list[str]]:
+    """Sessões e execuções da marca. Marca ilegível ou no formato antigo (lista) não impede compactar."""
+    try:
+        conteudo = json.loads(marca.read_text(encoding="utf-8", errors="replace") or "{}")
+    except json.JSONDecodeError:
+        return [], []
+    if isinstance(conteudo, list):
+        conteudo = {"sessoes": conteudo}
+    if not isinstance(conteudo, dict):
+        return [], []
+    listas = [conteudo.get(chave) for chave in ("sessoes", "execucoes")]
+    return tuple([str(x) for x in lista] if isinstance(lista, list) else [] for lista in listas)
+
+
+def marcar_pendencia(arquivo: Path, sessoes: list[str], execucoes: list[str] = ()) -> None:
+    """Grava a marca antes de apagar, somando ao que já estava pendente: nada pendente se perde."""
     marca = marca_de_pendencia(arquivo)
-    marca.write_text(json.dumps(sessoes), encoding="utf-8")
+    antigas, execucoes_antigas = _ler_marca(marca) if marca.exists() else ([], [])
+    marca.write_text(json.dumps({"sessoes": sorted({*antigas, *sessoes}),
+                                 "execucoes": sorted({*execucoes_antigas, *execucoes})}), encoding="utf-8")
+
+
+def compactar_com_marca(arquivo: Path, sessoes: list[str], execucoes: list[str] = ()) -> None:
+    """Compacta deixando a marca até terminar: se falhar, a próxima abertura termina o serviço."""
+    marcar_pendencia(arquivo, sessoes, execucoes)
     try:
         compactar(arquivo)
     except (EliminacaoIncompleta, sqlite3.Error) as erro:
         raise EliminacaoIncompleta(f"{erro}; a compactação será refeita na próxima abertura", sessoes) from erro
-    marca.unlink()
+    marca_de_pendencia(arquivo).unlink(missing_ok=True)
 
 
-def concluir_pendencia(arquivo: Path) -> list[str]:
-    """Termina a compactação interrompida, se houver, e devolve as sessões que ela tinha apagado."""
+def concluir_pendencia(arquivo: Path) -> tuple[list[str], list[str]]:
+    """Termina a compactação interrompida, se houver; devolve as sessões e execuções que ela apagou."""
     marca = marca_de_pendencia(arquivo)
     if not marca.exists():
-        return []
-    try:
-        sessoes = [str(s) for s in json.loads(marca.read_text(encoding="utf-8") or "[]")]
-    except (json.JSONDecodeError, TypeError):   # marca antiga ou truncada: compacta mesmo assim
-        sessoes = []
+        return [], []
+    sessoes, execucoes = _ler_marca(marca)
     compactar(arquivo)
     marca.unlink()
-    return sessoes
+    return sessoes, execucoes
+
+
+def run_ids(arquivo: Path, sessoes: list[str]) -> list[str]:
+    """Execuções gravadas das sessões: é por elas que se confere a eliminação, sem falso resto."""
+    if not sessoes or not arquivo.exists() or "agno_runs" not in tabelas(arquivo):
+        return []
+    marcas = ",".join("?" * len(sessoes))
+    with sqlite3.connect(arquivo) as con:
+        return [r[0] for r in con.execute(f"SELECT run_id FROM agno_runs WHERE session_id IN ({marcas})", sessoes)]
 
 
 def compactar(arquivo: Path) -> None:
@@ -163,7 +190,7 @@ def apagar_dos_registros(arquivos: list[Path], termos: list[str]) -> int:
     for arquivo in arquivos:
         if not arquivo.exists():
             continue
-        linhas = arquivo.read_text(encoding="utf-8").splitlines(keepends=True)
+        linhas = arquivo.read_text(encoding="utf-8", errors="replace").splitlines(keepends=True)
         ficam = [linha for linha in linhas if not any(g in linha for g in grafias)]
         apagadas += len(linhas) - len(ficam)
         arquivo.write_text("".join(ficam), encoding="utf-8")
@@ -186,8 +213,10 @@ def eliminar_titular(db: SqliteDb, arquivo: Path, nome: str, matriculas: list[st
     por_usuario = {s.session_id for m in matriculas for s in db.get_sessions(user_id=m)}
     por_conteudo, memorias_por_conteudo = _sessoes_e_memorias_do_titular(arquivo, termos)
     sessoes = sorted(por_usuario | por_conteudo)
+    execucoes = run_ids(arquivo, sessoes)
     if sessoes:
-        db.delete_sessions(sessoes)           # leva junto as execuções e os resultados guardados
+        marcar_pendencia(arquivo, sessoes, execucoes)   # antes de apagar: qualquer falha daqui em diante
+        db.delete_sessions(sessoes)                     # deixa a compactação para a próxima abertura
     relatorio.sessoes_apagadas = sessoes
 
     # 2. Memórias: listadas pelo user_id e pelo conteúdo, apagadas com delete_user_memories.
@@ -198,15 +227,22 @@ def eliminar_titular(db: SqliteDb, arquivo: Path, nome: str, matriculas: list[st
     relatorio.memorias_apagadas = len(ids)
 
     # 3. Registros fora do banco antes da compactação: uma compactação que falhe não os deixa para trás.
-    relatorio.linhas_de_registro_apagadas = apagar_dos_registros(list(registros), termos)
+    try:
+        relatorio.linhas_de_registro_apagadas = apagar_dos_registros(list(registros), termos)
+    except OSError as erro:   # arquivo sem permissão: compacta mesmo assim e acusa
+        falha_no_registro = erro
+    else:
+        falha_no_registro = None
 
     # 4. Compactação e conferência: tabela por tabela e nos bytes do arquivo.
     db.close()
-    compactar_com_marca(arquivo, sessoes)
+    compactar_com_marca(arquivo, sessoes, execucoes)
+    if falha_no_registro:
+        raise EliminacaoIncompleta(f"registro não pôde ser limpo: {falha_no_registro}", sessoes)
     relatorio.depois = ocorrencias(arquivo, termos)
     relatorio.bytes_residuais = bytes_residuais(arquivo, termos)
     relatorio.bytes_residuais += [f"{r.name}: {g}" for r in registros if r.exists()
-                                  for g in _grafias(termos) if g in r.read_text(encoding="utf-8")]
+                                  for g in _grafias(termos) if g in r.read_text(encoding="utf-8", errors="replace")]
     if relatorio.depois or relatorio.bytes_residuais:
         raise EliminacaoIncompleta(f"restou dado de {nome}: {relatorio.depois} {relatorio.bytes_residuais}",
                                    sessoes)

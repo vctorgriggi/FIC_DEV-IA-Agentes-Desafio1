@@ -255,3 +255,118 @@ def test_motivo_da_conferencia_sai_mascarado(tmp_path):
     gravado = arquivo.read_text(encoding="utf-8")
     assert "052.318.947-20" not in gravado and "ana@sema.mt.gov.br" not in gravado
     assert "servidora ligou" in gravado
+
+
+# ------------------------------------------------------------- quarta revisão
+
+def _sessoes(pasta):
+    from agno.db.sqlite import SqliteDb
+    return {s.session_id for s in SqliteDb(db_file=str(pasta / "agente.db")).get_sessions()}
+
+
+def _ocupado(_arquivo):
+    raise memoria.EliminacaoIncompleta("banco em uso")
+
+
+def test_matricula_de_outro_servidor_nao_entra_na_eliminacao(monkeypatch, pasta_temporaria):
+    from agno.db.sqlite import SqliteDb
+
+    from tests.test_memoria import sessao
+    agente_que_grava(monkeypatch)
+    at = abrir("DIA-2026-0112")
+    botao(at, "Instruir pedido").click().run()
+    sessao(SqliteDb(db_file=str(pasta_temporaria / "agente.db")), "DIA-2026-0199", "207481",
+           "Rafael Lima Antunes, matrícula 207481")
+    next(t for t in at.text_input if t.label.startswith("Matrículas")).set_value("207418, 207481").run()
+    at.checkbox[0].check().run()
+    botao(at, "Eliminar dados do titular").click().run()
+    assert any("outro servidor" in e.value for e in at.error)
+    assert "DIA-2026-0199" in _sessoes(pasta_temporaria)
+
+
+def test_poda_que_falha_nao_deixa_o_expurgado_na_tela(monkeypatch, pasta_temporaria):
+    import json
+    import os
+    import sqlite3
+    import time
+    from datetime import datetime, timedelta
+    agente_que_grava(monkeypatch)
+    at = abrir()
+    botao(at, "Instruir pedido").click().run()
+    (pasta_temporaria / "conferencias.jsonl").write_text(json.dumps({"pedido": "DIA-2026-0101", "registrado_em": (
+        datetime.now() - timedelta(days=31)).isoformat(timespec="seconds")}) + "\n", encoding="utf-8")
+    antigo = int(time.time()) - 31 * 86400
+    with sqlite3.connect(pasta_temporaria / "agente.db") as con:
+        con.execute("UPDATE agno_sessions SET created_at=?, updated_at=?", (antigo, antigo))
+    log = pasta_temporaria / "recusas.jsonl"
+    log.write_text(json.dumps({"pedido": "X", "registrado_em": datetime.now().isoformat()}) + "\n", encoding="utf-8")
+    os.chmod(log, 0o444)
+    try:
+        at.run()
+    finally:
+        os.chmod(log, 0o644)
+    assert "DIA-2026-0101" not in _sessoes(pasta_temporaria)
+    assert not any(b.label == "Registrar conferência" for b in at.button)
+
+
+def test_registro_sem_permissao_na_eliminacao_compacta_e_avisa(monkeypatch, pasta_temporaria):
+    import os
+    agente_que_grava(monkeypatch)
+    at = abrir()
+    botao(at, "Instruir pedido").click().run()
+    reg = pasta_temporaria / "conferencias.jsonl"
+    reg.write_text('{"pedido": "Y"}\n', encoding="utf-8")
+    os.chmod(reg, 0o444)
+    try:
+        at.checkbox[0].check().run()
+        botao(at, "Eliminar dados do titular").click().run()
+    finally:
+        os.chmod(reg, 0o644)
+    assert not at.exception
+    assert any("não se completou" in e.value for e in at.error)
+    assert not memoria.bytes_residuais(pasta_temporaria / "agente.db", ["Ana Paula Figueiredo"])
+    at.run()
+    assert not any(b.label == "Registrar conferência" for b in at.button)
+
+
+def test_reinstruir_com_compactacao_pendente_nao_some_nem_acusa_resto(monkeypatch, pasta_temporaria):
+    import uuid
+
+    from agno.run.agent import RunInput, RunOutput
+    from agno.session import AgentSession
+
+    def falso(agente, pedido, complementacao=None, ao_consultar=None):   # cada execução com run_id próprio
+        numero, mat = pedido["numero"], pedido["matricula"]
+        agente.db.upsert_session(AgentSession(session_id=numero, user_id=mat))
+        agente.db.upsert_run(run=RunOutput(run_id=str(uuid.uuid4()), session_id=numero, user_id=mat,
+                                           content=f"{pedido['nome']}, matrícula {mat}",
+                                           input=RunInput(input_content=numero)),
+                             session_id=numero, user_id=mat, run_index=0)
+        r = execucao_honesta(PEDIDOS[numero])
+        return ag.Resultado(numero=numero, aprovada=True, instrucao=r.content, resposta=r)
+    monkeypatch.setattr(ag, "instruir", falso)
+    at = abrir()
+    botao(at, "Instruir pedido").click().run()
+    real = memoria.compactar
+    monkeypatch.setattr(memoria, "compactar", _ocupado)
+    at.checkbox[0].check().run()
+    botao(at, "Eliminar dados do titular").click().run()
+    botao(at, "Instruir pedido").click().run()             # nova instrução enquanto a compactação está pendente
+    monkeypatch.setattr(memoria, "compactar", real)
+    at.run()
+    assert not at.warning
+    assert any(b.label == "Registrar conferência" for b in at.button)
+
+
+@pytest.mark.parametrize("arquivo", ["conferencias.jsonl", "recusas.jsonl"])
+def test_byte_invalido_no_registro_nao_derruba(pasta_temporaria, arquivo):
+    (pasta_temporaria / arquivo).write_bytes(b'{"pedido": "A", "motivo": "servidora n\xc3\n'
+                                             b'{"pedido": "B", "registrado_em": "2026-11-01T10:00:00"}\n')
+    assert not abrir().exception
+
+
+def test_marca_ilegivel_nao_derruba(pasta_temporaria):
+    memoria.marca_de_pendencia(pasta_temporaria / "agente.db").write_bytes(b"\xff\xfe")
+    at = abrir()
+    assert not at.exception
+    assert not memoria.marca_de_pendencia(pasta_temporaria / "agente.db").exists()

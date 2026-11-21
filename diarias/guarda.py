@@ -40,7 +40,7 @@ def vencidos(conferencias: list[dict], agora: datetime, prazo_dias: int = PRAZO_
     ultima: dict[str, datetime] = {}
     for c in conferencias:
         quando, numero = _quando(c), c.get("pedido") if isinstance(c, dict) else None
-        if quando is None or not numero:   # registro sem data ou sem pedido não conta para o prazo
+        if quando is None or not isinstance(numero, str) or not numero:   # sem data ou sem pedido: não conta
             continue
         ultima[numero] = max(quando, ultima.get(numero, quando))
     limite = agora - timedelta(days=prazo_dias)
@@ -71,14 +71,6 @@ def _ultimo_uso_no_banco(arquivo: Path, numero: str) -> datetime | None:
     return datetime.fromtimestamp(linha[0]) if linha and linha[0] else None
 
 
-def _run_ids(arquivo: Path, ids: list[str]) -> list[str]:
-    if "agno_runs" not in memoria.tabelas(arquivo):
-        return []
-    marcas = ",".join("?" * len(ids))
-    with sqlite3.connect(arquivo) as con:
-        return [r[0] for r in con.execute(f"SELECT run_id FROM agno_runs WHERE session_id IN ({marcas})", ids)]
-
-
 def expurgar(db: SqliteDb, arquivo: Path, agora: datetime | None = None, prazo_dias: int = PRAZO_DIAS,
              conferencias: list[dict] | None = None, recusas: list[dict] | None = None,
              ultimo_uso: Callable[[Path, str], datetime | None] | None = None) -> list[str]:
@@ -91,9 +83,12 @@ def expurgar(db: SqliteDb, arquivo: Path, agora: datetime | None = None, prazo_d
     pendentes = []
     if memoria.marca_de_pendencia(arquivo).exists():   # a compactação da vez anterior não terminou
         db.close()
-        pendentes = memoria.concluir_pendencia(arquivo)
-        if pendentes and _com_session_id(arquivo, pendentes):   # número do pedido nos bytes daria falso resto
-            raise memoria.EliminacaoIncompleta(f"expurgo incompleto de {pendentes}", pendentes)
+        sessoes, execucoes = memoria.concluir_pendencia(arquivo)
+        # confere pelas execuções apagadas: o pedido pode ter sido instruído de novo nesse meio-tempo, e
+        # a sessão nova, com outras execuções, não é resto; também não sai da tela
+        if memoria.bytes_residuais(arquivo, execucoes):
+            raise memoria.EliminacaoIncompleta(f"compactação pendente incompleta: {execucoes}", sessoes)
+        pendentes = [s for s in sessoes if not _com_session_id(arquivo, [s])]
     eventos = [*(conferencias if conferencias is not None else conferencia.ler()),
                *(recusas if recusas is not None else conferencia.ler(conferencia.LOG_RECUSAS))]
     candidatos = vencidos(eventos, agora, prazo_dias)
@@ -105,10 +100,11 @@ def expurgar(db: SqliteDb, arquivo: Path, agora: datetime | None = None, prazo_d
            and ((quando := uso(arquivo, i)) is None or quando <= limite)]   # e sem uso depois do prazo
     if not ids:
         return pendentes
-    execucoes = _run_ids(arquivo, ids)
+    execucoes = memoria.run_ids(arquivo, ids)
+    memoria.marcar_pendencia(arquivo, ids, execucoes)   # antes de apagar
     db.delete_sessions(ids)                   # leva junto as execuções e os resultados guardados
     db.close()
-    memoria.compactar_com_marca(arquivo, ids)   # se falhar, a próxima chamada termina e devolve os ids
+    memoria.compactar_com_marca(arquivo, ids, execucoes)   # se falhar, a próxima chamada termina
     restou = _com_session_id(arquivo, ids)
     residuos = memoria.bytes_residuais(arquivo, execucoes)
     if restou or residuos:
@@ -127,7 +123,7 @@ def podar_recusas(agora: datetime | None = None, prazo_dias: int = PRAZO_DIAS,
     if not arquivo.exists():
         return 0
     limite = (agora or datetime.now()) - timedelta(days=prazo_dias)
-    brutas = [x for x in arquivo.read_text(encoding="utf-8").splitlines() if x.strip()]
+    brutas = [x for x in arquivo.read_text(encoding="utf-8", errors="replace").splitlines() if x.strip()]
     linhas = conferencia.ler(arquivo)
     no_banco = _sessoes_no_banco(banco) if banco else set()
     ficam = [x for x in linhas if isinstance(x, dict) and (quando := _quando(x)) is not None

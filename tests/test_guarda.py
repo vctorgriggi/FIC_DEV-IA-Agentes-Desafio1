@@ -140,3 +140,17 @@ def test_compactacao_do_expurgo_que_falhou_devolve_os_pedidos_na_vez_seguinte(tm
     monkeypatch.setattr(memoria, "compactar", real)
     assert guarda.expurgar(SqliteDb(db_file=str(arquivo)), arquivo, AGORA, conferencias=conf,
                            ultimo_uso=lambda *_: None) == ["DIA-2026-0101"]
+
+
+# ------------------------------------------------------------- quarta revisão
+
+def test_pedido_que_nao_e_texto_nao_derruba_o_prazo():
+    assert guarda.vencidos([{"pedido": ["A"], "registrado_em": "2026-10-01T10:00:00"}], AGORA) == []
+
+
+def test_marca_nova_soma_as_pendencias_em_vez_de_apagar(tmp_path):
+    arquivo = tmp_path / "agente.db"
+    memoria.marcar_pendencia(arquivo, ["DIA-2026-0101"], ["run-1"])
+    memoria.marcar_pendencia(arquivo, ["DIA-2026-0111"], ["run-2"])
+    sessoes, execucoes = memoria._ler_marca(memoria.marca_de_pendencia(arquivo))
+    assert sessoes == ["DIA-2026-0101", "DIA-2026-0111"] and execucoes == ["run-1", "run-2"]

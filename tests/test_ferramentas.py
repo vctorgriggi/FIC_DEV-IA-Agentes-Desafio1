@@ -72,6 +72,7 @@ def test_0109_limite_mensal_excedido():
     p = PEDIDOS["DIA-2026-0109"]
     saida = consultar_historico_diarias(p["matricula"], p["data_partida"], p["data_retorno"])
     assert "8 já concedidas + 3.5 pedidas = 11.5" in saida and "LIMITE EXCEDIDO" in saida
+    assert "LIMITE EXCEDIDO em 1.5" in saida   # o excesso vem pronto: o modelo não faz a conta
 
 
 # ------------------------------------------------------------- minimização e entradas ruins
@@ -143,3 +144,8 @@ CASOS = [(n, PEDIDOS[n], GABARITO["pedidos"][n]) for n in PEDIDOS] + [
 def test_ferramentas_encadeadas_chegam_ao_gabarito(nome, pedido, esperado):
     obtido = instruir_com_ferramentas(pedido)
     assert obtido == {k: v for k, v in esperado.items() if k != "caso"}
+
+
+def test_calculo_informa_pernoites_e_meia_diaria():
+    saida = calcular_diarias("B", "MT", "2026-10-08", "2026-11-09", "2026-11-12")
+    assert "3 pernoite(s) + 0.5 no retorno" in saida and "Quantidade: 3.5 " in saida

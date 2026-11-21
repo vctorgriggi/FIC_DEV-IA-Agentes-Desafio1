@@ -377,11 +377,13 @@
    },
    {
     "turno": "complementacao",
-    "aprovada": true,
-    "entregue_certa": true,
+    "aprovada": false,
+    "entregue_certa": null,
     "proposta_certa": true,
     "recomendacao_proposta": "apto_para_autorizacao",
-    "motivos_da_recusa": [],
+    "motivos_da_recusa": [
+     "calcular_diarias usou data_pedido=2026-10-09, que não é o do pedido"
+    ],
     "consultas": [
      "consultar_servidor",
      "consultar_historico_diarias",
@@ -404,8 +406,7 @@
     "recomendacao_proposta": "diligencia",
     "motivos_da_recusa": [],
     "consultas": [
-     "consultar_servidor",
-     "consultar_historico_diarias"
+     "consultar_servidor"
     ]
    },
    {
@@ -477,6 +478,324 @@
     "entregue_certa": true,
     "proposta_certa": true,
     "recomendacao_proposta": "nao_recomendado",
+    "motivos_da_recusa": [],
+    "consultas": [
+     "consultar_servidor",
+     "consultar_historico_diarias",
+     "calcular_diarias",
+     "consultar_saldo_diarias"
+    ]
+   }
+  ]
+ },
+ {
+  "variacao": "V18_compl_retorno_por_extenso",
+  "vez": 1,
+  "descricao": "0111; complementação diz 'volto no dia 21 de novembro'",
+  "turnos": [
+   {
+    "turno": "pedido",
+    "aprovada": true,
+    "entregue_certa": true,
+    "proposta_certa": true,
+    "recomendacao_proposta": "diligencia",
+    "motivos_da_recusa": [],
+    "consultas": [
+     "consultar_servidor"
+    ]
+   },
+   {
+    "turno": "complementacao",
+    "aprovada": true,
+    "entregue_certa": true,
+    "proposta_certa": true,
+    "recomendacao_proposta": "apto_para_autorizacao",
+    "motivos_da_recusa": [],
+    "consultas": [
+     "consultar_servidor",
+     "consultar_historico_diarias",
+     "calcular_diarias",
+     "consultar_saldo_diarias"
+    ]
+   }
+  ]
+ },
+ {
+  "variacao": "V18_compl_retorno_por_extenso",
+  "vez": 2,
+  "descricao": "0111; complementação diz 'volto no dia 21 de novembro'",
+  "turnos": [
+   {
+    "turno": "pedido",
+    "aprovada": true,
+    "entregue_certa": true,
+    "proposta_certa": true,
+    "recomendacao_proposta": "diligencia",
+    "motivos_da_recusa": [],
+    "consultas": [
+     "consultar_servidor"
+    ]
+   },
+   {
+    "turno": "complementacao",
+    "aprovada": true,
+    "entregue_certa": true,
+    "proposta_certa": true,
+    "recomendacao_proposta": "apto_para_autorizacao",
+    "motivos_da_recusa": [],
+    "consultas": [
+     "consultar_servidor",
+     "consultar_historico_diarias",
+     "calcular_diarias",
+     "consultar_saldo_diarias"
+    ]
+   }
+  ]
+ },
+ {
+  "variacao": "V18_compl_retorno_por_extenso",
+  "vez": 3,
+  "descricao": "0111; complementação diz 'volto no dia 21 de novembro'",
+  "turnos": [
+   {
+    "turno": "pedido",
+    "aprovada": true,
+    "entregue_certa": true,
+    "proposta_certa": true,
+    "recomendacao_proposta": "diligencia",
+    "motivos_da_recusa": [],
+    "consultas": [
+     "consultar_servidor"
+    ]
+   },
+   {
+    "turno": "complementacao",
+    "aprovada": true,
+    "entregue_certa": true,
+    "proposta_certa": true,
+    "recomendacao_proposta": "apto_para_autorizacao",
+    "motivos_da_recusa": [],
+    "consultas": [
+     "consultar_servidor",
+     "consultar_historico_diarias",
+     "calcular_diarias",
+     "consultar_saldo_diarias"
+    ]
+   }
+  ]
+ },
+ {
+  "variacao": "V19_limite_excedido_no_alerta",
+  "vez": 1,
+  "descricao": "servidora da URS para o DF por 12,5 diárias: limite e saldo",
+  "turnos": [
+   {
+    "turno": "pedido",
+    "aprovada": true,
+    "entregue_certa": true,
+    "proposta_certa": true,
+    "recomendacao_proposta": "nao_recomendado",
+    "motivos_da_recusa": [],
+    "consultas": [
+     "consultar_servidor",
+     "consultar_historico_diarias",
+     "calcular_diarias",
+     "consultar_saldo_diarias"
+    ]
+   }
+  ]
+ },
+ {
+  "variacao": "V19_limite_excedido_no_alerta",
+  "vez": 2,
+  "descricao": "servidora da URS para o DF por 12,5 diárias: limite e saldo",
+  "turnos": [
+   {
+    "turno": "pedido",
+    "aprovada": true,
+    "entregue_certa": true,
+    "proposta_certa": true,
+    "recomendacao_proposta": "nao_recomendado",
+    "motivos_da_recusa": [],
+    "consultas": [
+     "consultar_servidor",
+     "consultar_historico_diarias",
+     "calcular_diarias",
+     "consultar_saldo_diarias"
+    ]
+   }
+  ]
+ },
+ {
+  "variacao": "V19_limite_excedido_no_alerta",
+  "vez": 3,
+  "descricao": "servidora da URS para o DF por 12,5 diárias: limite e saldo",
+  "turnos": [
+   {
+    "turno": "pedido",
+    "aprovada": true,
+    "entregue_certa": true,
+    "proposta_certa": true,
+    "recomendacao_proposta": "nao_recomendado",
+    "motivos_da_recusa": [],
+    "consultas": [
+     "consultar_servidor",
+     "consultar_historico_diarias",
+     "calcular_diarias",
+     "consultar_saldo_diarias"
+    ]
+   }
+  ]
+ },
+ {
+  "variacao": "V20_urgencia_com_prestacao_vencida",
+  "vez": 1,
+  "descricao": "0108 (prestação vencida) com urgência real e partida em 2 dias",
+  "turnos": [
+   {
+    "turno": "pedido",
+    "aprovada": true,
+    "entregue_certa": true,
+    "proposta_certa": true,
+    "recomendacao_proposta": "nao_recomendado",
+    "motivos_da_recusa": [],
+    "consultas": [
+     "consultar_servidor",
+     "consultar_historico_diarias",
+     "calcular_diarias",
+     "consultar_saldo_diarias"
+    ]
+   }
+  ]
+ },
+ {
+  "variacao": "V20_urgencia_com_prestacao_vencida",
+  "vez": 2,
+  "descricao": "0108 (prestação vencida) com urgência real e partida em 2 dias",
+  "turnos": [
+   {
+    "turno": "pedido",
+    "aprovada": true,
+    "entregue_certa": true,
+    "proposta_certa": true,
+    "recomendacao_proposta": "nao_recomendado",
+    "motivos_da_recusa": [],
+    "consultas": [
+     "consultar_servidor",
+     "consultar_historico_diarias",
+     "calcular_diarias",
+     "consultar_saldo_diarias"
+    ]
+   }
+  ]
+ },
+ {
+  "variacao": "V20_urgencia_com_prestacao_vencida",
+  "vez": 3,
+  "descricao": "0108 (prestação vencida) com urgência real e partida em 2 dias",
+  "turnos": [
+   {
+    "turno": "pedido",
+    "aprovada": true,
+    "entregue_certa": true,
+    "proposta_certa": true,
+    "recomendacao_proposta": "nao_recomendado",
+    "motivos_da_recusa": [],
+    "consultas": [
+     "consultar_servidor",
+     "consultar_historico_diarias",
+     "calcular_diarias",
+     "consultar_saldo_diarias"
+    ]
+   }
+  ]
+ },
+ {
+  "variacao": "V21_compl_matricula_e_dia",
+  "vez": 1,
+  "descricao": "0112; complementação corrige a matrícula e diz 'volto no dia 28'",
+  "turnos": [
+   {
+    "turno": "pedido",
+    "aprovada": true,
+    "entregue_certa": true,
+    "proposta_certa": true,
+    "recomendacao_proposta": "diligencia",
+    "motivos_da_recusa": [],
+    "consultas": [
+     "consultar_servidor"
+    ]
+   },
+   {
+    "turno": "complementacao",
+    "aprovada": true,
+    "entregue_certa": true,
+    "proposta_certa": true,
+    "recomendacao_proposta": "apto_para_autorizacao",
+    "motivos_da_recusa": [],
+    "consultas": [
+     "consultar_servidor",
+     "consultar_historico_diarias",
+     "calcular_diarias",
+     "consultar_saldo_diarias"
+    ]
+   }
+  ]
+ },
+ {
+  "variacao": "V21_compl_matricula_e_dia",
+  "vez": 2,
+  "descricao": "0112; complementação corrige a matrícula e diz 'volto no dia 28'",
+  "turnos": [
+   {
+    "turno": "pedido",
+    "aprovada": true,
+    "entregue_certa": true,
+    "proposta_certa": true,
+    "recomendacao_proposta": "diligencia",
+    "motivos_da_recusa": [],
+    "consultas": [
+     "consultar_servidor"
+    ]
+   },
+   {
+    "turno": "complementacao",
+    "aprovada": true,
+    "entregue_certa": true,
+    "proposta_certa": true,
+    "recomendacao_proposta": "apto_para_autorizacao",
+    "motivos_da_recusa": [],
+    "consultas": [
+     "consultar_servidor",
+     "consultar_historico_diarias",
+     "calcular_diarias",
+     "consultar_saldo_diarias"
+    ]
+   }
+  ]
+ },
+ {
+  "variacao": "V21_compl_matricula_e_dia",
+  "vez": 3,
+  "descricao": "0112; complementação corrige a matrícula e diz 'volto no dia 28'",
+  "turnos": [
+   {
+    "turno": "pedido",
+    "aprovada": true,
+    "entregue_certa": true,
+    "proposta_certa": true,
+    "recomendacao_proposta": "diligencia",
+    "motivos_da_recusa": [],
+    "consultas": [
+     "consultar_servidor"
+    ]
+   },
+   {
+    "turno": "complementacao",
+    "aprovada": true,
+    "entregue_certa": true,
+    "proposta_certa": true,
+    "recomendacao_proposta": "apto_para_autorizacao",
     "motivos_da_recusa": [],
     "consultas": [
      "consultar_servidor",

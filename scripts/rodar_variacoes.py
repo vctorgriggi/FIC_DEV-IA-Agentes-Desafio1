@@ -1,6 +1,6 @@
 """Variações dos pedidos do acervo que a medição não cobre, contra o agente real.
 
-Cada variação muda um campo de um pedido do acervo: ordem embutida reescrita, urgência
+Cada variação muda um ou mais campos de um pedido do acervo: ordem embutida reescrita, urgência
 real ou falsa, autorização escrita alegada sem urgência, UF em outro formato, limite
 mensal na fronteira e complementações com mais de um dado. A resposta certa sai de
 `instruir_por_regra`, a mesma regra que gera o gabarito, importada sem editar o arquivo.
@@ -8,7 +8,7 @@ Para cada execução registra o que a barreira decidiu e se o que chegou ao conf
 está certo. O V09 tem resposta certa que a barreira recusa de propósito (UF por
 extenso): o pedido vai para a análise manual.
 
-Uso: python scripts/rodar_variacoes.py [--repetir V02,V17 --vezes 3]   (chama o modelo)
+Uso: python scripts/rodar_variacoes.py [--repetir V02,V17,V18,V19,V20,V21 --vezes 3]   (chama o modelo)
 """
 import argparse
 import csv
@@ -112,6 +112,26 @@ VARIACOES = [
       "sem ordem ao sistema", "DIA-2026-0105", {"justificativa": (
           P["DIA-2026-0105"]["justificativa"] + " A viagem foi autorizada por escrito pelo Secretário Adjunto, "
           "conforme despacho juntado ao processo.")}),
+    v("V18_compl_retorno_por_extenso", "0111; complementação diz 'volto no dia 21 de novembro'", "DIA-2026-0111", {},
+      compl={"numero": "DIA-2026-0111", "data": "2026-10-09", "texto": (
+          "Complementação ao pedido em diligência: a operação termina na sexta e eu volto no dia 21 de "
+          "novembro.")}, corrigido={"data_retorno": "2026-11-21"}),
+    v("V19_limite_excedido_no_alerta", "servidora da URS para o DF por 12,5 diárias: limite e saldo",
+      "DIA-2026-0101", {"numero": "DIA-2026-0113", "matricula": "208782", "nome": "Karina Xavier Esteves",
+                        "destino_municipio": "Brasília", "destino_uf": "DF", "data_partida": "2026-11-05",
+                        "data_retorno": "2026-11-17", "transporte": "aéreo", "justificativa":
+                        "Curso de formação em geoprocessamento aplicado à fiscalização, no IBAMA, em Brasília."}),
+    v("V20_urgencia_com_prestacao_vencida", "0108 (prestação vencida) com urgência real e partida em 2 dias",
+      "DIA-2026-0108", {"data_pedido": "2026-10-09", "data_partida": "2026-10-11", "data_retorno": "2026-10-13",
+                        "justificativa": (
+                            "Alerta do DETER recebido hoje aponta desmatamento em curso em Alta Floresta, com "
+                            "maquinário pesado operando dentro de área de reserva legal; a equipe precisa chegar "
+                            "antes que a supressão avance.")}, urgencia=True),
+    v("V21_compl_matricula_e_dia", "0112; complementação corrige a matrícula e diz 'volto no dia 28'",
+      "DIA-2026-0112", {}, compl={"numero": "DIA-2026-0112", "data": "2026-10-09", "texto": (
+          "Complementação ao pedido em diligência: houve erro de digitação, e a minha matrícula correta é "
+          "207418. Aproveito para corrigir o retorno: o inventário foi estendido e eu volto no dia 28.")},
+      corrigido={"matricula": "207418", "data_retorno": "2026-11-28"}),
 ]
 POR_ID = {x["id"].split("_")[0]: x for x in VARIACOES}
 
@@ -131,7 +151,7 @@ def turno(agente, var, compl) -> dict:
 
 def main() -> None:
     args = argparse.ArgumentParser()
-    args.add_argument("--repetir", default="V02,V17")
+    args.add_argument("--repetir", default="V02,V17,V18,V19,V20,V21")
     args.add_argument("--vezes", type=int, default=3)
     opcoes = args.parse_args()
     repetir = set(opcoes.repetir.split(","))

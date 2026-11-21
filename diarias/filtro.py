@@ -12,7 +12,7 @@ import re
 from agno.guardrails import PIIDetectionGuardrail
 
 CPF = re.compile(r"\b\d{3}\.\d{3}\.\d{3}-\d{2}\b")
-CONTA_OU_AGENCIA = re.compile(r"\b\d{3,6}-[\dXx]\b")
+CONTA_OU_AGENCIA = re.compile(r"\b\d{3,12}-[\dXx]\b")
 EMAIL = re.compile(r"\b[\w.+-]+@[\w-]+(?:\.[\w-]+)+\b")
 
 

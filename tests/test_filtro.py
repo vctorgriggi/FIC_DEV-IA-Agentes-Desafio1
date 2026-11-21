@@ -49,3 +49,9 @@ def test_mascara_da_tela_cobre_os_mesmos_padroes_e_o_email():
     saida = mascarar(texto)
     assert "123.456.789-00" not in saida and "1234-5" not in saida and "fulano@" not in saida
     assert "DIA-2026-0101" in saida and "2026-11-09" in saida   # número de pedido e data não são mascarados
+
+
+def test_conta_com_mais_algarismos_tambem_e_mascarada():
+    from diarias.filtro import mascarar
+    assert "12345678-9" not in mascarar("conta 12345678-9 no banco")
+    assert "DIA-2026-0112" in mascarar("pedido DIA-2026-0112 de 2026-11-20")
