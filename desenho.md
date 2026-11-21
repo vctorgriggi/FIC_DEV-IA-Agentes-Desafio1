@@ -85,8 +85,9 @@ A entrada da chamada k é a da primeira chamada mais o que os passos anteriores 
 | **Total estimado** | **2.195** |
 | Referência do enunciado | 2.060 (+7%) |
 
-A resposta final, um `Instrucao` de pedido apto, tem cerca de 446 tokens de saída; cada chamada de
-ferramenta acrescenta à saída cerca de 40 tokens (premissa), o que dá 606 no sequencial. Com os
+A resposta final, um `Instrucao` de pedido apto, tem cerca de 446 tokens de saída; cada passo que chama
+ferramenta acrescenta à saída cerca de 40 tokens (premissa): 606 no sequencial (4 passos com
+ferramenta), 566 no paralelo (3) e 486 na diligência (1). Com os
 preços do gpt-5.6-luna (US$ 0,20 por milhão de entrada e US$ 1,20 de saída, fonte: docs oficiais
 OpenAI, developers.openai.com/api/docs/pricing, nov/2026):
 

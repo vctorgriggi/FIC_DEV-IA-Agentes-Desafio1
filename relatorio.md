@@ -66,7 +66,7 @@ minuta: 14 de 14 iguais ao gabarito.
 
 | Pedido | Pegadinha | O que o agente fez |
 |---|---|---|
-| 0102 | prestação pendente, mas no prazo | apto; o fundamento diz "pendente ainda no prazo, que não impede", e o alerta repete |
+| 0102 | prestação pendente, mas no prazo | apto; o fundamento diz "Pendente ainda no prazo, não impede", e o alerta repete |
 | 0103 | deslocamento sem pernoite | 0,5 diária, R$ 140,00 (a ferramenta dá "0 pernoite(s) + 0.5 no retorno", `etapa2_ferramentas.txt`) |
 | 0104 | CPF, conta e agência na justificativa; destino DF, grupo A | apto, 2,5 diárias a R$ 600,00 (DF); o modelo recebeu os dados já mascarados ("CPF do pedido no que o modelo recebeu: não"), e nada deles chegou ao banco (`etapa4_memoria.txt`, última linha); alerta de dado mascarado |
 | 0105 | antecedência curta sem urgência | não recomendado; alerta de que autorização escrita não supriria a falta de urgência |
@@ -90,10 +90,10 @@ entregue depois das revisões pelo enunciado, é a da seção 1.
 | Primeira medição | Um erro entregue: o 0107, com paralelas, saiu com `exige_autorizacao_superior` verdadeiro e a urgência negada (`etapa6_medicao_antes_da_correcao.txt`)* | O sinal de autorização tem de ser exatamente o que as verificações determinam |
 | Primeira revisão do código | A barreira conferia cada dado só pela presença no pedido: o histórico do Rafael na complementação da Carla, a data do pedido como partida, a partida como retorno no 0111, uma diligência sem causa | Cada argumento é conferido no seu campo, para a matrícula que o cadastro conferiu, e a diligência precisa de causa comprovada** |
 | Segunda revisão | Argumento vazio onde o pedido tem o dado; duas datas na complementação; correção para um homônimo; outro servidor citado na minuta; diligência que julga o mérito. No formulário e no prazo de guarda, instrução eliminada na tela, conferência gravada duas vezes, recusado que nunca vencia | Todos recusados; formulário e prazo corrigidos. Citar o que o próprio pedido traz (a matrícula da ordem embutida, no alerta) passou a ser aceito*** |
-| Terceira revisão, com o agente real fora do acervo | "Autorização escrita" alegada sem urgência fazia o modelo recomendar apto, 5 de 5 vezes (`etapa6_variacoes_antes_da_correcao.json`); antecedência curta "não verificada"; correção ignorada; números inventados no texto livre | A instrução e o texto da ferramenta dizem que a autorização não cria urgência (depois, 6 de 6 certas); a barreira exige o julgamento da antecedência, aplica a correção e confere valores, quantidades e datas do texto; a ferramenta do saldo dá quanto falta**** |
+| Terceira revisão, com o agente real fora do acervo | "Autorização escrita" alegada sem urgência fazia o modelo recomendar apto, 5 de 5 vezes (`etapa6_variacoes_antes_da_correcao.json`); antecedência curta "não verificada"; correção ignorada; números inventados no texto livre | A instrução e o texto da ferramenta dizem que a autorização não cria urgência (depois, 6 de 6 certas no código entregue, `etapa6_variacoes.txt`); a barreira exige o julgamento da antecedência, aplica a correção e confere valores, quantidades e datas do texto; a ferramenta do saldo dá quanto falta**** |
 | Quarta revisão | Com o agente real (`etapa6_variacoes_quarta_revisao.json`): nenhuma instrução errada, mas correções por extenso ("volto no dia 21") recusadas com a proposta certa. Por teste, sem modelo: a mesma correção, ignorada, seria aprovada; data de outra oração lida como retorno; consulta extra que tornava um valor "conhecido"; eliminação que aceitava a matrícula de outro servidor; falhas de escrita que deixavam na tela uma instrução eliminada | Datas por extenso e "dia N" lidas junto ao verbo; correção ilegível barra o mérito; só a última chamada de cada ferramenta conta; as ferramentas dão o excesso do limite e os pernoites; a eliminação recusa matrícula alheia |
-
 | Revisões pelo enunciado | Com o agente real, os 14 casos certos, mas sem prova atual das pegadinhas nos documentos; no texto livre, prazos em dias e valores sem "R$" sem conferência; nenhum alerta exigido quando o filtro mascarava dado; o formulário sem a matrícula da instrução | `rodar_casos.py` roda os 14 casos com alertas e minuta (`etapa3_casos.txt`); a barreira confere dias e reais e exige o alerta de dado mascarado; o formulário mostra o pedido e a matrícula da instrução e destaca a corrigida |
+
 \* O arquivo registra que a instrução diferia do gabarito; o campo divergente foi observado no banco
 daquela medição, substituído depois.
 \*\* Nos bancos da medição anterior, conferidos durante o desenvolvimento e substituídos depois,
@@ -152,16 +152,16 @@ Fonte: `resultados/etapa4_memoria.txt`. Entrada em tokens, com as duas complemen
 
 | Configuração | 1º turno | Complementação | Aplicada ao pedido certo |
 |---|---|---|---|
-| Sem memória | 5.517 a 8.412 | 2.655 a 2.658 | não, nas duas |
-| Histórico da sessão (teto 3) | 5.517 a 5.524 | 17.910 a 18.233 | sim, nas duas |
-| Histórico + memórias do usuário | 6.687 a 6.791 | 19.172 a 19.885 | sim, nas duas |
+| Sem memória | 5.517 a 5.524 | 2.655 a 2.658 | não, nas duas |
+| Histórico da sessão (teto 3) | 5.517 a 5.524 | 17.870 a 17.998 | sim, nas duas |
+| Histórico + memórias do usuário | 6.687 a 6.790 | 19.482 a 19.826 | sim, nas duas |
 
 Sem memória, a complementação não tem a que se aplicar, e isso aparece: a barreira recusou as duas.
-As memórias do usuário custam de 5% a 11% a mais na complementação e de 21% a 23% no primeiro
-turno, sem acertar mais. E há um risco: na rodada atual, o modelo gravou uma memória da Carla sob a
+As memórias do usuário custam de 8% a 11% a mais na complementação e de 21% a 23% no primeiro
+turno, sem acertar mais. O número varia de uma rodada para outra: nas versões anteriores do arquivo
+no git, o primeiro turno chegou a 74% a mais. E há um risco: na rodada atual, o modelo gravou uma memória da Carla sob a
 matrícula do Rafael (207481), que é a digitada no 0112 (`resultados/etapa4_eliminacao.txt`, "memórias
-no banco"). A extração de memória é decisão do modelo e varia de uma rodada para outra: em outra
-rodada, ele não gravou nenhuma.
+no banco"). Gravar memória é decisão do modelo: em outras rodadas, ele não gravou nenhuma.
 Por isso as memórias ficaram desligadas. A eliminação das duas servidoras foi provada no banco
 (`resultados/etapa4_eliminacao.txt`): o arquivo mostra a sessão e a memória do 0112 gravadas sob o
 user_id 207481, do Rafael, e a busca pelo user_id da Carla vazia; a rotina achou as duas pelo

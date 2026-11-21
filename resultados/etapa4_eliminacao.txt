@@ -27,3 +27,17 @@ Carla Regina Souza (207418)
   sessões apagadas: ['DIA-2026-0112'] · memórias apagadas: 0
   depois: nenhuma linha · bytes residuais: nenhum
 Heitor Vasconcelos Lima, que não pediu eliminação: {'agno_runs': 1}
+
+## medicao_sem_memoria.db
+busca da Carla pelo user_id 207418: nenhuma sessão
+sessões no banco (session_id: user_id): DIA-2026-0111: 206689, DIA-2026-0112: 207481
+memórias no banco (user_id, cita a Carla?): nenhuma
+Beatriz Moraes Cunha (206689)
+  antes:  {'agno_sessions': 1, 'agno_runs': 2}
+  sessões apagadas: ['DIA-2026-0111'] · memórias apagadas: 0
+  depois: nenhuma linha · bytes residuais: nenhum
+Carla Regina Souza (207418)
+  antes:  {'agno_runs': 2}
+  sessões apagadas: ['DIA-2026-0112'] · memórias apagadas: 0
+  depois: nenhuma linha · bytes residuais: nenhum
+Heitor Vasconcelos Lima, que não pediu eliminação: ausente

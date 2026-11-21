@@ -391,3 +391,14 @@ def test_matricula_corrigida_e_destacada_na_complementacao_do_0112(monkeypatch):
     at.button[0].click().run()
     tela = texto_da_tela(at)
     assert "para a matrícula 207418" in tela and "a digitada no pedido (207481)" in tela
+
+
+def test_eliminacao_some_da_tela_ja_na_rodada_do_clique(monkeypatch):
+    agente_que_grava(monkeypatch)
+    at = abrir()
+    botao(at, "Instruir pedido").click().run()
+    at.checkbox[0].check().run()
+    botao(at, "Eliminar dados do titular").click().run()   # sem nenhuma interação a mais
+    assert any("Eliminação concluída" in s.value for s in at.success)
+    assert "Cadastro confere: matrícula 204317" not in texto_da_tela(at)
+    assert not any(b.label == "Registrar conferência" for b in at.button)

@@ -20,13 +20,13 @@ cp .env.example .env          # preencha OPENAI_API_KEY; o .env não é versiona
 
 | Comando | O que faz | Chama o modelo? |
 |---|---|---|
-| `.venv/bin/ruff check . && .venv/bin/python -m pytest -q` | lint e os testes (ferramentas, filtro, barreira, eliminação, prazo de guarda, formulário); saída em `resultados/etapa6_testes.txt` | não |
+| `.venv/bin/ruff check . && .venv/bin/python -m pytest -q` | lint e os testes (ferramentas, filtro, barreira, eliminação, prazo de guarda, formulário); a saída de uma execução com `pytest -v` está em `resultados/etapa6_testes.txt` | não |
 | `.venv/bin/python scripts/estimar_desenho.py` | contas da Etapa 1 | não |
 | `.venv/bin/python scripts/testar_ferramentas.py` | as ferramentas nos casos do enunciado (`resultados/etapa2_ferramentas.txt`) | não |
 | `.venv/bin/streamlit run app.py` | o formulário de conferência; abre sem chave, e só chama o modelo ao instruir | sim |
 | `.venv/bin/python scripts/rodar_casos.py` | o agente nos 12 pedidos e nas 2 complementações, com alertas e minuta | sim |
 | `.venv/bin/python scripts/medir_memoria.py` | custo da memória nas três configurações | sim |
-| `.venv/bin/python scripts/eliminar_titulares.py` | eliminação das duas servidoras nos bancos que `medir_memoria.py` grava (rode-o antes) | não |
+| `.venv/bin/python scripts/eliminar_titulares.py` | eliminação das duas servidoras nos três bancos que `medir_memoria.py` grava (rode-o antes) | não |
 | `.venv/bin/python scripts/medir.py` | 3 rodadas contra o gabarito, chamadas paralelas desligadas e ligadas | sim |
 | `.venv/bin/python scripts/provocar_falhas.py` | as quatro falhas provocadas | sim |
 | `.venv/bin/python scripts/rodar_variacoes.py` | 21 variações fora do acervo, contra a regra do gabarito | sim |
@@ -74,7 +74,8 @@ falhas provocadas, que a Figura 1 e a Etapa 1 do enunciado chamam de Etapa 6.
     um nome com homônimo no cadastro vai para a análise manual.
   - A minuta, os alertas, as pendências e os fundamentos não citam outra matrícula nem outro
     servidor do cadastro, e cada valor em reais, quantidade de diárias e data que escrevem está no
-    pedido, na complementação ou no retorno de uma ferramenta, em qualquer dos dois formatos.
+    pedido, na complementação ou no retorno de uma ferramenta, escrito como as ferramentas escrevem
+    (9250.00, 2026-11-20) ou em português (9.250,00, 20/11/2026, 20 de novembro de 2026).
   - Quando o filtro mascarou dado pessoal no pedido, algum alerta precisa avisar o conferente.
   - O grupo e a unidade vêm do cadastro, e quantidade e valor são os do cálculo.
   - A situação de cada critério numérico bate com o texto da ferramenta, e uma diligência precisa
@@ -91,9 +92,9 @@ falhas provocadas, que a Figura 1 e a Etapa 1 do enunciado chamam de Etapa 6.
 - **Data da análise fixa** (2026-10-09, de `tabela_diarias.json`), nunca a data de hoje, e dias
   úteis sem feriados, como o gabarito.
 - **Python 3.15.** É o da máquina, e as dependências instalaram e importaram nele. O enunciado
-  pede 3.10 ou superior: o `requirements.lock` só instala a partir do 3.12 (numpy e altair travados
-  ali não têm versão para 3.10 e 3.11). Em 3.10 ou 3.11, instale `requirements.txt`, que o pip
-  resolve para essas versões; não foi testado nelas.
+  pede 3.10 ou superior: o `requirements.lock` só instala a partir do 3.12, porque o numpy travado
+  ali exige 3.12 (e o altair, 3.11). Em 3.10 ou 3.11, instale `requirements.txt`, que o pip resolve
+  para essas versões; não foi testado nelas.
 
 ## As perguntas do enunciado
 
@@ -118,8 +119,8 @@ que número?**
   fim. Com teto 2 (falha provocada 4), a instrução fica incompleta e é recusada.
 - **Memória: histórico da sessão com teto de 3 execuções, sem memórias do usuário.** Sem
   memória, a complementação não foi aplicada (0 de 2); com o histórico, foi (2 de 2), e somar as
-  memórias do usuário também acertou 2 de 2, mas custou de 5% a 11% a mais na complementação e de
-  21% a 23% no primeiro turno. E o modelo gravou uma memória da Carla (0112) sob a matrícula de outro
+  memórias do usuário também acertou 2 de 2, mas custou de 8% a 11% a mais na complementação e de
+  21% a 23% no primeiro turno (o número varia entre rodadas). E o modelo gravou uma memória da Carla (0112) sob a matrícula de outro
   servidor (`resultados/etapa4_eliminacao.txt`).
   Um pedido tem no máximo dois turnos, então 3 é folga.
 
@@ -179,7 +180,9 @@ variações não entregaram nenhuma instrução errada (`relatorio.md`, seções
   guarda o número, fica. O formulário exige o nome completo como está no cadastro e recusa
   matrícula que o cadastro atribui a outra pessoa. Se sobrar qualquer coisa, acusa erro em vez de
   declarar sucesso.
-- **O que a eliminação não alcança:** o processo de diárias em si. Ele é registro de despesa
+- **O que a eliminação não alcança:** os bancos que os scripts de medição gravam em `bancos/medicao/`
+  (fora do git), que guardam cópias dos pedidos do acervo para a medição e devem ser apagados quando
+  ela termina; e o processo de diárias em si. Ele é registro de despesa
   pública, sujeito à transparência e à guarda das normas de prestação de contas e à LGPD: a
   eliminação pedida pelo titular vale para a cópia de trabalho do agente, e a minimização (sem CPF
   nem e-mail nas ferramentas, filtro antes do modelo, prazo de guarda) é a parte da LGPD que este
@@ -194,7 +197,8 @@ Sim, desde que um servidor confira cada instrução.
   complementações sem intervenção. Foram 14 de 14 iguais ao gabarito na execução com alertas e
   minuta (`resultados/etapa3_casos.txt`) e 336 de 336 nas rodadas sequenciais das oito medições.
   Em 21 variações fora do acervo, nenhuma instrução errada chegou ao conferente; as que o agente
-  não instruiu bem foram recusadas e voltaram à análise manual.
+  propôs certo mas a barreira não soube conferir (a UF por extenso, por exemplo) foram recusadas e
+  voltaram à análise manual, do lado seguro.
 - **A decisão fica com quem assina:** o agente não decide (art. 10). A barreira em código só deixa
   passar instrução com dado de origem conferida, o servidor confere cada pedido no formulário e
   registra o encaminhamento, e o ordenador de despesa defere ou indefere.

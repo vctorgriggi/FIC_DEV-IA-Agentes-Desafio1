@@ -208,6 +208,7 @@ def aba_eliminacao(pedido: dict) -> None:
     sugestao = barreira.MATRICULA.findall(corrigida) or [pedido["matricula"]]   # a corrigida, se houver
     matriculas = st.text_input("Matrículas do titular, separadas por vírgula", value=", ".join(sugestao))
     st.caption("Informe só matrículas do titular. No DIA-2026-0112 a digitada (207481) é de outro servidor.")
+    resultado_da_eliminacao()
     confirmar = st.checkbox("Confirmo que o titular pediu a eliminação dos seus dados",
                             key=f"confirma_eliminacao_{pedido['numero']}")   # não vale para outro pedido
     if st.button("Eliminar dados do titular", disabled=not confirmar):
@@ -227,28 +228,46 @@ def aba_eliminacao(pedido: dict) -> None:
                                            registros=[conferencia.LOG_RECUSAS, conferencia.ARQUIVO])
         except ValueError as erro:
             st.error(str(erro))
+            return
         except (memoria.EliminacaoIncompleta, sqlite3.Error, OSError) as erro:
             esquecer(getattr(erro, "sessoes", []))   # o que já saiu do banco não pode seguir conferível
-            st.error(f"A eliminação não se completou: {erro}")
+            st.session_state["eliminacao"] = {"erro": f"A eliminação não se completou: {erro}"}
         else:
             esquecer(rel.sessoes_apagadas)
-            st.success(f"Eliminação concluída: {len(rel.sessoes_apagadas)} sessão(ões), "
-                       f"{rel.memorias_apagadas} memória(s) e {rel.linhas_de_registro_apagadas} linha(s) "
-                       "de registro que citavam o titular apagadas.")
-            st.table([{"Tabela": t, "Linhas com o titular antes": n,
-                       "Depois": rel.depois.get(t, 0)} for t, n in rel.antes.items()] or
-                     [{"Tabela": "—", "Linhas com o titular antes": 0, "Depois": 0}])
-            st.caption(f"Sessões apagadas: {', '.join(rel.sessoes_apagadas) or 'nenhuma'} · "
-                       f"texto do titular nos bytes do arquivo: {', '.join(rel.bytes_residuais) or 'nenhum'}")
+            st.session_state["eliminacao"] = {
+                "sucesso": f"Eliminação concluída: {len(rel.sessoes_apagadas)} sessão(ões), "
+                           f"{rel.memorias_apagadas} memória(s) e {rel.linhas_de_registro_apagadas} linha(s) "
+                           "de registro que citavam o titular apagadas.",
+                "tabela": [{"Tabela": t, "Linhas com o titular antes": n, "Depois": rel.depois.get(t, 0)}
+                           for t, n in rel.antes.items()]
+                          or [{"Tabela": "—", "Linhas com o titular antes": 0, "Depois": 0}],
+                "legenda": f"Sessões apagadas: {', '.join(rel.sessoes_apagadas) or 'nenhuma'} · texto do "
+                           f"titular nos bytes do arquivo: {', '.join(rel.bytes_residuais) or 'nenhum'}"}
         finally:
             recursos.clear()   # o banco foi fechado para compactar; o próximo uso reabre
+        # a aba Instrução já foi desenhada nesta rodada: só uma rodada nova a desenha sem o que saiu do banco
+        st.rerun()
+
+
+def resultado_da_eliminacao() -> None:
+    """Mostra, na rodada seguinte ao clique, o que a eliminação fez."""
+    feito = st.session_state.pop("eliminacao", None)
+    if not feito:
+        return
+    if "erro" in feito:
+        st.error(feito["erro"])
+        return
+    st.success(feito["sucesso"])
+    st.table(feito["tabela"])
+    st.caption(feito["legenda"])
 
 
 def aba_conferencias() -> None:
     linhas = conferencia.ler()
     taxa = conferencia.taxa_de_divergencia()
     st.caption(f"Prazo de guarda: o banco do agente mantém cada pedido por {guarda.PRAZO_DIAS} dias depois "
-               "do último evento (conferência, recusa ou uso); depois disso ele é apagado automaticamente.")
+               "da conferência ou da recusa (uso posterior recomeça a contagem); depois disso ele é apagado "
+               "automaticamente. Pedido nunca conferido nem recusado fica até a eliminação pelo titular.")
     st.metric("Conferências registradas", len(linhas),
               help="Cada linha é uma decisão do servidor ao lado da sugestão do agente.")
     if taxa is not None:

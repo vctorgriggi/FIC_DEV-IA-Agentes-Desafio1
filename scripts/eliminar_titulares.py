@@ -1,4 +1,4 @@
-"""Etapa 4: elimina, nos bancos da medição, as duas servidoras que passaram por diligência.
+"""Etapa 4: elimina, nos três bancos da medição de memória, as duas servidoras que passaram por diligência.
 
 Usa os bancos gravados por scripts/medir_memoria.py, sem chamar o modelo. Para cada
 banco mostra o que havia de cada titular, o que foi apagado e o que restou, tabela
@@ -21,7 +21,7 @@ OUTROS = ["Heitor Vasconcelos Lima"]                  # DIA-2026-0104, que não 
 
 def main() -> None:
     linhas = ["ETAPA 4 · ELIMINAÇÃO DOS DADOS DAS TITULARES", ""]
-    for nome_banco in ("medicao_historico_e_memorias", "medicao_historico"):
+    for nome_banco in ("medicao_historico_e_memorias", "medicao_historico", "medicao_sem_memoria"):
         db, arquivo = memoria.abrir_banco(nome_banco)
         if not arquivo.exists():
             raise SystemExit(f"{arquivo.name} não existe: rode antes scripts/medir_memoria.py")
