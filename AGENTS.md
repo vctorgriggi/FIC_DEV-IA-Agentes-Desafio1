@@ -97,8 +97,7 @@ app.py       # formulário; só exibe instrução aprovada pela barreira, nunca 
   justificativa; confira por session_id e pelos run_id apagados.
 - Barreira que confere dado só pela presença no pedido aprova dado no campo errado ou de outra
   pessoa (0112, 0111, 0101) → confira campo a campo e pela matrícula do cadastro.
-- Painel de pré-visualização do app não abre o servidor ("Operation not permitted") → o macOS
-  não deixa o painel ler a pasta Desktop; suba o Streamlit pelo terminal e conecte pelo endereço.
+- Painel de pré-visualização não lê a pasta Desktop (macOS) → suba o Streamlit pelo terminal.
 - Checagem de texto livre que recusa toda matrícula fora do pedido recusa o alerta sobre injeção
   (falha provocada 1) → aceite o que o próprio pedido ou a complementação traz.
 - Número no texto livre sem origem é recusado → conta que o texto precisa (falta de saldo, excesso
@@ -124,6 +123,7 @@ app.py       # formulário; só exibe instrução aprovada pela barreira, nunca 
 - G5 — texto livre conferido por trecho e número sem contexto: nome sem acento, matrícula com ponto,
   número com outro sentido ou data por extenso passam — paliativo: campos estruturados à parte.
 - G6 — o filtro não pega CPF sem pontuação nem conta sem dígito — paliativo: só o 0104 tem um.
+- G7 — alerta da ordem embutida (0107) depende do modelo — paliativo: a instrução manda registrá-la.
 
 ## Como rodar
 
@@ -144,6 +144,6 @@ python3 -m venv .venv && .venv/bin/pip install -r requirements.lock
 
 ## Decisões em aberto
 
-- [ ] **LEIA-ME: quatro perguntas ou três** — o enunciado anuncia quatro e lista três; confirmar
-  com o professor se falta uma.
-- [ ] **resultados/ das "Etapas 4 e 5"** — a Etapa 5 é o formulário; provável "4 e 6". Confirmar.
+- [ ] **LEIA-ME: quatro perguntas ou três** — o enunciado e o docx anunciam quatro e listam três; o
+  LEIA-ME responde também à pergunta do "Problema" como quarta. Confirmar com o professor.
+- [ ] **resultados/ das "Etapas 4 e 5"** — docx sem seção de Etapa 6; provável "4 e 6". Confirmar.
