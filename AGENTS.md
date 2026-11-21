@@ -96,7 +96,7 @@ app.py       # formulário; só exibe instrução aprovada pela barreira, nunca 
 - Expurgo que procura o número do pedido no conteúdo acusa resto falso → o 0102 cita o 0101 na
   justificativa; confira por session_id e pelos run_id apagados.
 - Barreira que confere dado só pela presença no pedido aprova dado no campo errado ou de outra
-  pessoa (0112, 0111, 0101) → confira campo a campo e pela matrícula do cadastro; a revisão achou isso.
+  pessoa (0112, 0111, 0101) → confira campo a campo e pela matrícula do cadastro.
 - Painel de pré-visualização do app não abre o servidor ("Operation not permitted") → o macOS
   não deixa o painel ler a pasta Desktop; suba o Streamlit pelo terminal e conecte pelo endereço.
 - Checagem de texto livre que recusa toda matrícula fora do pedido recusa o alerta sobre injeção
@@ -120,7 +120,7 @@ app.py       # formulário; só exibe instrução aprovada pela barreira, nunca 
   argumento corrigido após erro de formato e 0112 que reconfere a matrícula antiga — paliativo: vão
   à análise manual; V09 e V16 de `scripts/rodar_variacoes.py` os medem.
 - G5 — o texto livre é conferido por trecho exato: nome de outro servidor sem acento ou abreviado,
-  ou matrícula com ponto, passa — paliativo: nenhuma ferramenta devolve outro nome; conferência humana.
+  ou matrícula com ponto, passa — paliativo: ferramenta nenhuma devolve outro nome.
 - G6 — o filtro não pega CPF sem pontuação nem conta sem dígito, e a tela não mascara e-mail —
   paliativo: no acervo só o 0104 tem dado bancário, e os testes mostram que ele é mascarado.
 
