@@ -44,9 +44,9 @@ app.py       # formulário; só exibe instrução aprovada pela barreira, nunca 
 ## Convenções
 
 - Python 3.15 em `.venv` na raiz — é o da máquina; agno 3.0.9, streamlit 1.67, pydantic 2.14 e
-  sqlalchemy 2.1.9 com greenlet instalaram e importaram nele (o enunciado pede 3.10 ou mais).
-- Dependências travadas em arquivo de lock gerado por pip freeze; `sqlalchemy[asyncio]`, nunca
-  `sqlalchemy` puro (ver Gotchas).
+  sqlalchemy 2.1.9 com greenlet instalaram nele. O lock só instala do 3.12 em diante; para 3.10 e
+  3.11 (o enunciado pede 3.10 ou mais) o LEIA-ME manda usar `requirements.txt`, não testado neles.
+- Dependências travadas em lock gerado por pip freeze; `sqlalchemy[asyncio]`, nunca puro (Gotchas).
 - Modelo `gpt-5.6-luna`, `telemetry=False`, `reasoning_effort="none"` — exigências do enunciado.
 - Regras numéricas iguais às de `instruir_por_regra` em `exemplos/gerar_dados.py`, incluindo
   dias úteis sem feriados e saldo comparado pedido a pedido — é o que o gabarito mede.
@@ -65,8 +65,8 @@ app.py       # formulário; só exibe instrução aprovada pela barreira, nunca 
   .env.example versionado traz só os nomes.
 - Código, nomes e documentos em português, como `exemplos/gerar_dados.py` e o enunciado.
 - Memória: histórico da sessão com teto de 3 execuções e memórias do usuário desligadas — sem
-  histórico a complementação não se aplica; as memórias acertam o mesmo, custam de 11% a 23% a mais
-  e já gravaram dados de uma pessoa sob o user_id de outra (0112, observado sem arquivo).
+  histórico a complementação não se aplica; as memórias acertam o mesmo, custam de 7% a 74% a mais
+  por turno e já gravaram dados de uma pessoa sob o user_id de outra (0112, observado sem arquivo).
 - Registro da conferência: número, sugestão, decisão, motivo mascarado e se a minuta foi editada,
   uma linha por instrução conferida (diligência e complementação são duas) — mede a discordância.
 - Chamadas paralelas desligadas — medido: 294/294 desligadas; todos os erros das sete medições
