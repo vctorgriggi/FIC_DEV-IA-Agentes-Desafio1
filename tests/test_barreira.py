@@ -22,6 +22,7 @@ from diarias.ferramentas import (
     consultar_saldo_diarias,
     consultar_servidor,
 )
+from diarias.filtro import mascarar
 
 DADOS = Path(__file__).resolve().parents[1] / "exemplos" / "dados"
 PEDIDOS = {p["numero"]: p for p in json.loads((DADOS / "pedidos.json").read_text(encoding="utf-8"))}
@@ -78,7 +79,10 @@ def _saida(pedido, p, tools, diligencia=None, urgente=False) -> RunOutput:
         verificacoes=[Verificacao(criterio=c, situacao=s, detalhe="trecho da ferramenta") for c, s in situacao.items()],
         recomendacao=recomendacao,
         exige_autorizacao_superior=bool(urgente and recomendacao == "apto_para_autorizacao"),
-        pendencias=[], alertas=[], minuta_despacho="Minuta.")
+        pendencias=[], minuta_despacho="Minuta.",
+        # o agente correto avisa o conferente quando o filtro mascarou dado pessoal no pedido
+        alertas=["Dados pessoais mascarados com asteriscos na justificativa."]
+        if mascarar(json.dumps(pedido, ensure_ascii=False)) != json.dumps(pedido, ensure_ascii=False) else [])
     return RunOutput(status=RunStatus.completed, content=instrucao, tools=tools)
 
 
@@ -566,3 +570,10 @@ def test_dias_e_reais_da_ferramenta_e_da_norma_passam():
         "5 dias úteis (art. 7º); valor de 980,00 reais."))
     veredito = conferir(r, "DIA-2026-0101")
     assert veredito.aprovada, veredito.motivos
+
+
+def test_dado_mascarado_sem_alerta_e_recusado():
+    # enunciado: alertas trazem "dados mascarados"; o filtro sabe quando mascarou, então a barreira cobra
+    r = execucao_honesta(PEDIDOS["DIA-2026-0104"])
+    assert conferir(r, "DIA-2026-0104").aprovada
+    assert not conferir(alterar(r, alertas=[]), "DIA-2026-0104").aprovada

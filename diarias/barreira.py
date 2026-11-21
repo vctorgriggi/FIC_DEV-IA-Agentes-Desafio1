@@ -32,6 +32,7 @@ from agno.run.base import RunStatus
 
 from diarias.dados import carregar
 from diarias.esquema import Instrucao
+from diarias.filtro import mascarar
 
 MENSAGEM_PADRAO = ("Não foi possível instruir este pedido automaticamente. "
                    "Ele foi devolvido para análise manual.")
@@ -70,6 +71,7 @@ EM_REAIS = re.compile(r"(\d[\d.]*(?:,\d{1,2})?)\s+reais\b")
 EM_DIAS = re.compile(r"(\d+)\s+dias?\b")
 NORMA = (Path(__file__).resolve().parents[1] / "exemplos" / "dados" / "normas.md").read_text(encoding="utf-8")
 NUMERO = re.compile(r"\d[\d.]*(?:,\d+)?")
+ALERTA_DE_MASCARA = re.compile(r"mascar|asterisc|\*{3,}|dados? pessoa|cpf", re.IGNORECASE)
 
 
 @dataclass
@@ -286,6 +288,11 @@ def _conferir(resposta: RunOutput | None, pedido: dict, complementacao: dict | N
     datas_conhecidas = _datas_citadas(fontes) | {str(carregar().data_da_analise)}
     for data in sorted(_datas_citadas(livre) - datas_conhecidas):
         motivos.append(f"texto da instrução cita a data {data}, que nenhuma ferramenta nem o pedido trazem")
+
+    # O filtro sabe quando mascarou dado pessoal no pedido; o conferente precisa ser avisado disso.
+    bruto = " ".join(str(v) for v in pedido.values())
+    if mascarar(bruto) != bruto and not ALERTA_DE_MASCARA.search(" ".join(instrucao.alertas)):
+        motivos.append("pedido com dado pessoal mascarado, mas nenhum alerta avisa o conferente")
 
     # 3. Cada critério uma vez, e a recomendação e o sinal de autorização como consequência deles.
     situacao = {v.criterio: v.situacao for v in instrucao.verificacoes}

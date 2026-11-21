@@ -74,123 +74,33 @@ minuta: 14 de 14 iguais ao gabarito.
 
 ## 2. O que a medição e as revisões acharam, e o que mudou
 
-**Primeira medição: um erro entregue.** Em paralelas 3, o DIA-2026-0107 foi aprovado pela
-barreira e estava errado (`resultados/etapa6_medicao_antes_da_correcao.txt`). Recomendação,
-quantidade, valor e critérios estavam certos, mas `exige_autorizacao_superior` vinha `true` com a
-urgência negada. O arquivo registra só que a instrução diferia do gabarito; o campo divergente foi
-observado no banco daquela medição, que a medição seguinte substituiu. A barreira passou a
-exigir que esse sinal seja exatamente o que as verificações determinam: urgência aceita e nenhum
-outro impedimento. Há um teste com o caso real, que falha com a barreira antiga.
+A barreira e a instrução do agente chegaram à versão atual em cinco etapas. Em cada uma, cada furo
+ganhou um teste que falhava antes da correção, e a medição foi refeita (os arquivos estão na tabela
+da seção 1).
 
-**Primeira revisão do código: furos que nenhuma medição tinha mostrado.** Uma revisão completa do
-código achou que a barreira conferia cada dado só pela presença no pedido,
-e não pelo lugar em que foi usado. Com isso passariam:
+| Etapa | O que passava | O que mudou |
+|---|---|---|
+| Primeira medição | Um erro entregue: o 0107, com paralelas, saiu com `exige_autorizacao_superior` verdadeiro e a urgência negada (`etapa6_medicao_antes_da_correcao.txt`)* | O sinal de autorização tem de ser exatamente o que as verificações determinam |
+| Primeira revisão do código | A barreira conferia cada dado só pela presença no pedido: o histórico do Rafael na complementação da Carla, a data do pedido como partida (35,5 diárias, R$ 9.940,00 no 0101), a partida como retorno no 0111, uma diligência sem causa | Cada argumento é conferido no seu campo, para a matrícula que o cadastro conferiu, e a diligência precisa de causa comprovada** |
+| Segunda revisão | Argumento vazio onde o pedido tem o dado; duas datas na complementação; correção para um homônimo; outro servidor citado na minuta; diligência que julga o mérito. No formulário e no prazo de guarda, instrução eliminada na tela, conferência gravada duas vezes, recusado que nunca vencia | Todos recusados; formulário e prazo corrigidos. Citar o que o próprio pedido traz (a matrícula da ordem embutida, no alerta) passou a ser aceito*** |
+| Terceira revisão, com o agente real fora do acervo | "Autorização escrita" alegada sem urgência fazia o modelo recomendar apto, 5 de 5 vezes (`etapa6_variacoes_antes_da_correcao.json`); antecedência curta "não verificada"; correção ignorada; números inventados no texto livre | A instrução e o texto da ferramenta dizem que a autorização não cria urgência (depois, 6 de 6 certas); a barreira exige o julgamento da antecedência, aplica a correção e confere valores, quantidades e datas do texto; a ferramenta do saldo dá quanto falta**** |
+| Quarta revisão | Correção por extenso ("volto no dia 21") ignorada; data de outra oração lida como retorno; consulta extra que tornava um valor "conhecido"; eliminação que aceitava a matrícula de outro servidor; falhas de escrita que deixavam na tela uma instrução eliminada (`etapa6_variacoes_quarta_revisao.json`) | Datas por extenso e "dia N" lidas junto ao verbo; correção ilegível barra o mérito; só a última chamada de cada ferramenta conta; as ferramentas dão o excesso do limite e os pernoites; a eliminação recusa matrícula alheia |
 
-- o histórico do Rafael (207481) na complementação do 0112, que é da Carla;
-- a instrução marcada com a matrícula do Rafael;
-- a data do pedido usada como partida (35,5 diárias, R$ 9.940,00 no 0101);
-- a partida usada como retorno no 0111, que sairia apto com R$ 140,00 em vez de diligência;
-- um nome que não é o do pedido, calculando para outra pessoa;
-- uma diligência sem causa real.
+\* O arquivo registra que a instrução diferia do gabarito; o campo divergente foi observado no banco
+daquela medição, substituído depois.
+\*\* Nos bancos da medição anterior, conferidos durante o desenvolvimento e substituídos depois,
+nenhum desses furos tinha acontecido; não há arquivo que o registre.
+\*\*\* A recusa da falha provocada 1 por citar a matrícula da ordem foi observada durante o
+desenvolvimento; o arquivo só guarda a execução refeita.
+\*\*\*\* O caso do 0110 que levou a ferramenta a dar a diferença apareceu ao repassar as execuções
+gravadas pela regra nova, o que foi observado durante o desenvolvimento, sem arquivo.
 
-Agora cada argumento é conferido no seu campo. A matrícula que o cadastro conferiu vale para todas
-as consultas e para a instrução, e a diligência precisa de causa comprovada. Cada furo ganhou um
-teste que falhava antes da correção. Nos bancos da medição anterior, conferidos durante o
-desenvolvimento e substituídos depois, nenhum desses furos tinha acontecido; não há arquivo em
-`resultados/` que prove isso. A medição foi refeita
-(`resultados/etapa6_medicao_primeira_revisao.txt`).
-
-**Segunda revisão: o que ainda passava.** Uma revisão mais minuciosa achou que ainda seriam
-aprovados:
-
-- um argumento vazio onde o pedido tem o dado, ou chamadas com valores diferentes entre si;
-- numa complementação com duas datas, qualquer uma delas como retorno;
-- a correção da matrícula para um nome que tem homônimo no cadastro;
-- a minuta ou um alerta citando outro servidor ou outra matrícula;
-- uma diligência que também julga o mérito ou consulta além do cadastro que divergiu.
-
-A barreira passou a recusar todos eles, cada um com teste. A mesma revisão achou falhas fora da
-barreira: no formulário, a instrução continuava na tela depois da eliminação do titular e a
-conferência podia ser gravada duas vezes. No prazo de guarda, um pedido recusado nunca vencia, um
-pedido instruído de novo depois de uma conferência antiga podia ser apagado no meio da
-complementação, e uma compactação que falhasse não era refeita. Todas foram corrigidas com teste.
-A medição foi refeita (`resultados/etapa6_medicao_segunda_revisao.txt`).
-
-Ao refazer a falha provocada 1, a checagem nova se mostrou excessiva: o modelo resistiu à injeção e
-avisou, num alerta, que a justificativa mandava consultar a matrícula 207481, e a barreira recusou
-por isso. Isso foi observado durante o desenvolvimento; a execução foi refeita depois do ajuste, e
-o arquivo só guarda a versão aprovada. Citar o que o próprio pedido traz não fere a regra de ouro, e
-a checagem passou a aceitar matrícula e nome que estão no pedido ou na complementação, com um teste
-do caso.
-
-**Terceira revisão: o agente real em variações novas.** A terceira revisão testou o agente fora do
-acervo, com 17 variações dos pedidos (`scripts/rodar_variacoes.py`, V01 a V17), e atacou a barreira
-de novo. O achado mais sério veio do agente real: quando a justificativa dizia ter **autorização
-escrita** do Secretário Adjunto, sem urgência nenhuma, o modelo aceitava a antecedência curta e
-recomendava apto, e a barreira aprovava. Aconteceu em 5 de 5 execuções, numa variação do 0105 e numa
-do 0107 (`resultados/etapa6_variacoes_antes_da_correcao.json`). A autorização só é exigida quando há
-urgência (art. 5º, §§ 1º e 2º); ela não cria a urgência. O texto da ferramenta reforçava o erro
-("NÃO atende, salvo urgência com autorização escrita"). A barreira não julga urgência, então a
-correção foi na instrução do agente e no texto da ferramenta. Depois dela, as mesmas variações
-saíram certas em 6 de 6, e as 17 variações não entregaram nenhuma instrução errada
-(`resultados/etapa6_variacoes.txt`).
-
-Os ataques à barreira acharam o que ainda passava:
-
-- a antecedência curta marcada "nao_verificado", que dava apto sem o sinal de autorização no 0105,
-  0106 e 0107;
-- qualquer data única de uma complementação aceita como retorno, mesmo quando o texto falava da
-  partida (reabria o furo do 0111 com R$ 140,00);
-- a correção da complementação ignorada: o 0112 de volta à diligência, ou o retorno antigo do 0101.
-
-Agora a antecedência curta exige julgamento, a data só vale como retorno quando o texto fala em
-retorno, e a correção substitui o valor do pedido. No formulário, um nome de titular vazio apagava
-o banco inteiro na eliminação. Uma falha depois de apagar deixava a instrução eliminada na tela, a
-poda do log de recusas podia tirar o único relógio de um pedido, e uma linha estranha no registro
-derrubava o formulário. Tudo foi corrigido com teste que falhava antes. A medição foi refeita, e é
-a da seção 1.
-
-Por fim, a barreira passou a conferir também os números do texto livre: cada valor em reais,
-quantidade de diárias e data que a minuta, os alertas e os fundamentos escrevem precisa estar no
-pedido, na complementação ou no retorno de uma ferramenta, em qualquer dos dois formatos. Antes, um
-fundamento com saldo inventado chegava à tela. Repassando pela regra nova as execuções gravadas da
-medição (observado durante o desenvolvimento, sem arquivo que o registre), apareceu um caso: no
-0110, o modelo escreveu quanto faltava de saldo, uma conta que nenhuma ferramenta fazia. A
-ferramenta do saldo passou a devolver a diferença pronta. A data de retorno em DD/MM/AAAA numa
-complementação passou a valer como em AAAA-MM-DD. Ficou uma recusa indevida, do lado seguro: a UF
-por extenso ("Distrito Federal"), em que o modelo propôs a instrução certa e o pedido vai para a
-análise manual (`resultados/etapa6_variacoes.txt`, V09). A medição e as variações foram refeitas com
-essas decisões (`resultados/etapa6_medicao_terceira_revisao.txt` guarda a anterior).
-
-**Quarta revisão.** Mais 14 variações com o agente real (`resultados/etapa6_variacoes_quarta_revisao.json`)
-não entregaram nenhuma instrução errada,
-mas três foram para a análise manual com a proposta certa, e a barreira tinha caminhos para aprovar
-uma errada:
-
-- a correção escrita por extenso ("volto no dia 21 de novembro", "o destino passa a ser Cáceres")
-  era ignorada pela barreira, que aprovava a instrução com o dado antigo;
-- numa complementação que citava o retorno e outra data ("o retorno depende da operação, que começa
-  em 2026-11-17"), a data da outra oração valia como retorno;
-- seis algarismos quaisquer viravam a matrícula corrigida, e uma consulta extra de ferramenta tornava
-  "conhecido" qualquer valor que a minuta citasse;
-- o período "de 09/11 a 12/11/2026" gerava uma data que não existe e recusava minutas corretas, e o
-  excesso do limite mensal e a meia diária do retorno, escritos no texto, eram recusados porque
-  nenhuma ferramenta os dava prontos;
-- com urgência aceita e outro impedimento, o modelo marcava a autorização superior.
-
-A barreira passou a ler datas por extenso, sem ano e "dia N" na complementação, só junto ao verbo
-de retorno, e a matrícula só perto da palavra "matrícula"; complementação que cita um campo sem
-correção legível barra a instrução de mérito. O texto livre passou a ser conferido só contra a
-última chamada de cada ferramenta, que agora informam o excesso do limite e os pernoites. A
-instrução do agente diz que a autorização só é exigida quando nada mais impede. No formulário, a
-eliminação recusa matrícula que o cadastro dá a outra pessoa (antes, apagava os dados dela), e
-falhas de escrita, de compactação ou de poda deixaram de deixar na tela uma instrução já eliminada
-ou de derrubar o formulário. Cada correção de código tem teste que falhava antes; a da instrução foi
-medida com o agente real (V20). As quatro variações do agente
-real viraram V18 a V21 em `scripts/rodar_variacoes.py`; repetidas 3 vezes cada, saíram todas certas.
-Nas 21 variações (43 turnos, 41 aprovados e certos), duas recusas indevidas ficaram, do lado seguro: a UF por extenso (V09)
-e uma complementação sem dado novo em que o modelo trocou a data do pedido pela da complementação
-(V15). A medição foi refeita, e é a da seção 1.
+A lição que se repete é a da seção 6: o que tem regra, a barreira confere em código; o julgamento
+de urgência é do modelo, e o que ele erra ali só a instrução e a conferência humana pegam. Nas 21
+variações atuais (`resultados/etapa6_variacoes.txt`, 43 turnos, 41 aprovados e certos), nenhuma
+instrução errada chegou ao conferente; duas foram recusadas com a proposta certa, do lado seguro: a
+UF por extenso (V09) e uma complementação sem dado novo em que o modelo trocou a data do pedido
+pela da complementação (V15).
 
 ## 3. A Etapa 1 contra o medido
 
@@ -284,6 +194,7 @@ três maneiras.
    - números iguais aos das ferramentas, nos campos e no texto livre;
    - critérios numéricos iguais ao texto das ferramentas;
    - a causa de cada diligência;
+   - um alerta sempre que o filtro mascarou dado pessoal no pedido;
    - a recomendação e o sinal de autorização como consequência das verificações.
 
    Ela não julga se uma justificativa descreve urgência legítima. Nos dois casos de antecedência

@@ -70,6 +70,7 @@ falhas provocadas, que a Figura 1 e a Etapa 1 do enunciado chamam de Etapa 6.
   - A minuta, os alertas, as pendências e os fundamentos não citam outra matrícula nem outro
     servidor do cadastro, e cada valor em reais, quantidade de diárias e data que escrevem está no
     pedido, na complementação ou no retorno de uma ferramenta, em qualquer dos dois formatos.
+  - Quando o filtro mascarou dado pessoal no pedido, algum alerta precisa avisar o conferente.
   - O grupo e a unidade vêm do cadastro, e quantidade e valor são os do cálculo.
   - A situação de cada critério numérico bate com o texto da ferramenta, e uma diligência precisa
     de causa comprovada, sem consultas além do cadastro quando ele diverge e sem julgar o mérito.
@@ -92,7 +93,8 @@ falhas provocadas, que a Figura 1 e a Etapa 1 do enunciado chamam de Etapa 6.
 ## As perguntas do enunciado
 
 O enunciado anuncia quatro perguntas e lista três; o docx original também lista só três. As três
-estão respondidas abaixo; a quarta precisa ser confirmada com o professor.
+estão respondidas abaixo. A quarta resposta é para a única outra pergunta do enunciado, a que ele
+diz que o desafio responde (seção "Problema"); confirmar com o professor se era essa.
 
 **Que configuração de chamadas paralelas, teto de chamadas e memória você escolheu, e com base em
 que número?**
@@ -128,7 +130,7 @@ Em quatro camadas:
    consultas, e os números dos campos contra o retorno real das ferramentas, registrado pelo Agno.
    No texto livre (minuta, alertas, fundamentos), confere matrículas, nomes de servidores, valores
    em reais, quantidades de diárias, prazos em dias e datas; o que não tem um desses formatos não
-   é conferido (`relatorio.md`, seção 7). São 87 testes
+   é conferido (`relatorio.md`, seção 7). São 88 testes
    em `tests/test_barreira.py`, que montam execuções honestas e execuções com um dado inventado ou
    usado no lugar errado.
 3. `resposta.status` é conferido antes de usar o conteúdo, e um erro da API vira recusa.
@@ -180,3 +182,20 @@ variações não entregaram nenhuma instrução errada (`relatorio.md`, seções
   eliminação pedida pelo titular vale para a cópia de trabalho do agente, e a minimização (sem CPF
   nem e-mail nas ferramentas, filtro antes do modelo, prazo de guarda) é a parte da LGPD que este
   sistema cumpre.
+
+**Um único agente construído com o Agno consegue instruir esses pedidos de ponta a ponta,
+deixando a decisão a quem assina?**
+
+Sim, desde que um servidor confira cada instrução.
+
+- **De ponta a ponta:** um agente só, com quatro ferramentas, instrui os 12 pedidos e as 2
+  complementações sem intervenção. Foram 14 de 14 iguais ao gabarito na execução com alertas e
+  minuta (`resultados/etapa3_casos.txt`) e 294 de 294 nas rodadas sequenciais das sete medições.
+  Em 21 variações fora do acervo, nenhuma instrução errada chegou ao conferente; as que o agente
+  não instruiu bem foram recusadas e voltaram à análise manual.
+- **A decisão fica com quem assina:** o agente não decide (art. 10). A barreira em código só deixa
+  passar instrução com dado de origem conferida, o servidor confere cada pedido no formulário e
+  registra o encaminhamento, e o ordenador de despesa defere ou indefere.
+- **O limite:** a urgência é julgada pelo modelo, sobre o texto da justificativa, e foi aí que
+  aconteceram três dos cinco erros das medições (todos com chamadas paralelas ligadas). É por isso
+  que a conferência humana é obrigatória em todo pedido (`relatorio.md`, seção 6).
