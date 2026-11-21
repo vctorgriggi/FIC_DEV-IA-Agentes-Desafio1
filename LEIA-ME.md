@@ -1,5 +1,7 @@
 # LEIA-ME · Desafio 01, instrução de pedidos de diárias
 
+Autor: Victor Griggi Moreira Regis da Silva
+
 Um agente Agno que recebe um pedido de diárias como foi protocolado e devolve a instrução pronta
 para conferência: as verificações da norma, a quantidade e o valor, a recomendação e a minuta do
 despacho. Quem confere é um servidor, num formulário Streamlit; quem decide é o ordenador de
@@ -138,7 +140,7 @@ Em quatro camadas:
 4. O que a barreira recusa não aparece na tela: o servidor vê a mensagem padrão e o pedido volta à
    análise manual.
 
-A medição achou um caso que passava (o sinal de autorização do 0107), e quatro revisões do código
+A medição achou um caso que passava (o sinal de autorização do 0107), e as revisões do código
 acharam furos que nenhuma medição tinha mostrado: dados do pedido usados no campo errado, para
 outra pessoa ou citados no texto livre, e a correção de uma complementação ignorada. Em variações
 fora do acervo, o agente real aceitava "autorização escrita" alegada como se fosse urgência; a

@@ -79,11 +79,11 @@ minuta: 14 de 14 iguais ao gabarito.
 
 ## 2. O que a medição e as revisões acharam, e o que mudou
 
-A barreira e a instrução do agente chegaram à versão atual em cinco etapas. Em cada uma, cada furo
+A barreira e a instrução do agente chegaram à versão atual em seis etapas. Em cada uma, cada furo
 ganhou um teste que falhava antes da correção (`tests/`), e a medição foi refeita: a medição 1 é a
 primeira etapa, as medições 2 a 7 vêm depois de cada correção (a 2 corrige o 0107, a 3 e a 4 fecham
 a primeira e a segunda revisões, a 5 e a 6 a terceira, e a 7 a quarta), e a 8, com o código
-entregue, é a da seção 1.
+entregue depois das revisões pelo enunciado, é a da seção 1.
 
 | Etapa | O que achou | O que mudou |
 |---|---|---|
@@ -93,6 +93,7 @@ entregue, é a da seção 1.
 | Terceira revisão, com o agente real fora do acervo | "Autorização escrita" alegada sem urgência fazia o modelo recomendar apto, 5 de 5 vezes (`etapa6_variacoes_antes_da_correcao.json`); antecedência curta "não verificada"; correção ignorada; números inventados no texto livre | A instrução e o texto da ferramenta dizem que a autorização não cria urgência (depois, 6 de 6 certas); a barreira exige o julgamento da antecedência, aplica a correção e confere valores, quantidades e datas do texto; a ferramenta do saldo dá quanto falta**** |
 | Quarta revisão | Com o agente real (`etapa6_variacoes_quarta_revisao.json`): nenhuma instrução errada, mas correções por extenso ("volto no dia 21") recusadas com a proposta certa. Por teste, sem modelo: a mesma correção, ignorada, seria aprovada; data de outra oração lida como retorno; consulta extra que tornava um valor "conhecido"; eliminação que aceitava a matrícula de outro servidor; falhas de escrita que deixavam na tela uma instrução eliminada | Datas por extenso e "dia N" lidas junto ao verbo; correção ilegível barra o mérito; só a última chamada de cada ferramenta conta; as ferramentas dão o excesso do limite e os pernoites; a eliminação recusa matrícula alheia |
 
+| Revisões pelo enunciado | Com o agente real, os 14 casos certos, mas sem prova atual das pegadinhas nos documentos; no texto livre, prazos em dias e valores sem "R$" sem conferência; nenhum alerta exigido quando o filtro mascarava dado; o formulário sem a matrícula da instrução | `rodar_casos.py` roda os 14 casos com alertas e minuta (`etapa3_casos.txt`); a barreira confere dias e reais e exige o alerta de dado mascarado; o formulário mostra o pedido e a matrícula da instrução e destaca a corrigida |
 \* O arquivo registra que a instrução diferia do gabarito; o campo divergente foi observado no banco
 daquela medição, substituído depois.
 \*\* Nos bancos da medição anterior, conferidos durante o desenvolvimento e substituídos depois,
