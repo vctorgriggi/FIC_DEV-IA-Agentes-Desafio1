@@ -55,11 +55,13 @@ guardam dados pessoais.
   - O nome é o do pedido, e a matrícula que o cadastro conferiu vale para todas as consultas e para
     a instrução. Todas as chamadas usam os mesmos valores, e um campo só fica vazio quando o pedido
     não o informa.
-  - A correção de uma complementação substitui o valor do pedido, e a data só vale como retorno
-    quando o texto fala em retorno.
+  - A correção de uma complementação substitui o valor do pedido, e a data (AAAA-MM-DD ou
+    DD/MM/AAAA) só vale como retorno quando o texto fala em retorno.
   - Uma complementação com mais de uma data ou de uma matrícula não corrige nada, e a correção para
     um nome com homônimo no cadastro vai para a análise manual.
-  - A minuta, os alertas e as pendências não citam outra matrícula nem outro servidor do cadastro.
+  - A minuta, os alertas, as pendências e os fundamentos não citam outra matrícula nem outro
+    servidor do cadastro, e cada valor em reais, quantidade de diárias e data que escrevem está no
+    pedido, na complementação ou no retorno de uma ferramenta, em qualquer dos dois formatos.
   - O grupo e a unidade vêm do cadastro, e quantidade e valor são os do cálculo.
   - A situação de cada critério numérico bate com o texto da ferramenta, e uma diligência precisa
     de causa comprovada, sem consultas além do cadastro quando ele diverge e sem julgar o mérito.
@@ -85,10 +87,10 @@ precisa ser confirmada com o professor.
 **Que configuração de chamadas paralelas, teto de chamadas e memória você escolheu, e com base em
 que número?**
 
-- **Chamadas paralelas desligadas.** Desligadas, deram 210 acertos em 210 casos nas cinco
-  medições (126 deles com a matrícula conferida; as duas primeiras medições não a conferiam).
-  Ligadas, cortam cerca de 11% do custo (US$ 0,00374 contra 0,00419 por pedido), mas todos os erros
-  das cinco medições aconteceram com elas: o 0107 em três e uma complementação sem cadastro.
+- **Chamadas paralelas desligadas.** Desligadas, deram 252 acertos em 252 casos nas seis
+  medições (168 deles com a matrícula conferida; as duas primeiras medições não a conferiam).
+  Ligadas, cortam cerca de 11% do custo (US$ 0,00374 contra 0,00420 por pedido), mas todos os erros
+  das seis medições aconteceram com elas: o 0107 em três e uma complementação sem cadastro.
 - **Teto de 8 chamadas de ferramenta** (`tool_call_limit=8`). Nas medições, o máximo foi 4
   consultas por turno e 5 chamadas ao modelo. Numa execução da falha provocada 1, o modelo repetiu
   as quatro consultas e chegou às 8, ainda com a instrução certa
@@ -96,7 +98,7 @@ que número?**
   fim. Com teto 2 (falha provocada 4), a instrução fica incompleta e é recusada.
 - **Memória: histórico da sessão com teto de 3 execuções, sem memórias do usuário.** Sem
   memória, a complementação não foi aplicada (0 de 2); com o histórico, foi (2 de 2), e somar as
-  memórias do usuário também acertou 2 de 2, mas custou de 12% a 76% a mais por turno. Na primeira
+  memórias do usuário também acertou 2 de 2, mas custou de 7% a 9% a mais na complementação. Na primeira
   medição, o modelo gravou uma memória da Carla (0112) sob a matrícula de outro servidor
   (`resultados/etapa4_eliminacao_primeira_medicao.txt` mostra a memória achada pelo conteúdo).
   Um pedido tem no máximo dois turnos, então 3 é folga.
@@ -105,9 +107,11 @@ que número?**
 
 Em quatro camadas:
 
-1. As contas não são do modelo: ele não tem número para inventar, porque o número vem pronto.
+1. As contas não são do modelo: todo número de que a instrução precisa vem pronto das ferramentas,
+   inclusive quanto falta de saldo.
 2. A barreira em código confere cada argumento no seu campo do pedido, uma só pessoa em todas as
-   consultas e cada número contra o retorno real das ferramentas, registrado pelo Agno. São 62 testes
+   consultas, e cada número e data, nos campos e no texto, contra o pedido e o retorno real das
+   ferramentas, registrado pelo Agno. São 70 testes
    em `tests/test_barreira.py`, que montam execuções honestas e execuções com um dado inventado ou
    usado no lugar errado.
 3. `resposta.status` é conferido antes de usar o conteúdo, e um erro da API vira recusa.
@@ -128,16 +132,19 @@ entregaram nenhuma instrução errada (`relatorio.md`, seções 1 e 2).
   - **No banco do agente** (`bancos/agente.db`), por pedido: a sessão, as mensagens com o pedido já
     mascarado (sem CPF, conta e agência), as consultas às ferramentas com os retornos (cadastro sem
     CPF nem e-mail) e a instrução. Não há memórias do usuário, porque ficaram desligadas.
-  - **No registro da conferência**: só o número do pedido, a sugestão, a decisão, o motivo e se a
-    minuta foi editada.
+  - **No registro da conferência**: o número do pedido, a sugestão, a decisão, o motivo e se a
+    minuta foi editada. O motivo é digitado pelo conferente e sai mascarado (CPF, conta, agência,
+    e-mail). Cada instrução conferida é uma linha: o pedido em diligência que recebe complementação
+    tem duas, uma por instrução, e a taxa de divergência é por instrução conferida.
   - **No log de recusas**: o número do pedido e os motivos internos da recusa.
 - **Por quanto tempo:** 30 dias depois do último evento do pedido: a conferência, a recusa pela
   barreira ou o último uso da sessão no banco, o que vier por último. Por isso o prazo recomeça
   quando o pedido é conferido de novo ou recebe uma complementação. Vencido o prazo, o formulário
   apaga sozinho a sessão do pedido e as execuções, compacta o arquivo e confere que nada restou
   (`diarias/guarda.py`). Se a compactação falhar, ela é refeita na abertura seguinte. No log de
-  recusas, cada linha sai 30 dias depois da própria recusa. O registro da conferência fica, porque
-  não guarda dados do solicitante e é o que mede a discordância com o agente. Pedido instruído e
+  recusas, cada linha sai 30 dias depois da própria recusa, mas só quando o pedido já saiu do banco,
+  porque ela é o relógio dele. O registro da conferência fica, porque é o que mede a discordância
+  com o agente; a eliminação tira dele as linhas que citam o titular. Pedido instruído e
   nunca conferido nem recusado não tem de onde contar o prazo: fica até ser conferido ou até a
   eliminação pelo titular.
 - **Como eliminar:** na aba "Eliminação de dados" do formulário, ou com a função

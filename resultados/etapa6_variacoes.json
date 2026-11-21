@@ -410,15 +410,11 @@
    },
    {
     "turno": "complementacao",
-    "aprovada": false,
-    "entregue_certa": null,
+    "aprovada": true,
+    "entregue_certa": true,
     "proposta_certa": true,
     "recomendacao_proposta": "apto_para_autorizacao",
-    "motivos_da_recusa": [
-     "consultar_historico_diarias usou data_retorno=2026-11-20, que não é o do pedido",
-     "calcular_diarias usou data_retorno=2026-11-20, que não é o do pedido",
-     "instrução de mérito sem data de retorno no pedido"
-    ],
+    "motivos_da_recusa": [],
     "consultas": [
      "consultar_servidor",
      "consultar_historico_diarias",

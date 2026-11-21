@@ -15,7 +15,7 @@ import streamlit as st
 from diarias import agente as ag
 from diarias import barreira, conferencia, guarda, memoria
 from diarias.dados import carregar
-from diarias.filtro import CONTA_OU_AGENCIA, CPF
+from diarias.filtro import mascarar
 
 DADOS = Path(__file__).resolve().parent / "exemplos" / "dados"
 PEDIDOS = {p["numero"]: p for p in json.loads((DADOS / "pedidos.json").read_text(encoding="utf-8"))}
@@ -79,10 +79,6 @@ def aplicar_prazo_de_guarda() -> None:
         esquecer(apagados)
         st.toast(f"Prazo de guarda: {len(apagados)} pedido(s) sem conferência, recusa ou uso há "
                  f"{guarda.PRAZO_DIAS} dias ou mais saíram do banco do agente.")
-
-
-def mascarar(texto: str) -> str:
-    return CONTA_OU_AGENCIA.sub(lambda m: "*" * len(m.group()), CPF.sub(lambda m: "*" * len(m.group()), texto))
 
 
 def executar(pedido: dict, complementacao: dict | None = None) -> ag.Resultado:

@@ -13,6 +13,14 @@ from agno.guardrails import PIIDetectionGuardrail
 
 CPF = re.compile(r"\b\d{3}\.\d{3}\.\d{3}-\d{2}\b")
 CONTA_OU_AGENCIA = re.compile(r"\b\d{3,6}-[\dXx]\b")
+EMAIL = re.compile(r"\b[\w.+-]+@[\w-]+(?:\.[\w-]+)+\b")
+
+
+def mascarar(texto: str) -> str:
+    """Os mesmos padrões fora do agente: na tela e no texto livre que o conferente digita."""
+    for padrao in (CPF, CONTA_OU_AGENCIA, EMAIL):
+        texto = padrao.sub(lambda m: "*" * len(m.group()), texto)
+    return texto
 
 
 def criar_filtro() -> PIIDetectionGuardrail:

@@ -153,8 +153,10 @@ def consultar_saldo_diarias(unidade: str, valor: float) -> str:
     if sigla not in unidades:
         return f"Unidade '{unidade}' não localizada. Siglas válidas: {', '.join(unidades)}."
     saldo = unidades[sigla]["saldo_diarias"]
-    situacao = "suficiente" if saldo >= float(valor) else "INSUFICIENTE"
-    return f"Saldo da unidade {sigla}: R$ {saldo:.2f}. Saldo {situacao} para R$ {float(valor):.2f} (art. 8º)."
+    if saldo >= float(valor):
+        return f"Saldo da unidade {sigla}: R$ {saldo:.2f}. Saldo suficiente para R$ {float(valor):.2f} (art. 8º)."
+    return (f"Saldo da unidade {sigla}: R$ {saldo:.2f}. Saldo INSUFICIENTE para R$ {float(valor):.2f}: "
+            f"faltam R$ {float(valor) - saldo:.2f} (art. 8º).")
 
 
 FERRAMENTAS = [consultar_servidor, consultar_historico_diarias, calcular_diarias, consultar_saldo_diarias]

@@ -65,6 +65,7 @@ def test_0103_meia_diaria_sem_pernoite():
 def test_0110_saldo_insuficiente():
     assert "INSUFICIENTE" in consultar_saldo_diarias("CRH", 1800.0)
     assert "R$ 640.00" in consultar_saldo_diarias("crh ", 1800)
+    assert "faltam R$ 1160.00" in consultar_saldo_diarias("CRH", 1800.0)   # a diferença vem pronta
 
 
 def test_0109_limite_mensal_excedido():

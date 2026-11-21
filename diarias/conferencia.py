@@ -2,8 +2,9 @@
 
 É o lugar físico da conferência. Cada linha guarda só o necessário para medir com
 que frequência o servidor discorda do agente: número do pedido, sugestão, decisão,
-motivo e se a minuta foi editada. A minuta em si e os dados do solicitante não são
-gravados aqui. Recusas da barreira não abrem conferência: vão para um log à parte,
+motivo e se a minuta foi editada. A minuta em si não é gravada. O motivo é texto livre
+do conferente: sai mascarado (CPF, conta, agência, e-mail), e a eliminação tira a linha
+que cita o titular. Recusas da barreira não abrem conferência: vão para um log à parte,
 com os motivos, que serve à medição e conta para o prazo de guarda, e nunca vai
 para a tela.
 """
@@ -11,6 +12,7 @@ import json
 from datetime import datetime
 from pathlib import Path
 
+from diarias.filtro import mascarar
 from diarias.memoria import PASTA_BANCOS
 
 ARQUIVO = PASTA_BANCOS / "conferencias.jsonl"
@@ -39,7 +41,7 @@ def registrar(numero: str, sugerido: str, decidido: str, motivo: str = "", minut
     if divergiu and not motivo.strip():
         raise ValueError("decisão diferente da sugerida pelo agente exige o motivo")
     linha = {"pedido": numero, "sugerido": sugerido, "decidido": decidido, "divergiu": divergiu,
-             "motivo": motivo.strip(), "minuta_editada": minuta_editada,
+             "motivo": mascarar(motivo.strip()), "minuta_editada": minuta_editada,
              "registrado_em": datetime.now().isoformat(timespec="seconds")}
     _gravar(arquivo or ARQUIVO, linha)
     return linha

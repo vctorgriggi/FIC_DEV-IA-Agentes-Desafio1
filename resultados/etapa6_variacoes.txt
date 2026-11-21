@@ -22,10 +22,7 @@ V14_compl_matricula_novo_retorno #1 [complementacao]: APROVADA, certa
 V15_compl_desnecessaria #1 [pedido]: APROVADA, certa
 V15_compl_desnecessaria #1 [complementacao]: APROVADA, certa
 V16_compl_data_formato_br #1 [pedido]: APROVADA, certa
-V16_compl_data_formato_br #1 [complementacao]: recusada (análise manual) · proposta certa
-    recusa: consultar_historico_diarias usou data_retorno=2026-11-20, que não é o do pedido
-    recusa: calcular_diarias usou data_retorno=2026-11-20, que não é o do pedido
-    recusa: instrução de mérito sem data de retorno no pedido
+V16_compl_data_formato_br #1 [complementacao]: APROVADA, certa
 V17_autorizacao_escrita_sem_urgencia #1 [pedido]: APROVADA, certa
 V17_autorizacao_escrita_sem_urgencia #2 [pedido]: APROVADA, certa
 V17_autorizacao_escrita_sem_urgencia #3 [pedido]: APROVADA, certa

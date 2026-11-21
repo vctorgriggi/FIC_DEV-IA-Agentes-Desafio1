@@ -27,13 +27,17 @@ e são estimativas feitas antes de existir agente: a Etapa 6 confronta cada um c
 
 1. A aplicação recebe o pedido e o passa pelo filtro de dados pessoais: CPF, conta, agência e
    e-mail são mascarados antes de chegar ao modelo e ao banco.
-2. O agente roda com `session_id` = número do pedido e `user_id` = matrícula do solicitante.
+2. O agente roda com `session_id` = número do pedido e `user_id` = matrícula informada no pedido
+   (no 0112, a digitada é de outro servidor; por isso a eliminação procura também pelo conteúdo).
 3. O agente consulta as quatro ferramentas, que fazem todas as contas dos passos 3 a 7: cadastro,
    histórico do mês, cálculo das diárias e saldo da unidade. Ele julga só o que é texto: se a
    justificativa descreve urgência legítima e se há ordem embutida a sinalizar.
 4. A saída é um objeto `Instrucao` validado (`diarias/esquema.py`), nunca texto livre.
-5. Uma barreira em código confere a saída: toda matrícula consultada e toda data usada nas contas
-   precisam constar do pedido ou da complementação, e a execução precisa ter terminado sem erro.
+5. Uma barreira em código confere a saída: a execução terminou sem erro; cada argumento das
+   ferramentas é o do seu campo no pedido ou a correção da complementação; a matrícula é a que o
+   cadastro conferiu; quantidade, valor e critérios numéricos são os das ferramentas; os valores,
+   quantidades e datas do texto têm origem no pedido ou nas ferramentas; e a recomendação decorre
+   das verificações.
    Recusada, o pedido volta à análise manual com a mensagem padrão.
 6. O formulário mostra recomendação, verificações, alertas, pendências e consultas. O servidor
    confere, edita a minuta e registra a decisão dele ao lado da sugerida pelo agente.

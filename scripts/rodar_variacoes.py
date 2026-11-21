@@ -5,8 +5,8 @@ real ou falsa, autorização escrita alegada sem urgência, UF em outro formato,
 mensal na fronteira e complementações com mais de um dado. A resposta certa sai de
 `instruir_por_regra`, a mesma regra que gera o gabarito, importada sem editar o arquivo.
 Para cada execução registra o que a barreira decidiu e se o que chegou ao conferente
-está certo. V09 e V16 têm resposta certa que a barreira recusa de propósito (UF por
-extenso; data fora do formato AAAA-MM-DD): o pedido vai para a análise manual.
+está certo. O V09 tem resposta certa que a barreira recusa de propósito (UF por
+extenso): o pedido vai para a análise manual.
 
 Uso: python scripts/rodar_variacoes.py [--repetir V02,V17 --vezes 3]   (chama o modelo)
 """

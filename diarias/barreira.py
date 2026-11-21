@@ -46,6 +46,11 @@ DATA_DE_RETORNO = re.compile(r"(?:retorn|volt|regress)\w*[^.;\n]*?(\d{4}-\d{2}-\
 CADASTRO_OK = re.compile(r"Cadastro confere: matrícula (\d+),.*grupo da diária (\w), unidade (\w+) ")
 QUANTIDADE = re.compile(r"Quantidade: ([\d.]+) ")
 VALOR = re.compile(r"= R\$ ([\d.]+) \(Anexo I\)")
+DATA_BR = re.compile(r"\b(\d{2})/(\d{2})/(\d{4})\b")
+PERIODO_BR = re.compile(r"\b(\d{1,2}) a (\d{1,2})/(\d{2})/(\d{4})\b")   # "12 a 14/10/2026"
+DINHEIRO = re.compile(r"R\$\s*(\d[\d.]*(?:,\d{1,2})?)")
+QTD_DE_DIARIAS = re.compile(r"(\d+(?:[.,]\d+)?)\s+diárias?\b")
+NUMERO = re.compile(r"\d[\d.]*(?:,\d+)?")
 
 
 @dataclass
@@ -59,7 +64,7 @@ def permitidos(pedido: dict, complementacao: dict | None) -> dict[str, set[str]]
 
     A correção substitui o valor do pedido: aceitar os dois deixaria passar a complementação ignorada.
     """
-    texto = str((complementacao or {}).get("texto", ""))
+    texto = _datas_iso(str((complementacao or {}).get("texto", "")))   # "20/11/2026" vale como 2026-11-20
     retorno = {str(pedido["data_retorno"])} if pedido.get("data_retorno") else set()
     # Com mais de uma data (ou matrícula) no texto não há como saber qual é a correção: nenhuma vale.
     datas, matriculas = set(DATA.findall(texto)), set(MATRICULA.findall(texto))
@@ -73,6 +78,31 @@ def permitidos(pedido: dict, complementacao: dict | None) -> dict[str, set[str]]
         "data_partida": {str(pedido["data_partida"])},
         "data_retorno": datas or retorno,
     }
+
+
+def _datas_iso(texto: str) -> str:
+    """Reescreve as datas DD/MM/AAAA como AAAA-MM-DD, o formato das ferramentas e do pedido."""
+    return DATA_BR.sub(lambda m: f"{m[3]}-{m[2]}-{m[1]}", texto)
+
+
+def _numero(bruto: str) -> float | None:
+    """Número escrito em português (9.250,00) ou como as ferramentas o escrevem (9250.00)."""
+    s = bruto.rstrip(".")
+    if "," in s:
+        s = s.replace(".", "").replace(",", ".")
+    elif re.fullmatch(r"\d{1,3}(\.\d{3})+", s):   # 9.250: separador de milhar
+        s = s.replace(".", "")
+    try:
+        return round(float(s), 2)
+    except ValueError:
+        return None
+
+
+def _datas_citadas(texto: str) -> set[str]:
+    datas = set(DATA.findall(_datas_iso(texto)))
+    for dia1, dia2, mes, ano in PERIODO_BR.findall(texto):
+        datas |= {f"{ano}-{mes}-{int(dia1):02d}", f"{ano}-{mes}-{int(dia2):02d}"}
+    return datas
 
 
 def _ultimo_resultado(resposta: RunOutput, nome: str) -> tuple[dict, str] | None:
@@ -159,6 +189,16 @@ def _conferir(resposta: RunOutput | None, pedido: dict, complementacao: dict | N
     for nome in {s["nome"] for s in carregar().servidores.values()} - aceitos["nome_informado"]:
         if nome in livre and nome not in origem:
             motivos.append(f"texto da instrução cita outro servidor: {nome}")
+    # Valores em reais, quantidades de diárias e datas do texto também precisam ter origem: o
+    # detalhe é o fundamento que o conferente lê, "como veio da ferramenta".
+    fontes = " ".join([origem, _datas_iso(origem), *((t.result or "") for t in resposta.tools or [])])
+    conhecidos = {n for bruto in NUMERO.findall(fontes) if (n := _numero(bruto)) is not None}
+    for bruto in DINHEIRO.findall(livre) + QTD_DE_DIARIAS.findall(livre):
+        if _numero(bruto) not in conhecidos:
+            motivos.append(f"texto da instrução cita {bruto}, que nenhuma ferramenta nem o pedido trazem")
+    datas_conhecidas = _datas_citadas(fontes) | {str(carregar().data_da_analise)}
+    for data in sorted(_datas_citadas(livre) - datas_conhecidas):
+        motivos.append(f"texto da instrução cita a data {data}, que nenhuma ferramenta nem o pedido trazem")
 
     # 3. Cada critério uma vez, e a recomendação e o sinal de autorização como consequência deles.
     situacao = {v.criterio: v.situacao for v in instrucao.verificacoes}

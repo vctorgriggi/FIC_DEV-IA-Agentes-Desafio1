@@ -246,3 +246,12 @@ def test_eliminacao_tira_o_texto_da_complementacao(monkeypatch):
     botao(at, "Eliminar dados do titular").click().run()
     assert any("Eliminação concluída" in s.value for s in at.success), [e.value for e in at.error]
     assert "complemento_DIA-2026-0112" not in at.session_state
+
+
+def test_motivo_da_conferencia_sai_mascarado(tmp_path):
+    arquivo = tmp_path / "conferencias.jsonl"
+    conferencia.registrar("DIA-2026-0101", "apto_para_autorizacao", "analise_manual",
+                          "servidora ligou, CPF 052.318.947-20, e-mail ana@sema.mt.gov.br", arquivo=arquivo)
+    gravado = arquivo.read_text(encoding="utf-8")
+    assert "052.318.947-20" not in gravado and "ana@sema.mt.gov.br" not in gravado
+    assert "servidora ligou" in gravado

@@ -429,3 +429,45 @@ def test_correcao_de_retorno_ignorada_e_recusada():
     aplicada = conferir(execucao_honesta(PEDIDOS["DIA-2026-0101"], data_retorno="2026-11-13"),
                         "DIA-2026-0101", comp)
     assert aplicada.aprovada, aplicada.motivos
+
+
+# ------------------------------------------------------------- texto livre com número de origem conferida
+
+@pytest.mark.parametrize("campo, texto", [
+    ("minuta_despacho", "No pedido DIA-2026-0110, 19,5 diárias, R$ 7.800,00; não recomendado."),
+    ("minuta_despacho", "Viagem de 2026-12-01 a 2026-12-20, encaminhe-se ao ordenador."),
+    ("alertas", ["Saldo da unidade confirmado em R$ 64.000,00."]),
+])
+def test_numero_ou_data_inventados_no_texto_livre_sao_recusados(campo, texto):
+    r = alterar(execucao_honesta(PEDIDOS["DIA-2026-0110"]), **{campo: texto})
+    assert not conferir(r, "DIA-2026-0110").aprovada
+
+
+def test_detalhe_com_saldo_inventado_e_recusado():
+    r = execucao_honesta(PEDIDOS["DIA-2026-0110"])
+    verifs = [v.model_copy(update={"detalhe": "Saldo da unidade CRH: R$ 64.000,00. Saldo suficiente."})
+              if v.criterio == "saldo_orcamentario" else v for v in r.content.verificacoes]
+    assert not conferir(alterar(r, verificacoes=verifs), "DIA-2026-0110").aprovada
+
+
+@pytest.mark.parametrize("texto", [
+    "No pedido DIA-2026-0110, de 10 a 14/11/2026, 4,5 diárias, R$ 1.800,00; saldo de R$ 640,00, faltam "
+    "R$ 1.160,00. Não recomendado; encaminhe-se ao ordenador de despesa (art. 10).",
+    "Pedido DIA-2026-0110, de 2026-11-10 a 2026-11-14, com 4.5 diárias e R$ 1800.00, analisado em 09/10/2026.",
+])
+def test_numeros_e_datas_do_pedido_e_das_ferramentas_em_outro_formato_passam(texto):
+    r = alterar(execucao_honesta(PEDIDOS["DIA-2026-0110"]), minuta_despacho=texto)
+    veredito = conferir(r, "DIA-2026-0110")
+    assert veredito.aprovada, veredito.motivos
+
+
+def test_retorno_em_formato_brasileiro_na_complementacao_e_aceito():
+    comp = {"numero": "DIA-2026-0111", "texto": "Complementação: o retorno está previsto para 20/11/2026."}
+    veredito = conferir(execucao_honesta(PEDIDOS["DIA-2026-0111"], data_retorno="2026-11-20"), "DIA-2026-0111", comp)
+    assert veredito.aprovada, veredito.motivos
+
+
+def test_duas_datas_em_formatos_diferentes_continuam_ambiguas():
+    comp = {"numero": "DIA-2026-0111", "texto": "O retorno será 20/11/2026 (antes cogitei 2026-11-17)."}
+    assert not conferir(execucao_honesta(PEDIDOS["DIA-2026-0111"], data_retorno="2026-11-20"),
+                        "DIA-2026-0111", comp).aprovada

@@ -1,11 +1,11 @@
 # Relatório · Desafio 01, instrução de pedidos de diárias
 
 **Resultado.** Com as chamadas paralelas desligadas, o agente instruiu os 12 pedidos e as 2
-complementações corretamente em todas as rodadas das cinco medições (210 de 210). Na medição final,
+complementações corretamente em todas as rodadas das seis medições (252 de 252). Na medição final,
 os 84 casos acertaram, sem recusa e sem erro entregue, e em 17 variações fora do acervo nenhuma
 instrução errada chegou ao conferente. Até chegar aí, a barreira e a instrução do agente foram
-corrigidas quatro vezes: uma por um erro que a medição achou e três por furos que revisões do código
-acharam (seção 2). A conferência humana continua obrigatória em todos os pedidos, e a medição diz
+corrigidas cinco vezes: uma por um erro que a medição achou e as outras por furos que revisões do
+código acharam (seção 2). A conferência humana continua obrigatória em todos os pedidos, e a medição diz
 onde ela precisa olhar (seção 6).
 
 Todo número abaixo sai de um arquivo em `resultados/`, gerado pelos scripts de `scripts/`, salvo
@@ -18,23 +18,23 @@ escolhida na Etapa 4 (histórico da sessão). Acerto é instrução igual ao gab
 quantidade, valor, sinal de autorização e critérios não atendidos) e, a partir da terceira medição,
 feita também para a matrícula certa. "Erro entregue" é instrução aprovada pela barreira e diferente
 do gabarito: o erro que chega ao conferente. Fonte: `resultados/etapa6_medicao.txt`, medição final,
-com o código da terceira revisão.
+com o código da terceira revisão e as decisões que a fecharam.
 
 | Rodada | Acertos | Recusas visíveis | Erros entregues | Entrada média (tokens) | Passos* | s por caso | US$ por pedido |
 |---|---|---|---|---|---|---|---|
-| sequencial 1 | 14/14 | 0 | 0 | 13.995 | 5 | 10,8 | 0,00429 |
-| sequencial 2 | 14/14 | 0 | 0 | 13.958 | 5 | 10,1 | 0,00426 |
-| sequencial 3 | 14/14 | 0 | 0 | 13.993 | 5 | 9,9 | 0,00428 |
-| paralelas 1 | 14/14 | 0 | 0 | 12.004 | 4,4 | 9,8 | 0,00382 |
-| paralelas 2 | 14/14 | 0 | 0 | 11.607 | 4,1 | 9,1 | 0,00373 |
-| paralelas 3 | 14/14 | 0 | 0 | 11.598 | 4,2 | 9,7 | 0,00374 |
+| sequencial 1 | 14/14 | 0 | 0 | 13.754 | 5 | 9,9 | 0,00423 |
+| sequencial 2 | 14/14 | 0 | 0 | 14.002 | 5 | 8,9 | 0,00429 |
+| sequencial 3 | 14/14 | 0 | 0 | 13.984 | 5 | 8,9 | 0,00428 |
+| paralelas 1 | 14/14 | 0 | 0 | 11.597 | 4,2 | 8,0 | 0,00373 |
+| paralelas 2 | 14/14 | 0 | 0 | 11.806 | 4,3 | 7,9 | 0,00378 |
+| paralelas 3 | 14/14 | 0 | 0 | 11.578 | 4,2 | 7,7 | 0,00372 |
 
 \* Passos é a média só das instruções completas (sem diligência nem complementação). Entrada e
 tempo são a média dos 14 casos; o custo por pedido divide o custo dos 14 casos pelos 12 pedidos.
 
-As cinco medições estão em `resultados/`: `etapa6_medicao_antes_da_correcao`,
-`etapa6_medicao_correcao_0107`, `etapa6_medicao_primeira_revisao`, `etapa6_medicao_segunda_revisao`
-e `etapa6_medicao` (a final).
+As seis medições estão em `resultados/`: `etapa6_medicao_antes_da_correcao`,
+`etapa6_medicao_correcao_0107`, `etapa6_medicao_primeira_revisao`, `etapa6_medicao_segunda_revisao`,
+`etapa6_medicao_terceira_revisao` e `etapa6_medicao` (a final).
 
 | Medição | Acerto confere a matrícula? | Sequencial | Paralelas | O que não acertou (sempre com paralelas) |
 |---|---|---|---|---|
@@ -42,15 +42,16 @@ e `etapa6_medicao` (a final).
 | 2. correção do 0107 | não | 42/42 | 41/42 | 0107 recusado: sinal de autorização incoerente |
 | 3. primeira revisão | sim | 42/42 | 41/42 | 0107 recusado: recomendação e sinal incoerentes |
 | 4. segunda revisão | sim | 42/42 | 42/42 | nada |
-| 5. terceira revisão (final) | sim | 42/42 | 42/42 | nada |
+| 5. terceira revisão | sim | 42/42 | 42/42 | nada |
+| 6. texto livre conferido (final) | sim | 42/42 | 42/42 | nada |
 
 **Chamadas paralelas: desligadas.** Ligadas, cortam cerca de 11% do custo (US$ 0,00374 contra
-0,00419 por pedido, média das cinco medições) e menos de um segundo por caso (8,9 s contra 9,8 s).
-Mas todos os erros das cinco medições aconteceram com elas ligadas: o 0107 em três medições e uma
-complementação do 0111 em que o modelo pulou o cadastro. Desligadas, foram 210 de 210, dos quais
-126 com a matrícula conferida. Os mesmos 11% não pagam um caso a mais para a análise manual. As duas
-últimas medições, sem erro com paralelas, não mudam a escolha: 84 casos sem erro não desmentem
-4 erros em 210.
+0,00420 por pedido, média das seis medições) e menos de um segundo por caso (8,8 s contra 9,7 s).
+Mas todos os erros das seis medições aconteceram com elas ligadas: o 0107 em três medições e uma
+complementação do 0111 em que o modelo pulou o cadastro. Desligadas, foram 252 de 252, dos quais
+168 com a matrícula conferida. Os mesmos 11% não pagam um caso a mais para a análise manual. As três
+últimas medições, sem erro com paralelas, não mudam a escolha: 126 casos sem erro não desmentem
+4 erros em 252.
 
 ## 2. O que a medição e as revisões acharam, e o que mudou
 
@@ -128,9 +129,17 @@ poda do log de recusas podia tirar o único relógio de um pedido, e uma linha e
 derrubava o formulário. Tudo foi corrigido com teste que falhava antes. A medição foi refeita, e é
 a da seção 1.
 
-Duas recusas indevidas ficaram, do lado seguro: a UF por extenso ("Distrito Federal") e a data de
-retorno em DD/MM/AAAA numa complementação. Nas duas o modelo propôs a instrução certa e o pedido vai
-para a análise manual (`resultados/etapa6_variacoes.txt`, V09 e V16).
+Por fim, a barreira passou a conferir também os números do texto livre: cada valor em reais,
+quantidade de diárias e data que a minuta, os alertas e os fundamentos escrevem precisa estar no
+pedido, na complementação ou no retorno de uma ferramenta, em qualquer dos dois formatos. Antes, um
+fundamento com saldo inventado chegava à tela. Repassando pela regra nova as execuções gravadas da
+medição, apareceu um caso: no 0110, o modelo escreveu quanto faltava de saldo, uma conta que
+nenhuma ferramenta fazia. A ferramenta do saldo passou a devolver a diferença pronta. A data de
+retorno em DD/MM/AAAA numa complementação passou a valer como em AAAA-MM-DD. Ficou uma recusa
+indevida, do lado seguro: a UF por extenso ("Distrito Federal"), em que o modelo propôs a instrução
+certa e o pedido vai para a análise manual (`resultados/etapa6_variacoes.txt`, V09). A medição e as
+variações foram refeitas com essas decisões (`resultados/etapa6_medicao_terceira_revisao.txt` guarda
+a anterior).
 
 ## 3. A Etapa 1 contra o medido
 
@@ -139,12 +148,12 @@ Fonte: `resultados/etapa6_confronto.txt`, que lê a estimativa feita antes do ag
 | | Estimado | Medido (sequencial) |
 |---|---|---|
 | Primeira chamada | 2.195 tokens | 2.692 (+23%) |
-| Acréscimo por passo | 90 a 150 | 72 a 194, média 115 |
+| Acréscimo por passo | 90 a 150 | 72 a 194, média 116 |
 | Passos de uma instrução completa | 5 | 5,00 |
-| Entrada de uma instrução completa | 11.875 a 12.475 | 14.613 (+17% sobre o teto) |
-| Saída | 606 | 759 |
-| Custo por instrução completa | US$ 0,00310 a 0,00322 | US$ 0,00383 |
-| Diligência | 2 passos, 4.480 a 4.540 tokens | 2,50 passos, 6.867 tokens |
+| Entrada de uma instrução completa | 11.875 a 12.475 | 14.614 (+17% sobre o teto) |
+| Saída | 606 | 766 |
+| Custo por instrução completa | US$ 0,00310 a 0,00322 | US$ 0,00384 |
+| Diligência | 2 passos, 4.480 a 4.540 tokens | 2,33 passos, 6.392 tokens |
 | Mês com 300 pedidos | US$ 1,00 a 1,04 | US$ 1,28 |
 
 O desenho da cadeia acertou: 5 passos medidos contra 5 previstos, e o acréscimo médio por passo
@@ -154,11 +163,11 @@ Agno acrescenta (o formato das ferramentas na API e as instruções do esquema d
 se repete em cada um dos 5 passos. A instrução mais longa da terceira revisão somou 88 tokens à
 primeira chamada (2.604 na medição anterior). Com chamadas paralelas a diferença sobe (+28%), porque
 o histórico de cada passo carrega duas consultas. Na diligência por falta de data (0111), o modelo
-consulta o histórico, como manda a ordem da instrução, antes de devolver a diligência: 3 passos no
-0111 e 2 no 0112, média de 2,50.
+em duas das três rodadas consulta o histórico, como manda a ordem da instrução, antes de devolver a
+diligência: 2 ou 3 passos no 0111 e 2 no 0112, média de 2,33.
 
 A confiabilidade composta previa, com 99% por passo, cerca de 15 instruções com algum passo errado
-por mês em 300. Em 210 casos sequenciais não houve nenhuma, o que é compatível com 99% ou mais por
+por mês em 300. Em 252 casos sequenciais não houve nenhuma, o que é compatível com 99% ou mais por
 passo. A amostra é pequena demais para medir a taxa.
 
 ## 4. Memória (Etapa 4)
@@ -167,12 +176,14 @@ Fonte: `resultados/etapa4_memoria.txt`. Entrada em tokens, com as duas complemen
 
 | Configuração | 1º turno | Complementação | Aplicada ao pedido certo |
 |---|---|---|---|
-| Sem memória | 5.439 a 5.446 | 2.616 a 5.315 | não, nas duas |
-| Histórico da sessão (teto 3) | 5.439 a 5.446 | 17.560 a 18.006 | sim, nas duas |
-| Histórico + memórias do usuário | 6.714 a 9.580 | 19.691 a 20.315 | sim, nas duas |
+| Sem memória | 5.439 a 5.446 | 2.616 a 2.619 | não, nas duas |
+| Histórico da sessão (teto 3) | 5.439 a 8.295 | 17.580 a 18.321 | sim, nas duas |
+| Histórico + memórias do usuário | 6.602 a 6.722 | 18.897 a 20.033 | sim, nas duas |
 
 Sem memória, a complementação não tem a que se aplicar, e isso aparece: a barreira recusou as duas.
-As memórias do usuário custam de 12% a 76% a mais por turno, sem acertar mais. Há ainda um risco
+As memórias do usuário custam de 7% a 9% a mais na complementação, sem acertar mais. No primeiro
+turno a diferença acompanha os passos que o modelo dá: no 0111, o histórico sozinho deu um passo a
+mais e saiu mais caro (8.295 contra 6.722); no 0112, as memórias custaram 21% a mais. Há ainda um risco
 observado na primeira medição da Etapa 4: o modelo gravou uma memória da Carla, que a eliminação
 achou pelo conteúdo (`resultados/etapa4_eliminacao_primeira_medicao.txt`); no banco daquela
 medição, substituído depois, ela estava sob a matrícula do Rafael (207481). A extração de memória é
@@ -212,7 +223,7 @@ três maneiras.
 1. **A barreira só confere o que tem regra.** Ela confere:
    - cada argumento no seu campo do pedido, com os mesmos valores em todas as chamadas;
    - uma só pessoa em todas as consultas, e nenhuma outra no texto livre;
-   - números iguais aos das ferramentas;
+   - números iguais aos das ferramentas, nos campos e no texto livre;
    - critérios numéricos iguais ao texto das ferramentas;
    - a causa de cada diligência;
    - a recomendação e o sinal de autorização como consequência das verificações.
@@ -221,12 +232,12 @@ três maneiras.
    curta (0106 e 0107), a decisão é do modelo, e foi aí que três dos quatro erros das medições
    apareceram. O quarto foi o modelo pular a consulta ao cadastro numa complementação, que a barreira
    recusou.
-2. **O erro é raro e caro.** O único erro entregue nas cinco medições foi um sinal errado num pedido
+2. **O erro é raro e caro.** O único erro entregue nas seis medições foi um sinal errado num pedido
    cuja recomendação estava certa. Um conferente que só olhasse a recomendação não teria visto. A
    revisão mostrou ainda que a barreira tinha furos que medição nenhuma revelou. O processo está no
    quadrante de reversível com detecção tardia: o erro apareceria meses depois, na auditoria.
-3. **A minuta é texto livre.** Nenhuma regra confere a redação. O formulário a deixa editável e
-   registra se foi alterada.
+3. **A minuta é texto livre.** A barreira confere os números e as datas que ela cita, mas não a
+   redação. O formulário a deixa editável e registra se foi alterada.
 
 Onde o conferente precisa olhar com mais atenção: pedido com antecedência curta (urgência e
 autorização escrita), pedido com alerta de ordem embutida ou de dado mascarado, e a minuta. O
@@ -236,10 +247,12 @@ de conferência pode ficar mais leve em algum tipo de pedido.
 
 ## 7. Limites
 
-- 14 casos por rodada é pouco para estimar taxas: "nenhum erro em 210" não quer dizer zero.
+- 14 casos por rodada é pouco para estimar taxas: "nenhum erro em 252" não quer dizer zero.
 - A barreira reconhece, numa complementação, a correção da matrícula e da data de retorno (no
-  formato AAAA-MM-DD, numa frase que fala em retorno), como as do acervo. Uma complementação que
-  corrija outro dado, ou escreva a data de outro jeito, cai na análise manual.
+  formato AAAA-MM-DD ou DD/MM/AAAA, numa frase que fala em retorno), como as do acervo. Uma
+  complementação que corrija outro dado, ou escreva a data por extenso, cai na análise manual.
+- O registro da conferência tem uma linha por instrução conferida: o pedido em diligência que
+  recebe complementação conta duas vezes na taxa de divergência, uma por instrução.
 - O tokenizador da estimativa (o200k_base) é aproximação; o do gpt-5.6 não é público.
 - As ferramentas seguem `exemplos/gerar_dados.py`, que gera o gabarito, e herdam o que ele não
   confere da norma:
