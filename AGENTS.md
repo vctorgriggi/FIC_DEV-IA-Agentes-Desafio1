@@ -65,11 +65,11 @@ app.py       # formulário; só exibe instrução aprovada pela barreira, nunca 
   .env.example versionado traz só os nomes.
 - Código, nomes e documentos em português, como `exemplos/gerar_dados.py` e o enunciado.
 - Memória: histórico da sessão com teto de 3 execuções e memórias do usuário desligadas — sem
-  histórico a complementação não se aplica; as memórias acertam o mesmo, custam de 7% a 74% a mais
-  por turno e já gravaram dados de uma pessoa sob o user_id de outra (0112, observado sem arquivo).
+  histórico a complementação não se aplica; as memórias acertam o mesmo, custam de 5% a 23% a mais
+  por turno e gravaram a memória da Carla sob o user_id do Rafael (0112, etapa4_eliminacao.txt).
 - Registro da conferência: número, sugestão, decisão, motivo mascarado e se a minuta foi editada,
   uma linha por instrução conferida (diligência e complementação são duas) — mede a discordância.
-- Chamadas paralelas desligadas — medido: 294/294 desligadas; todos os erros das sete medições
+- Chamadas paralelas desligadas — medido: 336/336 desligadas; todos os erros das oito medições
   aconteceram com elas ligadas, por cerca de 11% de custo a menos.
 - Prazo de guarda: 30 dias após o último evento do pedido — conferência (decisão do usuário),
   recusa ou último uso no banco, para que recusado não fique para sempre nem pedido em uso seja
