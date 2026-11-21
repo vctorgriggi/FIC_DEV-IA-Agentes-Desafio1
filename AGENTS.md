@@ -50,8 +50,8 @@ app.py       # formulário; só exibe instrução aprovada pela barreira, nunca 
 - Modelo `gpt-5.6-luna`, `telemetry=False`, `reasoning_effort="none"` — exigências do enunciado.
 - Regras numéricas iguais às de `instruir_por_regra` em `exemplos/gerar_dados.py`, incluindo
   dias úteis sem feriados e saldo comparado pedido a pedido — é o que o gabarito mede.
-- Acerto de um pedido: recomendação, quantidade, valor, `exige_autorizacao_superior` e o
-  conjunto de critérios "nao_atende" iguais ao gabarito. Decidido para a Etapa 1 e a medição.
+- Acerto de um pedido: recomendação, quantidade, valor, `exige_autorizacao_superior`, critérios
+  "nao_atende" iguais ao gabarito e a matrícula certa (conferida desde a terceira medição).
 - Volume adotado nas contas da Etapa 1: 300 pedidos por mês — o enunciado só diz "centenas";
   premissa, não dado do órgão.
 - Etapa 6 (medição), ausente do docx, segue a Figura 1 e os critérios: 12 pedidos e 2
@@ -64,13 +64,13 @@ app.py       # formulário; só exibe instrução aprovada pela barreira, nunca 
 - Env e segredos: chave só no `.env` da raiz do repositório, lido com load_dotenv; um
   .env.example versionado traz só os nomes.
 - Código, nomes e documentos em português, como `exemplos/gerar_dados.py` e o enunciado.
-- Memória: histórico da sessão com teto de 3 execuções e memórias do usuário desligadas — mediu-se
-  que só o histórico aplica a complementação, e as memórias custam mais e gravam dados de uma
-  pessoa sob o user_id de outra (0112).
+- Memória: histórico da sessão com teto de 3 execuções e memórias do usuário desligadas — sem
+  histórico a complementação não se aplica; as memórias acertam o mesmo, custam de 12% a 76% a
+  mais e já gravaram dados de uma pessoa sob o user_id de outra (0112).
 - Registro da conferência guarda número, sugestão, decisão, motivo e se a minuta foi editada; nem
   a minuta nem dados do solicitante — basta para medir a discordância, e minimiza dado pessoal.
-- Chamadas paralelas desligadas — medido: 168/168 desligadas; todos os erros das quatro medições
-  aconteceram com elas ligadas, por cerca de 10% de custo a menos.
+- Chamadas paralelas desligadas — medido: 210/210 desligadas; todos os erros das cinco medições
+  aconteceram com elas ligadas, por cerca de 11% de custo a menos.
 - Prazo de guarda: 30 dias após o último evento do pedido — conferência (decisão do usuário),
   recusa ou último uso no banco, para que recusado não fique para sempre nem pedido em uso seja
   apagado; expurgo em diarias/guarda.py a cada interação do formulário, com a data real.
@@ -89,8 +89,8 @@ app.py       # formulário; só exibe instrução aprovada pela barreira, nunca 
   texto; autorização verbal não supre a escrita (art. 5º, § 2º).
 - Teste que monta banco não grava execuções com upsert_session → no Agno 3.0.9 elas vão para
   agno_runs por upsert_run; use-o, como o agente faz.
-- Memória do usuário do 0112 pode ficar sob o user_id 207481 (de outro servidor) → mais um motivo para a
-  eliminação procurar por conteúdo, e para a memória do usuário ficar desligada.
+- "Autorização escrita" alegada na justificativa faz o modelo aceitar antecedência curta sem
+  urgência (V02, V17) → a autorização não cria urgência; diga isso na instrução e na ferramenta.
 - O modelo marca exige_autorizacao_superior com a urgência negada (0107, com paralelas) → a barreira
   exige o valor que decorre das verificações; não afrouxe essa regra.
 - Expurgo que procura o número do pedido no conteúdo acusa resto falso → o 0102 cita o 0101 na
@@ -101,7 +101,8 @@ app.py       # formulário; só exibe instrução aprovada pela barreira, nunca 
   não deixa o painel ler a pasta Desktop; suba o Streamlit pelo terminal e conecte pelo endereço.
 - Checagem de texto livre que recusa toda matrícula fora do pedido recusa o alerta sobre injeção
   (falha provocada 1) → aceite o que o próprio pedido ou a complementação traz.
-- Complementação com duas datas ou duas matrículas → nenhuma vale como correção; não escolha uma.
+- Complementação com duas datas ou duas matrículas → nenhuma vale como correção; data única só é
+  retorno se o texto fala em retorno, e a correção substitui o valor do pedido.
 - O formulário guarda a instrução em session_state → eliminação e expurgo tiram da tela com
   `esquecer`, senão o eliminado continua visível e conferível.
 
@@ -109,11 +110,19 @@ app.py       # formulário; só exibe instrução aprovada pela barreira, nunca 
 
 - G1 — a eliminação casa nome e matrícula como trecho de texto: um número de 6 algarismos dentro
   do registro de outra pessoa apagaria a sessão dela — não ocorreu nas medições; paliativo: a
-  conferência por bytes acusa o que sobrou do titular, mas não o que foi apagado a mais.
+  conferência por bytes acusa o que sobrou do titular, mas não o que foi apagado a mais; nome
+  vazio ou parcial é recusado (cadastro, duas palavras) e matrícula só com 6 algarismos.
 - G2 — `_ouvinte` em diarias/agente.py é global: dois conferentes no mesmo processo misturariam
   os avisos de consulta — paliativo: o formulário roda local, para um conferente por vez.
 - G3 — uma execução em andamento pode regravar a sessão depois da eliminação do titular — corrida
   teórica, não observada; paliativo: a eliminação confere tabela e bytes logo depois.
+- G4 — recusas indevidas, do lado seguro: UF por extenso, data DD/MM/AAAA na complementação,
+  argumento corrigido após erro de formato e 0112 que reconfere a matrícula antiga — paliativo: vão
+  à análise manual; V09 e V16 de `scripts/rodar_variacoes.py` os medem.
+- G5 — o texto livre é conferido por trecho exato: nome de outro servidor sem acento ou abreviado,
+  ou matrícula com ponto, passa — paliativo: nenhuma ferramenta devolve outro nome; conferência humana.
+- G6 — o filtro não pega CPF sem pontuação nem conta sem dígito, e a tela não mascara e-mail —
+  paliativo: no acervo só o 0104 tem dado bancário, e os testes mostram que ele é mascarado.
 
 ## Como rodar
 
@@ -127,6 +136,7 @@ python3 -m venv .venv && .venv/bin/pip install -r requirements.lock
 .venv/bin/streamlit run app.py   # formulário; chama o modelo
 .venv/bin/python scripts/medir.py               # chama o modelo
 .venv/bin/python scripts/provocar_falhas.py     # chama o modelo
+.venv/bin/python scripts/rodar_variacoes.py     # chama o modelo
 .venv/bin/python scripts/confrontar.py
 .venv/bin/ruff check . && .venv/bin/python -m pytest -q
 ```
