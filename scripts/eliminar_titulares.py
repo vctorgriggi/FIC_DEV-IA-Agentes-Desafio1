@@ -28,6 +28,12 @@ def main() -> None:
         linhas.append(f"## {arquivo.name}")
         busca_carla = [s.session_id for s in db.get_sessions(user_id="207418")]
         linhas.append(f"busca da Carla pelo user_id 207418: {busca_carla or 'nenhuma sessão'}")
+        # sob que user_id cada sessão e cada memória ficou gravada: o 0112 fica sob a matrícula digitada
+        linhas.append("sessões no banco (session_id: user_id): " + ", ".join(
+            f"{s.session_id}: {s.user_id}" for s in db.get_sessions()))
+        memorias = db.get_user_memories() or []
+        linhas.append("memórias no banco (user_id, cita a Carla?): " + (", ".join(
+            f"{m.user_id}, {'sim' if 'Carla' in (m.memory or '') else 'não'}" for m in memorias) or "nenhuma"))
         for nome, matriculas in TITULARES:
             db, arquivo = memoria.abrir_banco(nome_banco)
             rel = memoria.eliminar_titular(db, arquivo, nome, matriculas)

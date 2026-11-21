@@ -25,6 +25,7 @@ antecedência curta sem julgamento ("nao_verificado") é recusado.
 import re
 from dataclasses import dataclass, field
 from datetime import date
+from pathlib import Path
 
 from agno.agent import RunOutput
 from agno.run.base import RunStatus
@@ -65,6 +66,9 @@ DIA_E_MES = re.compile(r"\b(\d{1,2})/(\d{1,2})\b(?!/)")
 SO_O_DIA = re.compile(r"\bdia (\d{1,2})\b(?![/\d]| de )", re.IGNORECASE)
 DINHEIRO = re.compile(r"R\$\s*(\d[\d.]*(?:,\d{1,2})?)")
 QTD_DE_DIARIAS = re.compile(r"(\d+(?:[.,]\d+)?)\s+diárias?(\s+e\s+meia)?\b")
+EM_REAIS = re.compile(r"(\d[\d.]*(?:,\d{1,2})?)\s+reais\b")
+EM_DIAS = re.compile(r"(\d+)\s+dias?\b")
+NORMA = (Path(__file__).resolve().parents[1] / "exemplos" / "dados" / "normas.md").read_text(encoding="utf-8")
 NUMERO = re.compile(r"\d[\d.]*(?:,\d+)?")
 
 
@@ -266,8 +270,13 @@ def _conferir(resposta: RunOutput | None, pedido: dict, complementacao: dict | N
     ultimas = [r[1] for nome in sorted(FERRAMENTAS_CONHECIDAS) if (r := _ultimo_resultado(resposta, nome))]
     fontes = " ".join([origem, _datas_iso(origem), *ultimas])
     conhecidos = {n for bruto in NUMERO.findall(fontes) if (n := _numero(bruto)) is not None}
-    citados = [bruto for bruto in DINHEIRO.findall(livre)]
+    citados = [bruto for bruto in DINHEIRO.findall(livre) + EM_REAIS.findall(livre)]
     citados += [f"{bruto} e meia" if meia else bruto for bruto, meia in QTD_DE_DIARIAS.findall(livre)]
+    # prazos em dias podem vir da norma (10 dias corridos, 5 dias úteis), além do pedido e das ferramentas
+    prazos = conhecidos | {n for bruto in NUMERO.findall(NORMA) if (n := _numero(bruto)) is not None}
+    for bruto in EM_DIAS.findall(livre):
+        if _numero(bruto) not in prazos:
+            motivos.append(f"texto da instrução cita {bruto} dias, que nenhuma ferramenta, a norma nem o pedido trazem")
     for bruto in citados:
         valor = _numero(bruto.removesuffix(" e meia"))
         if valor is not None and bruto.endswith(" e meia"):

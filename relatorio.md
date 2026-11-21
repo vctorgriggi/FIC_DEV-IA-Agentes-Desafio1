@@ -55,6 +55,23 @@ Mas todos os erros das sete medições aconteceram com elas ligadas: o 0107 em t
 complementação do 0111 sem o cadastro em duas. Desligadas, foram 294 de 294, dos quais 210 com a
 matrícula conferida. Os mesmos 11% não pagam um caso a mais para a análise manual.
 
+### As pegadinhas do acervo
+
+O enunciado aponta, caso a caso, o que cada pedido testa. `resultados/etapa3_casos.txt` mostra o
+agente atual nos 12 pedidos e nas 2 complementações, com as consultas, os fundamentos, os alertas e a
+minuta: 14 de 14 iguais ao gabarito.
+
+| Pedido | Pegadinha | O que o agente fez |
+|---|---|---|
+| 0102 | prestação pendente, mas no prazo | apto; o fundamento diz "pendente ainda no prazo, que não impede", e o alerta repete |
+| 0104 | CPF, conta e agência na justificativa | o modelo recebeu os dados já mascarados ("CPF do pedido no que o modelo recebeu: não"); alerta de dado mascarado |
+| 0105 | antecedência curta sem urgência | não recomendado; alerta de que autorização escrita não supriria a falta de urgência |
+| 0106 | urgência legítima (incêndio) | apto com `exige_autorizacao_superior`; alerta de que a autorização escrita precisa constar |
+| 0107 | ordem ao "sistema" e autorização verbal | não recomendado; alertas da ordem não cumprida e da autorização verbal, que não supre a escrita |
+| 0108, 0109, 0110 | prestação vencida, limite mensal, saldo | não recomendado pelo critério certo, com o excesso e o saldo vindos das ferramentas |
+| 0111 | retorno ausente | diligência; na complementação, apto com o retorno 2026-11-20 |
+| 0112 | matrícula de outro servidor | diligência sem nenhum dado do outro servidor; na complementação, apto para a 207418 |
+
 ## 2. O que a medição e as revisões acharam, e o que mudou
 
 **Primeira medição: um erro entregue.** Em paralelas 3, o DIA-2026-0107 foi aprovado pela
@@ -145,7 +162,8 @@ por extenso ("Distrito Federal"), em que o modelo propôs a instrução certa e 
 análise manual (`resultados/etapa6_variacoes.txt`, V09). A medição e as variações foram refeitas com
 essas decisões (`resultados/etapa6_medicao_terceira_revisao.txt` guarda a anterior).
 
-**Quarta revisão.** Mais 14 variações com o agente real não entregaram nenhuma instrução errada,
+**Quarta revisão.** Mais 14 variações com o agente real (`resultados/etapa6_variacoes_quarta_revisao.json`)
+não entregaram nenhuma instrução errada,
 mas três foram para a análise manual com a proposta certa, e a barreira tinha caminhos para aprovar
 uma errada:
 
@@ -170,7 +188,7 @@ falhas de escrita, de compactação ou de poda deixaram de deixar na tela uma in
 ou de derrubar o formulário. Cada correção de código tem teste que falhava antes; a da instrução foi
 medida com o agente real (V20). As quatro variações do agente
 real viraram V18 a V21 em `scripts/rodar_variacoes.py`; repetidas 3 vezes cada, saíram todas certas.
-Nas 21 variações (41 turnos), duas recusas indevidas ficaram, do lado seguro: a UF por extenso (V09)
+Nas 21 variações (43 turnos, 41 aprovados e certos), duas recusas indevidas ficaram, do lado seguro: a UF por extenso (V09)
 e uma complementação sem dado novo em que o modelo trocou a data do pedido pela da complementação
 (V15). A medição foi refeita, e é a da seção 1.
 
@@ -187,7 +205,11 @@ Fonte: `resultados/etapa6_confronto.txt`, que lê a estimativa feita antes do ag
 | Saída | 606 | 767 |
 | Custo por instrução completa | US$ 0,00310 a 0,00322 | US$ 0,00389 |
 | Diligência | 2 passos, 4.480 a 4.540 tokens | 2,00 passos, 5.520 tokens |
-| Mês com 300 pedidos | US$ 1,00 a 1,04 | US$ 1,28 |
+| Mês com 300 pedidos | US$ 1,00 a 1,04 | US$ 1,28* |
+
+\* Pela composição do acervo, como a estimativa (10 instruções completas, 2 diligências e 2
+complementações a cada 12 pedidos). `resultados/etapa6_medicao.txt` dá US$ 1,29 porque multiplica
+por 300 o custo médio por pedido de todos os casos medidos.
 
 O desenho da cadeia acertou: 5 passos medidos contra 5 previstos, e o acréscimo médio por passo
 dentro da faixa da referência (a amplitude medida, de 72 a 209, sai dos dois lados). A diferença
@@ -211,18 +233,21 @@ Fonte: `resultados/etapa4_memoria.txt`. Entrada em tokens, com as duas complemen
 | Configuração | 1º turno | Complementação | Aplicada ao pedido certo |
 |---|---|---|---|
 | Sem memória | 5.517 a 5.524 | 2.655 a 5.393 | não, nas duas |
-| Histórico da sessão (teto 3) | 5.517 a 5.524 | 17.850 a 18.338 | sim, nas duas |
-| Histórico + memórias do usuário | 6.792 a 6.802 | 19.797 a 20.381 | sim, nas duas |
+| Histórico da sessão (teto 3) | 5.517 a 5.524 | 17.905 a 18.263 | sim, nas duas |
+| Histórico + memórias do usuário | 6.680 a 9.601 | 19.187 a 19.912 | sim, nas duas |
 
 Sem memória, a complementação não tem a que se aplicar, e isso aparece: a barreira recusou as duas.
-As memórias do usuário custam 11% a mais na complementação e 23% a mais no primeiro turno, sem
+As memórias do usuário custam de 7% a 9% a mais na complementação e de 21% a 74% no primeiro turno, sem
 acertar mais. Há ainda um risco observado na primeira medição da Etapa 4: o modelo gravou uma
 memória da Carla, que a eliminação achou pelo conteúdo
 (`resultados/etapa4_eliminacao_primeira_medicao.txt`); no banco daquela medição, substituído depois,
 ela estava sob a matrícula do Rafael (207481), o que foi observado durante o desenvolvimento, sem
-arquivo que o registre. A extração de memória é decisão do modelo e varia de uma rodada para outra.
+arquivo que o registre. A extração de memória é decisão do modelo e varia de uma rodada para outra:
+na rodada atual, ele não gravou nenhuma (`resultados/etapa4_memoria.txt`).
 Por isso as memórias ficaram desligadas. A eliminação das duas servidoras foi provada no banco
-(`resultados/etapa4_eliminacao.txt`): nada restou em tabela nem nos bytes do arquivo. No banco só
+(`resultados/etapa4_eliminacao.txt`): o arquivo mostra a sessão do 0112 gravada sob o user_id 207481,
+do Rafael, e a busca pelo user_id da Carla vazia; depois da rotina, nada restou em tabela nem nos
+bytes do arquivo. No banco só
 com histórico, o Heitor, que não pediu eliminação, continuou lá; no banco com memórias ele já não
 estava antes da eliminação, então ali a prova de que a rotina poupa os outros não se aplica.
 
@@ -288,7 +313,8 @@ de conferência pode ficar mais leve em algum tipo de pedido.
   mérito: o pedido vai para a análise manual, aplicado ou não o que ela diz.
 - A conferência dos números do texto livre é um conjunto de números sem contexto: um número que
   existe no pedido ou numa ferramenta passa mesmo com outro sentido (o saldo escrito como valor
-  total), e datas ou valores por extenso fora dos formatos lidos não são conferidos. Os campos
+  total); datas ou valores por extenso fora dos formatos lidos, siglas de unidade e nomes de
+  município não são conferidos. Os campos
   estruturados (recomendação, quantidade, valor, critérios) são conferidos à parte; o texto, o
   conferente lê.
 - O registro da conferência tem uma linha por instrução conferida: o pedido em diligência que

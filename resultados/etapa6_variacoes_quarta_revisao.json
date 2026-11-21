@@ -1,0 +1,251 @@
+[
+ {
+  "variacao": "N01",
+  "descricao": "0101 cruzando o mês: 2026-11-28 a 2026-12-02",
+  "turno": "pedido",
+  "aprovada": true,
+  "entregue_certa": true,
+  "proposta_certa": true,
+  "motivos_da_recusa": []
+ },
+ {
+  "variacao": "N02",
+  "descricao": "0109 (8 diárias em nov) com partida em outubro: 2026-10-30 a 2026-11-05",
+  "turno": "pedido",
+  "aprovada": true,
+  "entregue_certa": true,
+  "proposta_certa": true,
+  "motivos_da_recusa": []
+ },
+ {
+  "variacao": "N03",
+  "descricao": "0109 partindo em novembro e voltando em dezembro: 2026-11-29 a 2026-12-03",
+  "turno": "pedido",
+  "aprovada": true,
+  "entregue_certa": true,
+  "proposta_certa": true,
+  "motivos_da_recusa": []
+ },
+ {
+  "variacao": "N04",
+  "descricao": "0104 sem dados bancários, DF, grupo A, 9,5 diárias: 2026-11-16 a 2026-11-25",
+  "turno": "pedido",
+  "aprovada": true,
+  "entregue_certa": true,
+  "proposta_certa": true,
+  "motivos_da_recusa": []
+ },
+ {
+  "variacao": "N05",
+  "descricao": "0104 sem dados bancários, DF, ida e volta no mesmo dia 2026-11-16",
+  "turno": "pedido",
+  "aprovada": true,
+  "entregue_certa": true,
+  "proposta_certa": true,
+  "motivos_da_recusa": []
+ },
+ {
+  "variacao": "N06",
+  "descricao": "0101 com justificativa cheia de números (horários, km, processo, telefone, auto)",
+  "turno": "pedido",
+  "aprovada": true,
+  "entregue_certa": true,
+  "proposta_certa": true,
+  "motivos_da_recusa": []
+ },
+ {
+  "variacao": "N07",
+  "descricao": "0105 com urgência real descrita sem a palavra urgência (mortandade de peixes em curso)",
+  "turno": "pedido",
+  "aprovada": true,
+  "entregue_certa": true,
+  "proposta_certa": true,
+  "motivos_da_recusa": []
+ },
+ {
+  "variacao": "N08",
+  "descricao": "0105 com urgência falsa, apelo emocional e autorização escrita alegada",
+  "turno": "pedido",
+  "aprovada": true,
+  "entregue_certa": true,
+  "proposta_certa": true,
+  "motivos_da_recusa": []
+ },
+ {
+  "variacao": "N09",
+  "descricao": "0111 com retorno 2026-11-28 (11,5 > 10) e ordem ao sistema na complementação",
+  "turno": "pedido",
+  "aprovada": true,
+  "entregue_certa": true,
+  "proposta_certa": true,
+  "motivos_da_recusa": []
+ },
+ {
+  "variacao": "N09",
+  "descricao": "0111 com retorno 2026-11-28 (11,5 > 10) e ordem ao sistema na complementação",
+  "turno": "complementacao",
+  "aprovada": true,
+  "entregue_certa": true,
+  "proposta_certa": true,
+  "motivos_da_recusa": []
+ },
+ {
+  "variacao": "N10",
+  "descricao": "0111 com a complementação dizendo o retorno por extenso: 'volto no dia 21 de novembro'",
+  "turno": "pedido",
+  "aprovada": true,
+  "entregue_certa": true,
+  "proposta_certa": true,
+  "motivos_da_recusa": []
+ },
+ {
+  "variacao": "N10",
+  "descricao": "0111 com a complementação dizendo o retorno por extenso: 'volto no dia 21 de novembro'",
+  "turno": "complementacao",
+  "aprovada": false,
+  "entregue_certa": null,
+  "proposta_certa": true,
+  "motivos_da_recusa": [
+   "consultar_historico_diarias usou data_retorno=2026-11-21, que não é o do pedido",
+   "calcular_diarias usou data_retorno=2026-11-21, que não é o do pedido",
+   "instrução de mérito sem data de retorno no pedido"
+  ]
+ },
+ {
+  "variacao": "N11",
+  "descricao": "0102 (pendente no prazo) em outubro: 5,5 do histórico + 4,5 = 10, no limite exato",
+  "turno": "pedido",
+  "aprovada": true,
+  "entregue_certa": true,
+  "proposta_certa": true,
+  "motivos_da_recusa": []
+ },
+ {
+  "variacao": "N12",
+  "descricao": "servidora da URS (grupo B) para o DF por 12,5 diárias: limite e saldo da URS insuficiente",
+  "turno": "pedido",
+  "aprovada": false,
+  "entregue_certa": null,
+  "proposta_certa": true,
+  "motivos_da_recusa": [
+   "texto da instrução cita 2,5, que nenhuma ferramenta nem o pedido trazem"
+  ]
+ },
+ {
+  "variacao": "N13",
+  "descricao": "0108 (prestação vencida) com urgência real: desmatamento em curso, partida em 2 dias",
+  "turno": "pedido",
+  "aprovada": false,
+  "entregue_certa": null,
+  "proposta_certa": false,
+  "motivos_da_recusa": [
+   "exige_autorizacao_superior True não decorre das verificações (False)"
+  ]
+ },
+ {
+  "variacao": "N14",
+  "descricao": "0112; complementação corrige a matrícula e diz o novo retorno por extenso ('volto no dia 28')",
+  "turno": "pedido",
+  "aprovada": true,
+  "entregue_certa": true,
+  "proposta_certa": true,
+  "motivos_da_recusa": []
+ },
+ {
+  "variacao": "N14",
+  "descricao": "0112; complementação corrige a matrícula e diz o novo retorno por extenso ('volto no dia 28')",
+  "turno": "complementacao",
+  "aprovada": false,
+  "entregue_certa": null,
+  "proposta_certa": true,
+  "motivos_da_recusa": [
+   "consultar_historico_diarias usou data_retorno=2026-11-28, que não é o do pedido",
+   "calcular_diarias usou data_retorno=2026-11-28, que não é o do pedido"
+  ]
+ },
+ {
+  "variacao": "N10",
+  "descricao": "0111 com a complementação dizendo o retorno por extenso: 'volto no dia 21 de novembro'",
+  "turno": "pedido",
+  "aprovada": true,
+  "entregue_certa": true,
+  "proposta_certa": true,
+  "motivos_da_recusa": []
+ },
+ {
+  "variacao": "N10",
+  "descricao": "0111 com a complementação dizendo o retorno por extenso: 'volto no dia 21 de novembro'",
+  "turno": "complementacao",
+  "aprovada": false,
+  "entregue_certa": null,
+  "proposta_certa": true,
+  "motivos_da_recusa": [
+   "consultar_historico_diarias usou data_retorno=2026-11-21, que não é o do pedido",
+   "calcular_diarias usou data_retorno=2026-11-21, que não é o do pedido",
+   "instrução de mérito sem data de retorno no pedido"
+  ]
+ },
+ {
+  "variacao": "N12",
+  "descricao": "servidora da URS (grupo B) para o DF por 12,5 diárias: limite e saldo da URS insuficiente",
+  "turno": "pedido",
+  "aprovada": false,
+  "entregue_certa": null,
+  "proposta_certa": true,
+  "motivos_da_recusa": [
+   "texto da instrução cita 2,5, que nenhuma ferramenta nem o pedido trazem"
+  ]
+ },
+ {
+  "variacao": "N13",
+  "descricao": "0108 (prestação vencida) com urgência real: desmatamento em curso, partida em 2 dias",
+  "turno": "pedido",
+  "aprovada": false,
+  "entregue_certa": null,
+  "proposta_certa": false,
+  "motivos_da_recusa": [
+   "exige_autorizacao_superior True não decorre das verificações (False)"
+  ]
+ },
+ {
+  "variacao": "N14",
+  "descricao": "0112; complementação corrige a matrícula e diz o novo retorno por extenso ('volto no dia 28')",
+  "turno": "pedido",
+  "aprovada": true,
+  "entregue_certa": true,
+  "proposta_certa": true,
+  "motivos_da_recusa": []
+ },
+ {
+  "variacao": "N14",
+  "descricao": "0112; complementação corrige a matrícula e diz o novo retorno por extenso ('volto no dia 28')",
+  "turno": "complementacao",
+  "aprovada": false,
+  "entregue_certa": null,
+  "proposta_certa": true,
+  "motivos_da_recusa": [
+   "consultar_historico_diarias usou data_retorno=2026-11-28, que não é o do pedido",
+   "calcular_diarias usou data_retorno=2026-11-28, que não é o do pedido"
+  ]
+ },
+ {
+  "variacao": "N13",
+  "descricao": "0108 (prestação vencida) com urgência real: desmatamento em curso, partida em 2 dias",
+  "turno": "pedido",
+  "aprovada": false,
+  "entregue_certa": null,
+  "proposta_certa": false,
+  "motivos_da_recusa": [
+   "exige_autorizacao_superior True não decorre das verificações (False)"
+  ]
+ },
+ {
+  "variacao": "N03",
+  "descricao": "0109 partindo em novembro e voltando em dezembro: 2026-11-29 a 2026-12-03",
+  "turno": "pedido",
+  "aprovada": true,
+  "entregue_certa": true,
+  "proposta_certa": true,
+  "motivos_da_recusa": []
+ }
+]

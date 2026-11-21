@@ -1,8 +1,10 @@
-"""Roda o agente de verdade (com a chave) em alguns pedidos e compara com o gabarito.
+"""Roda o agente de verdade (com a chave) nos 12 pedidos e nas 2 complementações e compara com o gabarito.
 
 É script de medição: só ele e os testes abrem o gabarito, e o agente nunca o vê.
-Sem memória (cada pedido isolado). Grava em resultados/etapa3_casos.txt o que a
-barreira decidiu, as consultas feitas, tokens, tempo e o confronto com o gabarito.
+Usa a configuração de produção (histórico da sessão; a complementação vai na mesma
+sessão do pedido). Grava em resultados/etapa3_casos.txt, caso a caso, o que a
+barreira decidiu, as consultas, as verificações com o fundamento, os alertas, as
+pendências e a minuta: é onde se vê como o agente tratou cada pegadinha do acervo.
 
 Uso: python scripts/rodar_casos.py [números dos pedidos...] [--paralelas]
 """
@@ -14,13 +16,13 @@ import time
 RAIZ = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(RAIZ))
 
-from diarias import barreira  # noqa: E402  (depende do sys.path acima)
+from diarias import barreira, memoria  # noqa: E402  (depende do sys.path acima)
 from diarias.agente import criar_agente, instruir  # noqa: E402
 
 DADOS = RAIZ / "exemplos" / "dados"
 PEDIDOS = {p["numero"]: p for p in json.loads((DADOS / "pedidos.json").read_text(encoding="utf-8"))}
-GABARITO = json.loads((RAIZ / "exemplos" / "gabarito.json").read_text(encoding="utf-8"))["pedidos"]
-PADRAO = ["DIA-2026-0101", "DIA-2026-0104", "DIA-2026-0106", "DIA-2026-0107", "DIA-2026-0112"]
+COMPLEMENTOS = {c["numero"]: c for c in json.loads((DADOS / "complementacoes.json").read_text(encoding="utf-8"))}
+GABARITO = json.loads((RAIZ / "exemplos" / "gabarito.json").read_text(encoding="utf-8"))
 
 
 def matricula_esperada(pedido: dict, complementacao: dict | None) -> str:
@@ -45,19 +47,29 @@ def acertou(instrucao, esperado: dict, matricula: str | None = None) -> bool:
 
 def main() -> None:
     paralelas = "--paralelas" in sys.argv
-    numeros = [a for a in sys.argv[1:] if a.startswith("DIA-")] or PADRAO
-    agente = criar_agente(paralelas=paralelas)
-    linhas = [f"ETAPA 3 · AGENTE SEM MEMÓRIA · paralelas={'ligadas' if paralelas else 'desligadas'}", ""]
-    for numero in numeros:
+    numeros = [a for a in sys.argv[1:] if a.startswith("DIA-")] or list(PEDIDOS)
+    linhas = [f"ETAPA 3 · OS 12 PEDIDOS E AS 2 COMPLEMENTAÇÕES · memória: histórico da sessão · "
+              f"paralelas={'ligadas' if paralelas else 'desligadas'}", ""]
+    acertos = 0
+    turnos = [(n, None) for n in numeros] + [(n, COMPLEMENTOS[n]) for n in numeros if n in COMPLEMENTOS]
+    agentes = {}
+    for numero, complementacao in turnos:
+        if numero not in agentes:   # um banco por pedido: o turno da complementação reencontra a sessão
+            db, _ = memoria.abrir_banco(f"medicao/casos/{numero}")
+            agentes[numero] = criar_agente(paralelas=paralelas, db=db, **memoria.CONFIGURACOES["historico"])
         inicio = time.perf_counter()
-        r = instruir(agente, PEDIDOS[numero])
+        r = instruir(agentes[numero], PEDIDOS[numero], complementacao)
         segundos = time.perf_counter() - inicio
         m = r.resposta.metrics if r.resposta else None
         recebido = r.resposta.input.input_content_string() if r.resposta and r.resposta.input else ""
-        esperado = GABARITO[numero]
-        linhas.append(f"## {numero} · {esperado['caso']}")
+        esperado = GABARITO["complementacoes" if complementacao else "pedidos"][numero]
+        certo = acertou(r.instrucao, esperado, matricula_esperada(PEDIDOS[numero], complementacao))
+        acertos += certo
+        linhas.append(f"## {numero}{' · complementação' if complementacao else ''} · {esperado.get('caso', '')}")
+        if complementacao:
+            linhas.append(f"texto da complementação: {complementacao['texto']}")
         linhas.append(f"barreira: {'APROVADA' if r.aprovada else 'RECUSADA'} · acerto contra o gabarito: "
-                      f"{'sim' if acertou(r.instrucao, esperado, PEDIDOS[numero]['matricula']) else 'NÃO'} · "
+                      f"{'sim' if certo else 'NÃO'} · "
                       f"{getattr(m, 'input_tokens', '?')} tokens de entrada, "
                       f"{getattr(m, 'output_tokens', '?')} de saída · {segundos:.1f} s")
         for motivo in r.motivos_da_recusa:
@@ -77,6 +89,7 @@ def main() -> None:
         linhas.append(f"  gabarito: {esperado['recomendacao']} · {esperado['quantidade_diarias']} · "
                       f"{esperado['valor_total']} · não atende {esperado['criterios_nao_atendidos']}")
         linhas.append("")
+    linhas.append(f"Acertos contra o gabarito: {acertos} de {len(turnos)}")
     saida = RAIZ / "resultados" / f"etapa3_casos{'_paralelas' if paralelas else ''}.txt"
     saida.write_text("\n".join(linhas), encoding="utf-8")
     print("\n".join(linhas))

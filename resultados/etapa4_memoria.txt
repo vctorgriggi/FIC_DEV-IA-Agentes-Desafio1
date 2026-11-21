@@ -11,15 +11,15 @@ sem_memoria             DIA-2026-0112        5517      5393  diligencia → recu
                                         recusa: dados incompletos alegados com o pedido completo
                                         consultas na complementação: consultar_servidor
 sem_memoria · memórias gravadas: 0
-historico               DIA-2026-0111        5524     18338  diligencia → apto_para_autorizacao · aplicada ao pedido certo
+historico               DIA-2026-0111        5524     18263  diligencia → apto_para_autorizacao · aplicada ao pedido certo
                                         consultas na complementação: consultar_servidor, consultar_historico_diarias, calcular_diarias, consultar_saldo_diarias
-historico               DIA-2026-0112        5517     17850  diligencia → apto_para_autorizacao · aplicada ao pedido certo
+historico               DIA-2026-0112        5517     17905  diligencia → apto_para_autorizacao · aplicada ao pedido certo
                                         consultas na complementação: consultar_servidor, consultar_historico_diarias, calcular_diarias, consultar_saldo_diarias
 historico · memórias gravadas: 0
-historico_e_memorias    DIA-2026-0111        6802     20381  diligencia → apto_para_autorizacao · aplicada ao pedido certo
+historico_e_memorias    DIA-2026-0111        9601     19912  diligencia → apto_para_autorizacao · aplicada ao pedido certo
                                         consultas na complementação: consultar_servidor, consultar_historico_diarias, calcular_diarias, consultar_saldo_diarias
-historico_e_memorias    DIA-2026-0112        6792     19797  diligencia → apto_para_autorizacao · aplicada ao pedido certo
+historico_e_memorias    DIA-2026-0112        6680     19187  diligencia → apto_para_autorizacao · aplicada ao pedido certo
                                         consultas na complementação: consultar_servidor, consultar_historico_diarias, calcular_diarias, consultar_saldo_diarias
-historico_e_memorias · memórias gravadas: 2
+historico_e_memorias · memórias gravadas: 0
 
 DIA-2026-0104 · CPF, conta ou agência nos bytes do banco: nenhum

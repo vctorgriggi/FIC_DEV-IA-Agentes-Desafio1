@@ -1,6 +1,6 @@
 ============================= test session starts ==============================
-platform darwin -- Python 3.15.2, pytest-9.2.0, pluggy-1.7.0 -- /Users/victor/Desktop/Workspaces/FIC_DEV/IA Agentes/desafio-01/.venv/bin/python
-rootdir: /Users/victor/Desktop/Workspaces/FIC_DEV/IA Agentes/desafio-01
+platform darwin -- Python 3.15.2, pytest-9.2.0, pluggy-1.7.0 -- .venv/bin/python
+rootdir: .
 configfile: pyproject.toml
 testpaths: tests
 plugins: anyio-4.16.0

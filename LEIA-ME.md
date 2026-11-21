@@ -21,17 +21,23 @@ cp .env.example .env          # preencha OPENAI_API_KEY; o .env não é versiona
 | `.venv/bin/ruff check . && .venv/bin/python -m pytest -q` | lint e os testes (ferramentas, filtro, barreira, eliminação, prazo de guarda, formulário) | não |
 | `.venv/bin/python scripts/estimar_desenho.py` | contas da Etapa 1 | não |
 | `.venv/bin/python scripts/testar_ferramentas.py` | as ferramentas nos casos do enunciado | não |
-| `.venv/bin/streamlit run app.py` | o formulário de conferência | sim |
-| `.venv/bin/python scripts/rodar_casos.py` | o agente em cinco pedidos-chave | sim |
+| `.venv/bin/streamlit run app.py` | o formulário de conferência; abre sem chave, e só chama o modelo ao instruir | sim |
+| `.venv/bin/python scripts/rodar_casos.py` | o agente nos 12 pedidos e nas 2 complementações, com alertas e minuta | sim |
 | `.venv/bin/python scripts/medir_memoria.py` | custo da memória nas três configurações | sim |
-| `.venv/bin/python scripts/eliminar_titulares.py` | eliminação das duas servidoras nos bancos da medição | não |
+| `.venv/bin/python scripts/eliminar_titulares.py` | eliminação das duas servidoras nos bancos que `medir_memoria.py` grava (rode-o antes) | não |
 | `.venv/bin/python scripts/medir.py` | 3 rodadas contra o gabarito, chamadas paralelas desligadas e ligadas | sim |
 | `.venv/bin/python scripts/provocar_falhas.py` | as quatro falhas provocadas | sim |
 | `.venv/bin/python scripts/rodar_variacoes.py` | 21 variações fora do acervo, contra a regra do gabarito | sim |
 | `.venv/bin/python scripts/confrontar.py` | Etapa 1 contra o medido | não |
 
-As saídas vão para `resultados/`; as telas do formulário em uso estão em `resultados/etapa5_telas/`.
+As saídas vão para `resultados/`; as telas do formulário em uso (progresso, instrução, minuta
+editável, conferência, mensagem padrão e eliminação) estão em `resultados/etapa5_telas/`.
 Os bancos do agente vão para `bancos/`, fora do git, porque guardam dados pessoais.
+
+O enunciado pede em `resultados/` "as saídas das medições das Etapas 4 e 5". Os arquivos seguem a
+numeração das etapas: `etapa4_*` são a memória e a eliminação; `etapa5_*`, o formulário (telas e
+testes, porque a Etapa 5 não tem medição própria); `etapa6_*`, a medição contra o gabarito e as
+falhas provocadas, que a Figura 1 e a Etapa 1 do enunciado chamam de Etapa 6.
 
 ## Como o sistema está dividido
 
@@ -79,17 +85,21 @@ Os bancos do agente vão para `bancos/`, fora do git, porque guardam dados pesso
 - **Data da análise fixa** (2026-10-09, de `tabela_diarias.json`), nunca a data de hoje, e dias
   úteis sem feriados, como o gabarito.
 - **Python 3.15.** É o da máquina, e as dependências instalaram e importaram nele. O enunciado
-  pede 3.10 ou superior.
+  pede 3.10 ou superior: o `requirements.lock` só instala a partir do 3.12 (numpy e altair travados
+  ali não têm versão para 3.10 e 3.11). Em 3.10 ou 3.11, instale `requirements.txt`, que o pip
+  resolve para essas versões; não foi testado nelas.
 
 ## As perguntas do enunciado
 
-O enunciado anuncia quatro perguntas e lista três. As três estão respondidas abaixo; a quarta
-precisa ser confirmada com o professor.
+O enunciado anuncia quatro perguntas e lista três; o docx original também lista só três. As três
+estão respondidas abaixo; a quarta precisa ser confirmada com o professor.
 
 **Que configuração de chamadas paralelas, teto de chamadas e memória você escolheu, e com base em
 que número?**
 
-- **Chamadas paralelas desligadas.** Desligadas, deram 294 acertos em 294 casos nas sete
+- **Chamadas paralelas desligadas.** A cadeia é dependente: o cálculo precisa do grupo que vem
+  do cadastro, e o saldo precisa do valor que vem do cálculo; só o histórico poderia correr junto do
+  cadastro (`desenho.md`, seção 4). Desligadas, deram 294 acertos em 294 casos nas sete
   medições (210 deles com a matrícula conferida; as duas primeiras medições não a conferiam).
   Ligadas, cortam cerca de 11% do custo (US$ 0,00376 contra 0,00421 por pedido), mas todos os erros
   das sete medições aconteceram com elas: o 0107 em três e a complementação do 0111 sem cadastro
@@ -101,7 +111,7 @@ que número?**
   fim. Com teto 2 (falha provocada 4), a instrução fica incompleta e é recusada.
 - **Memória: histórico da sessão com teto de 3 execuções, sem memórias do usuário.** Sem
   memória, a complementação não foi aplicada (0 de 2); com o histórico, foi (2 de 2), e somar as
-  memórias do usuário também acertou 2 de 2, mas custou 11% a mais na complementação e 23% no
+  memórias do usuário também acertou 2 de 2, mas custou de 7% a 9% a mais na complementação e de 21% a 74% no
   primeiro turno. Na
   primeira medição, o modelo gravou uma memória da Carla (0112), que a eliminação achou pelo
   conteúdo (`resultados/etapa4_eliminacao_primeira_medicao.txt`); que ela estava sob a matrícula de
@@ -115,8 +125,10 @@ Em quatro camadas:
 1. As contas não são do modelo: todo número de que a instrução precisa vem pronto das ferramentas,
    inclusive quanto falta de saldo.
 2. A barreira em código confere cada argumento no seu campo do pedido, uma só pessoa em todas as
-   consultas, e cada número e data, nos campos e no texto, contra o pedido e o retorno real das
-   ferramentas, registrado pelo Agno. São 84 testes
+   consultas, e os números dos campos contra o retorno real das ferramentas, registrado pelo Agno.
+   No texto livre (minuta, alertas, fundamentos), confere matrículas, nomes de servidores, valores
+   em reais, quantidades de diárias, prazos em dias e datas; o que não tem um desses formatos não
+   é conferido (`relatorio.md`, seção 7). São 87 testes
    em `tests/test_barreira.py`, que montam execuções honestas e execuções com um dado inventado ou
    usado no lugar errado.
 3. `resposta.status` é conferido antes de usar o conteúdo, e um erro da API vira recusa.
@@ -164,4 +176,7 @@ variações não entregaram nenhuma instrução errada (`relatorio.md`, seções
   matrícula que o cadastro atribui a outra pessoa. Se sobrar qualquer coisa, acusa erro em vez de
   declarar sucesso.
 - **O que a eliminação não alcança:** o processo de diárias em si. Ele é registro de despesa
-  pública, sujeito à transparência e à guarda das normas de prestação de contas.
+  pública, sujeito à transparência e à guarda das normas de prestação de contas e à LGPD: a
+  eliminação pedida pelo titular vale para a cópia de trabalho do agente, e a minimização (sem CPF
+  nem e-mail nas ferramentas, filtro antes do modelo, prazo de guarda) é a parte da LGPD que este
+  sistema cumpre.

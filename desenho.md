@@ -96,7 +96,9 @@ OpenAI, developers.openai.com/api/docs/pricing, nov/2026):
 | Diligência (2 passos) | 4.480 a 4.540 | 486 | 0,00148 a 0,00149 |
 
 **Volume mensal adotado: 300 pedidos** (o enunciado diz "centenas"; premissa, não dado do
-órgão). Sequencial, o mês custa de **US$ 1,00 a 1,04**. O custo não decide o desenho; a
+órgão). Sequencial, o mês custa de **US$ 1,00 a 1,04**, pela composição do acervo: a cada 12
+pedidos, 10 instruções completas, 2 diligências e 2 complementações que refazem a cadeia (só 300
+instruções completas dariam US$ 0,93 a 0,97). O custo não decide o desenho; a
 confiabilidade e o ponto de conferência decidem.
 
 Limites da estimativa: o tokenizador usado (o200k_base) é aproximação, porque o do gpt-5.6 não é

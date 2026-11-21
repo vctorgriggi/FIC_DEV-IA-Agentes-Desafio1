@@ -55,3 +55,13 @@ def test_conta_com_mais_algarismos_tambem_e_mascarada():
     from diarias.filtro import mascarar
     assert "12345678-9" not in mascarar("conta 12345678-9 no banco")
     assert "DIA-2026-0112" in mascarar("pedido DIA-2026-0112 de 2026-11-20")
+
+
+def test_o_filtro_esta_ligado_ao_agente(monkeypatch):
+    # o enunciado mede a configuração pelo CPF do 0104 fora do modelo e do banco: sem o filtro no agente,
+    # os testes do filtro sozinho continuariam verdes
+    monkeypatch.setenv("OPENAI_API_KEY", "teste-sem-chamada")
+    from agno.guardrails import PIIDetectionGuardrail
+
+    from diarias.agente import criar_agente
+    assert any(isinstance(h, PIIDetectionGuardrail) for h in criar_agente().pre_hooks or [])

@@ -545,3 +545,24 @@ def test_excesso_do_limite_mensal_no_alerta_passa():
                 alertas=["O limite mensal de 10 diárias foi excedido em 1,5 diárias (art. 6º)."])
     veredito = conferir(r, "DIA-2026-0109")
     assert veredito.aprovada, veredito.motivos
+
+
+# ------------------------------------------------------------- quinta revisão (foco no enunciado)
+
+@pytest.mark.parametrize("detalhe", [
+    "Antecedência de 45 dias corridos, mínimo 10: atende (art. 5º).",
+    "Saldo da unidade de 77.777,00 reais, suficiente.",
+])
+def test_dias_e_reais_inventados_no_fundamento_sao_recusados(detalhe):
+    r = execucao_honesta(PEDIDOS["DIA-2026-0101"])
+    verifs = [v.model_copy(update={"detalhe": detalhe}) if v.criterio == "antecedencia" else v
+              for v in r.content.verificacoes]
+    assert not conferir(alterar(r, verificacoes=verifs), "DIA-2026-0101").aprovada
+
+
+def test_dias_e_reais_da_ferramenta_e_da_norma_passam():
+    r = alterar(execucao_honesta(PEDIDOS["DIA-2026-0101"]), minuta_despacho=(
+        "Antecedência de 32 dias corridos, acima do mínimo de 10 dias (art. 5º); prestação de contas em até "
+        "5 dias úteis (art. 7º); valor de 980,00 reais."))
+    veredito = conferir(r, "DIA-2026-0101")
+    assert veredito.aprovada, veredito.motivos
