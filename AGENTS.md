@@ -65,11 +65,11 @@ app.py       # formulário; só exibe instrução aprovada pela barreira, nunca 
   .env.example versionado traz só os nomes.
 - Código, nomes e documentos em português, como `exemplos/gerar_dados.py` e o enunciado.
 - Memória: histórico da sessão com teto de 3 execuções e memórias do usuário desligadas — sem
-  histórico a complementação não se aplica; as memórias acertam o mesmo, custam de 7% a 9% a mais
-  na complementação e já gravaram dados de uma pessoa sob o user_id de outra (0112).
+  histórico a complementação não se aplica; as memórias acertam o mesmo, custam de 11% a 23% a mais
+  e já gravaram dados de uma pessoa sob o user_id de outra (0112, observado sem arquivo).
 - Registro da conferência: número, sugestão, decisão, motivo mascarado e se a minuta foi editada,
   uma linha por instrução conferida (diligência e complementação são duas) — mede a discordância.
-- Chamadas paralelas desligadas — medido: 252/252 desligadas; todos os erros das seis medições
+- Chamadas paralelas desligadas — medido: 294/294 desligadas; todos os erros das sete medições
   aconteceram com elas ligadas, por cerca de 11% de custo a menos.
 - Prazo de guarda: 30 dias após o último evento do pedido — conferência (decisão do usuário),
   recusa ou último uso no banco, para que recusado não fique para sempre nem pedido em uso seja
@@ -87,10 +87,10 @@ app.py       # formulário; só exibe instrução aprovada pela barreira, nunca 
   úteis) não impede; só a vencida impede.
 - DIA-2026-0106 e DIA-2026-0107 têm a mesma antecedência curta → urgência é julgamento sobre o
   texto; autorização verbal não supre a escrita (art. 5º, § 2º).
-- Teste que monta banco não grava execuções com upsert_session → no Agno 3.0.9 elas vão para
-  agno_runs por upsert_run; use-o, como o agente faz.
-- "Autorização escrita" alegada na justificativa faz o modelo aceitar antecedência curta sem
-  urgência (V02, V17) → a autorização não cria urgência; diga isso na instrução e na ferramenta.
+- Teste que monta banco não grava execuções com upsert_session → use upsert_run, e um run_id por
+  execução, como o Agno (a marca de compactação confere por run_id).
+- "Autorização escrita" alegada faz o modelo aceitar antecedência curta sem urgência (V02, V17), e
+  urgência com outro impedimento o faz pedir autorização (V20) → a instrução diz as duas regras.
 - O modelo marca exige_autorizacao_superior com a urgência negada (0107, com paralelas) → a barreira
   exige o valor que decorre das verificações; não afrouxe essa regra.
 - Expurgo que procura o número do pedido no conteúdo acusa resto falso → o 0102 cita o 0101 na
@@ -101,10 +101,10 @@ app.py       # formulário; só exibe instrução aprovada pela barreira, nunca 
   não deixa o painel ler a pasta Desktop; suba o Streamlit pelo terminal e conecte pelo endereço.
 - Checagem de texto livre que recusa toda matrícula fora do pedido recusa o alerta sobre injeção
   (falha provocada 1) → aceite o que o próprio pedido ou a complementação traz.
-- Número no texto livre sem origem é recusado → conta nova que o texto precisa (quanto falta de
-  saldo) entra na ferramenta, nunca no prompt.
-- Complementação com duas datas ou duas matrículas → nenhuma vale como correção; data única só é
-  retorno se o texto fala em retorno, e a correção substitui o valor do pedido.
+- Número no texto livre sem origem é recusado → conta que o texto precisa (falta de saldo, excesso
+  do limite, pernoites) entra na ferramenta, nunca no prompt.
+- Complementação com duas datas ou matrículas não corrige nada; a data só é retorno colada ao verbo,
+  a matrícula só perto da palavra, e correção que a barreira não lê barra a instrução de mérito.
 - O formulário guarda a instrução em session_state → eliminação e expurgo tiram da tela com
   `esquecer`, senão o eliminado continua visível e conferível.
 
@@ -113,16 +113,16 @@ app.py       # formulário; só exibe instrução aprovada pela barreira, nunca 
 - G1 — a eliminação casa nome e matrícula como trecho de texto: um número de 6 algarismos dentro
   do registro de outra pessoa apagaria a sessão dela — não ocorreu nas medições; paliativo: a
   conferência por bytes acusa o que sobrou do titular, mas não o que foi apagado a mais; nome
-  vazio ou parcial é recusado (cadastro, duas palavras) e matrícula só com 6 algarismos.
+  vazio ou parcial é recusado (cadastro, duas palavras), e matrícula de outro servidor também.
 - G2 — `_ouvinte` em diarias/agente.py é global: dois conferentes no mesmo processo misturariam
   os avisos de consulta — paliativo: o formulário roda local, para um conferente por vez.
 - G3 — uma execução em andamento pode regravar a sessão depois da eliminação do titular — corrida
   teórica, não observada; paliativo: a eliminação confere tabela e bytes logo depois.
-- G4 — recusas indevidas, do lado seguro: UF por extenso, argumento corrigido após erro de formato
-  e 0112 que reconfere a matrícula antiga — paliativo: vão à análise manual; o V09 de
-  `scripts/rodar_variacoes.py` mede a primeira.
-- G5 — o texto livre é conferido por trecho exato: nome de outro servidor sem acento ou abreviado,
-  ou matrícula com ponto, passa — paliativo: ferramenta nenhuma devolve outro nome.
+- G4 — recusas indevidas, do lado seguro: UF por extenso (V09), data da complementação usada como
+  data do pedido (V15), argumento corrigido após erro de formato, 0112 que reconfere a matrícula
+  antiga — paliativo: vão à análise manual.
+- G5 — texto livre conferido por trecho e número sem contexto: nome sem acento, matrícula com ponto,
+  número com outro sentido ou data por extenso passam — paliativo: campos estruturados à parte.
 - G6 — o filtro não pega CPF sem pontuação nem conta sem dígito — paliativo: só o 0104 tem um.
 
 ## Como rodar
