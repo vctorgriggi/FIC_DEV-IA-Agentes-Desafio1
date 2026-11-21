@@ -65,11 +65,11 @@ app.py       # formulário; só exibe instrução aprovada pela barreira, nunca 
   .env.example versionado traz só os nomes.
 - Código, nomes e documentos em português, como `exemplos/gerar_dados.py` e o enunciado.
 - Memória: histórico da sessão com teto de 3 execuções e memórias do usuário desligadas — sem
-  histórico a complementação não se aplica; as memórias acertam o mesmo, custam de 12% a 76% a
-  mais e já gravaram dados de uma pessoa sob o user_id de outra (0112).
-- Registro da conferência guarda número, sugestão, decisão, motivo e se a minuta foi editada; nem
-  a minuta nem dados do solicitante — basta para medir a discordância, e minimiza dado pessoal.
-- Chamadas paralelas desligadas — medido: 210/210 desligadas; todos os erros das cinco medições
+  histórico a complementação não se aplica; as memórias acertam o mesmo, custam de 7% a 9% a mais
+  na complementação e já gravaram dados de uma pessoa sob o user_id de outra (0112).
+- Registro da conferência: número, sugestão, decisão, motivo mascarado e se a minuta foi editada,
+  uma linha por instrução conferida (diligência e complementação são duas) — mede a discordância.
+- Chamadas paralelas desligadas — medido: 252/252 desligadas; todos os erros das seis medições
   aconteceram com elas ligadas, por cerca de 11% de custo a menos.
 - Prazo de guarda: 30 dias após o último evento do pedido — conferência (decisão do usuário),
   recusa ou último uso no banco, para que recusado não fique para sempre nem pedido em uso seja
@@ -101,6 +101,8 @@ app.py       # formulário; só exibe instrução aprovada pela barreira, nunca 
   não deixa o painel ler a pasta Desktop; suba o Streamlit pelo terminal e conecte pelo endereço.
 - Checagem de texto livre que recusa toda matrícula fora do pedido recusa o alerta sobre injeção
   (falha provocada 1) → aceite o que o próprio pedido ou a complementação traz.
+- Número no texto livre sem origem é recusado → conta nova que o texto precisa (quanto falta de
+  saldo) entra na ferramenta, nunca no prompt.
 - Complementação com duas datas ou duas matrículas → nenhuma vale como correção; data única só é
   retorno se o texto fala em retorno, e a correção substitui o valor do pedido.
 - O formulário guarda a instrução em session_state → eliminação e expurgo tiram da tela com
@@ -116,13 +118,12 @@ app.py       # formulário; só exibe instrução aprovada pela barreira, nunca 
   os avisos de consulta — paliativo: o formulário roda local, para um conferente por vez.
 - G3 — uma execução em andamento pode regravar a sessão depois da eliminação do titular — corrida
   teórica, não observada; paliativo: a eliminação confere tabela e bytes logo depois.
-- G4 — recusas indevidas, do lado seguro: UF por extenso, data DD/MM/AAAA na complementação,
-  argumento corrigido após erro de formato e 0112 que reconfere a matrícula antiga — paliativo: vão
-  à análise manual; V09 e V16 de `scripts/rodar_variacoes.py` os medem.
+- G4 — recusas indevidas, do lado seguro: UF por extenso, argumento corrigido após erro de formato
+  e 0112 que reconfere a matrícula antiga — paliativo: vão à análise manual; o V09 de
+  `scripts/rodar_variacoes.py` mede a primeira.
 - G5 — o texto livre é conferido por trecho exato: nome de outro servidor sem acento ou abreviado,
   ou matrícula com ponto, passa — paliativo: ferramenta nenhuma devolve outro nome.
-- G6 — o filtro não pega CPF sem pontuação nem conta sem dígito, e a tela não mascara e-mail —
-  paliativo: no acervo só o 0104 tem dado bancário, e os testes mostram que ele é mascarado.
+- G6 — o filtro não pega CPF sem pontuação nem conta sem dígito — paliativo: só o 0104 tem um.
 
 ## Como rodar
 
